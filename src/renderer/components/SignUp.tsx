@@ -4,23 +4,69 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import validator from 'validator';
 
 const theme = createTheme();
 
-export default function SignUp() {
+function SignUp() {
+  const [nameError, setNameError] = React.useState(false);
+  const [nameHelperText, setNameHelperText] = React.useState('');
+  const [nameValid, setNameValid] = React.useState(false);
+  const [emailError, setEmailError] = React.useState(false);
+  const [emailHelperText, setEmailHelperText] = React.useState('');
+  const [emailValid, setEmailValid] = React.useState(false);
+  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordHelperText, setPasswordHelperText] = React.useState('');
+  const [passwordValid, setPasswordValid] = React.useState(false);
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value.length < 3) {
+      setNameError(true);
+      setNameHelperText('Must be 3 or more characters');
+    } else {
+      setNameError(false);
+      setNameHelperText('');
+      setNameValid(true);
+    }
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (!validator.isEmail(value)) {
+      setEmailError(true);
+      setEmailHelperText('Invalid email address');
+    } else {
+      setEmailError(false);
+      setEmailHelperText('');
+      setEmailValid(true);
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value.length < 8) {
+      setPasswordError(true);
+      setPasswordHelperText('Must be 8 or more characters');
+    } else {
+      setPasswordError(false);
+      setPasswordHelperText('');
+      setPasswordValid(true);
+    }
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
     console.log({
+      name: data.get('name'),
       email: data.get('email'),
       password: data.get('password'),
     });
@@ -51,58 +97,47 @@ export default function SignUp() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
+                  error={nameError}
+                  helperText={nameHelperText}
+                  onChange={handleNameChange}
                   autoFocus
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  id="name"
+                  label="Name"
+                  name="name"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={emailError}
+                  helperText={emailHelperText}
+                  onChange={handleEmailChange}
                   required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={passwordError}
+                  helperText={passwordHelperText}
+                  onChange={handlePasswordChange}
                   required
                   fullWidth
-                  name="password"
-                  label="Password"
                   type="password"
                   id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                  label="Password"
+                  name="password"
                 />
               </Grid>
             </Grid>
             <Button
+              disabled={!(nameValid && emailValid && passwordValid)}
               type="submit"
               fullWidth
               variant="contained"
@@ -121,3 +156,5 @@ export default function SignUp() {
     </ThemeProvider>
   );
 }
+
+export default SignUp;

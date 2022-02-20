@@ -30,6 +30,7 @@ function SignUp() {
     if (value.length < 3) {
       setNameError(true);
       setNameHelperText('Must be 3 or more characters');
+      setNameValid(false);
     } else {
       setNameError(false);
       setNameHelperText('');
@@ -42,6 +43,7 @@ function SignUp() {
     if (!validator.isEmail(value)) {
       setEmailError(true);
       setEmailHelperText('Invalid email address');
+      setEmailValid(false);
     } else {
       setEmailError(false);
       setEmailHelperText('');
@@ -54,6 +56,7 @@ function SignUp() {
     if (value.length < 8) {
       setPasswordError(true);
       setPasswordHelperText('Must be 8 or more characters');
+      setPasswordValid(false);
     } else {
       setPasswordError(false);
       setPasswordHelperText('');

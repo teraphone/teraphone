@@ -12,10 +12,44 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import validator from 'validator';
 
 const theme = createTheme();
 
 function SignIn() {
+  const [emailError, setEmailError] = React.useState(false);
+  const [emailHelperText, setEmailHelperText] = React.useState('');
+  const [emailValid, setEmailValid] = React.useState(false);
+  const [passwordError, setPasswordError] = React.useState(false);
+  const [passwordHelperText, setPasswordHelperText] = React.useState('');
+  const [passwordValid, setPasswordValid] = React.useState(false);
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (!validator.isEmail(value)) {
+      setEmailError(true);
+      setEmailHelperText('Invalid email address');
+      setEmailValid(false);
+    } else {
+      setEmailError(false);
+      setEmailHelperText('');
+      setEmailValid(true);
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    if (value.length < 1) {
+      setPasswordError(true);
+      setPasswordHelperText('Password is required');
+      setPasswordValid(false);
+    } else {
+      setPasswordError(false);
+      setPasswordHelperText('');
+      setPasswordValid(true);
+    }
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -23,6 +57,7 @@ function SignIn() {
     console.log({
       email: data.get('email'),
       password: data.get('password'),
+      remember: data.get('remember'),
     });
   };
 
@@ -54,27 +89,36 @@ function SignIn() {
               margin="normal"
               required
               fullWidth
+              autoComplete="email"
+              autoFocus
+              error={emailError}
+              helperText={emailHelperText}
+              onChange={handleEmailChange}
               id="email"
               label="Email Address"
               name="email"
-              autoComplete="email"
-              autoFocus
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
-              label="Password"
+              autoComplete="current-password"
+              error={passwordError}
+              helperText={passwordHelperText}
+              onChange={handlePasswordChange}
               type="password"
               id="password"
-              autoComplete="current-password"
+              label="Password"
+              name="password"
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
+              id="remember"
               label="Remember me"
+              name="remember"
             />
             <Button
+              disabled={!(emailValid && passwordValid)}
               type="submit"
               fullWidth
               variant="contained"

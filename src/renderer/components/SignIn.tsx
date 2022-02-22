@@ -13,8 +13,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
+import axios from '../api/axios';
 
 const theme = createTheme();
+
+type SignInRequest = {
+  email: string;
+  password: string;
+};
 
 function SignIn() {
   const [emailError, setEmailError] = React.useState(false);
@@ -59,6 +65,20 @@ function SignIn() {
       password: data.get('password'),
       remember: data.get('remember'),
     });
+    const request: SignInRequest = {
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+    };
+    const resp = axios
+      .post('/v1/public/login', request)
+      .then((response) => {
+        console.log(response);
+        return response;
+      })
+      .catch((error) => {
+        console.log(error);
+        return error;
+      });
   };
 
   return (

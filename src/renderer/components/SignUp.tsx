@@ -11,8 +11,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
+import axios from '../api/axios';
 
 const theme = createTheme();
+
+type SignUpRequest = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 function SignUp() {
   const [nameError, setNameError] = React.useState(false);
@@ -73,6 +80,23 @@ function SignUp() {
       email: data.get('email'),
       password: data.get('password'),
     });
+    const request: SignUpRequest = {
+      name: data.get('name') as string,
+      email: data.get('email') as string,
+      password: data.get('password') as string,
+    };
+    const resp = axios
+      .post('/v1/public/signup', request)
+      .then((response) => {
+        // eslint-disable-next-line no-console
+        console.log(response);
+        return response;
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.log(error);
+        return error;
+      });
   };
 
   return (

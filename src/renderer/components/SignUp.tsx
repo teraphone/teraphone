@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -31,6 +31,9 @@ function SignUp() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordHelperText, setPasswordHelperText] = React.useState('');
   const [passwordValid, setPasswordValid] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const navigate = useNavigate();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -85,18 +88,35 @@ function SignUp() {
       email: data.get('email') as string,
       password: data.get('password') as string,
     };
-    const resp = axios
+    axios
       .post('/v1/public/signup', request)
       .then((response) => {
         // eslint-disable-next-line no-console
         console.log(response);
-        return response;
+        setSubmitError(false);
+        navigate('/home');
+        return true;
       })
       .catch((error) => {
         // eslint-disable-next-line no-console
         console.log(error);
-        return error;
+        setErrorMessage(error.response.data);
+        setSubmitError(true);
+        return false;
       });
+  };
+
+  const SubmitError = () => {
+    if (submitError) {
+      return (
+        <Box mt={5}>
+          <Typography variant="body1" color="error" align="center">
+            {errorMessage}
+          </Typography>
+        </Box>
+      );
+    }
+    return null;
   };
 
   return (
@@ -178,6 +198,7 @@ function SignUp() {
               </Grid>
             </Grid>
           </Box>
+          <SubmitError />
         </Box>
       </Container>
     </ThemeProvider>

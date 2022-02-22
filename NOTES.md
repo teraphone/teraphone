@@ -9,7 +9,8 @@ install with:
 
 Follow the instructions [here](https://mui.com/getting-started/installation/).
 
-# login page
+# TODO:
+- [ ] save JWT on successful login/signup
 
 
 

@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
 import axios from '../api/axios';
+import useAuth from '../hooks/useAuth';
 
 const theme = createTheme();
 
@@ -32,6 +33,7 @@ function SignIn() {
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -77,6 +79,11 @@ function SignIn() {
       .then((response) => {
         // eslint-disable-next-line no-console
         console.log(response);
+        auth.setToken(response.data.token);
+        // eslint-disable-next-line no-console
+        console.log(`bbtoken`);
+        // eslint-disable-next-line no-console
+        console.log(auth);
         setSubmitError(false);
         navigate('/home');
         return true;

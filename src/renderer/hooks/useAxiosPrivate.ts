@@ -3,15 +3,17 @@ import { axiosPrivate } from '../api/axios';
 import useAuth from './useAuth';
 
 const useAxiosPrivate = () => {
-  const { token } = useAuth();
+  const auth = useAuth();
 
-  React.useEffect(() => {
+  const updateAuthHeader = () => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers) {
           config.headers = {};
         }
-        config.headers.Authorization = `Bearer ${token}`;
+        // eslint-disable-next-line no-console
+        console.log(`Bearer ${auth.state.token}`);
+        config.headers.Authorization = `Bearer ${auth.state.token}`;
 
         return config;
       },
@@ -22,7 +24,10 @@ const useAxiosPrivate = () => {
     return () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
     };
-  }, [token]);
+  };
+
+  updateAuthHeader(); // initialize header
+  React.useEffect(updateAuthHeader, [auth.state]);
 
   return axiosPrivate;
 };

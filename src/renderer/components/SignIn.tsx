@@ -79,7 +79,8 @@ function SignIn() {
       .then((response) => {
         // eslint-disable-next-line no-console
         console.log(response);
-        auth.setToken(response.data.token);
+        const { token, expiration } = response.data;
+        auth.setState({ token, expiration });
         // eslint-disable-next-line no-console
         console.log(`bbtoken`);
         // eslint-disable-next-line no-console

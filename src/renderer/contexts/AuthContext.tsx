@@ -1,19 +1,21 @@
 import * as React from 'react';
 
-type Auth = {
+type AuthState = {
   token: string;
-  setToken: (s: string) => void;
+  expiration: number;
 };
 
-const AuthContext = React.createContext({
-  token: '',
-  setToken: () => {},
-} as Auth);
+type Auth = {
+  state: AuthState;
+  setState: (s: AuthState) => void;
+};
+
+const AuthContext = React.createContext({} as Auth);
 
 export const AuthProvider: React.FC = ({ children }) => {
-  const [token, setToken] = React.useState('');
+  const [state, setState] = React.useState({} as AuthState);
   return (
-    <AuthContext.Provider value={{ token, setToken }}>
+    <AuthContext.Provider value={{ state, setState }}>
       {children}
     </AuthContext.Provider>
   );

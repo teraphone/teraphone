@@ -1,4 +1,5 @@
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { AxiosInstance } from 'axios';
+import * as models from '../models/models';
 
 // Welcome endpoint:
 // PrivateWelcome               GET     /v1/private/
@@ -37,3 +38,44 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 // GetLiveKitRooms              GET     /v1/roomservice/rooms
 // JoinLiveKitRoom              GET     /v1/roomservice/rooms/:group_id/:room_id/join
 // GetLiveKitRoomParticipants   GET     /v1/roomservice/rooms/:group_id/:room_id
+
+export type CreateGroupResponse = {
+  success: boolean;
+  group: models.Group;
+};
+
+export function CreateGroup(client: AxiosInstance, name: string) {
+  const config = {
+    data: { name },
+  };
+  return client.post('/groups', config);
+}
+
+export type GetGroupsResponse = {
+  success: boolean;
+  groups: models.Group[];
+};
+
+export function GetGroups(client: AxiosInstance) {
+  return client.get('/v1/private/groups');
+}
+
+export type GetGroupUsersResponse = {
+  success: boolean;
+  users: models.GroupUserInfo[];
+};
+
+export function GetGroupUsers(client: AxiosInstance, group_id: number) {
+  const url = `/v1/private/groups/${group_id}/users`;
+  return client.get(url);
+}
+
+export type CreateGroupInviteResponse = {
+  success: boolean;
+  group_invite: models.GroupInvite;
+};
+
+export function CreateGroupInvite(client: AxiosInstance, group_id: number) {
+  const url = `/v1/private/groups/${group_id}/invites`;
+  return client.post(url);
+}

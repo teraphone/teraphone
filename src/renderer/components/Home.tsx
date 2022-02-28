@@ -3,10 +3,26 @@ import * as React from 'react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import * as requests from '../requests/requests';
+import * as models from '../models/models';
+
+type RoomInfo = {
+  room: models.Room;
+  users: models.RoomUserInfo[];
+};
+
+type GroupInfo = {
+  group: models.Group;
+  users: models.GroupUserInfo[];
+  rooms: RoomInfo[];
+};
+
+type GroupsInfo = GroupInfo[];
+// todo: getGroups() should be refactored into getGroupsInfo() and should populate the a GroupsInfo object
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const auth = useAuth();
+  const [groups, setGroups] = React.useState({} as requests.GetGroupsResponse);
 
   const setAuthExpire = () => {
     const { token } = auth.state;
@@ -34,18 +50,15 @@ const Home = () => {
       });
   };
 
-  let groups = {} as requests.GetGroupsResponse;
-  const groups2 = {} as requests.GetGroupsResponse;
-
   const getGroups = () => {
     requests
       .GetGroups(axiosPrivate)
       .then((response) => {
-        groups = response.data;
+        setGroups(response.data);
         return true;
       })
       .catch(() => {
-        groups.success = false;
+        setGroups({ success: false } as requests.GetGroupsResponse);
         return false;
       });
   };

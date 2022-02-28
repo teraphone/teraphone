@@ -51,6 +51,17 @@ export type RoomUser = {
   can_see: boolean;
 };
 
+export type RoomUserInfo = {
+  name: string;
+  created_at: string;
+  updated_at: string;
+  room_id: number;
+  user_id: number;
+  room_role_id: number;
+  can_join: boolean;
+  can_see: boolean;
+};
+
 export type GroupInvite = {
   id: number;
   created_at: string;

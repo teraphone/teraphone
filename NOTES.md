@@ -9,16 +9,22 @@ install with:
 
 Follow the instructions [here](https://mui.com/getting-started/installation/).
 
+# UI elements
+
+## Groups
+
+Groups can use [vertical tabs](https://mui.com/components/tabs/#vertical-tabs).
+
 # TODO:
 - [x] save JWT on successful login/signup
-- [ ] on successful login/signup, redirect to /home
-  - [ ] request data from api server...
-    - [ ] get groups
-    - [ ] for each group
-      - [ ] get users, user roles
-      - [ ] get rooms
-      - [ ] for each room
-        - [ ] get user roles
+- [x] on successful login/signup, redirect to /home
+  - [x] request data from api server...
+    - [x] get groups
+    - [x] for each group
+      - [x] get users, user roles
+      - [x] get rooms
+      - [x] for each room
+        - [x] get user roles
   - [ ] UI elements
     - [ ] groups
       - [ ] current groups

@@ -5,23 +5,10 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import * as requests from '../requests/requests';
 import * as models from '../models/models';
 
-type RoomInfo = {
-  room: models.Room;
-  users: models.RoomUserInfo[];
-};
-
-type GroupInfo = {
-  group: models.Group;
-  users: models.GroupUserInfo[];
-  rooms: RoomInfo[];
-};
-
-type GroupsInfo = GroupInfo[];
-
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const auth = useAuth();
-  const [groupsInfo, setGroupsInfo] = React.useState([] as GroupsInfo);
+  const [groupsInfo, setGroupsInfo] = React.useState([] as models.GroupsInfo);
 
   const setAuthExpire = () => {
     const { token } = auth.state;
@@ -56,7 +43,7 @@ const Home = () => {
     const handleRoom = async (room: models.Room) => {
       const rureq = await requests.GetRoomUsers(axiosPrivate, groupId, room.id);
       const { room_users: users } = rureq.data as requests.GetRoomUsersResponse;
-      return { users, room } as RoomInfo;
+      return { users, room } as models.RoomInfo;
     };
 
     const roomsInfo = await Promise.all(rooms.map(handleRoom));
@@ -72,7 +59,7 @@ const Home = () => {
       const { group_users: users } =
         ureq.data as requests.GetGroupUsersResponse;
       const rooms = await getRoomsInfo(group.id);
-      return { group, users, rooms } as GroupInfo;
+      return { group, users, rooms } as models.GroupInfo;
     };
 
     setGroupsInfo(await Promise.all(groups.map(handleGroup)));

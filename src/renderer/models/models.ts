@@ -51,16 +51,7 @@ export type RoomUser = {
   can_see: boolean;
 };
 
-export type RoomUserInfo = {
-  name: string;
-  created_at: string;
-  updated_at: string;
-  room_id: number;
-  user_id: number;
-  room_role_id: number;
-  can_join: boolean;
-  can_see: boolean;
-};
+export type RoomUserInfo = { name: string } & RoomUser;
 
 export type GroupInvite = {
   id: number;
@@ -118,3 +109,16 @@ export const InviteStatusMap = {
   accepted: 2,
   expired: 3,
 };
+
+export type RoomInfo = {
+  room: Room;
+  users: RoomUserInfo[];
+};
+
+export type GroupInfo = {
+  group: Group;
+  users: GroupUserInfo[];
+  rooms: RoomInfo[];
+};
+
+export type GroupsInfo = GroupInfo[];

@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
@@ -12,10 +11,9 @@ interface GroupTabsProps {
 }
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
   index: number;
   value: number;
-  groupInfo?: models.GroupInfo;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -47,20 +45,22 @@ function a11yProps(index: number) {
 
 export default function GroupTabs(props: GroupTabsProps) {
   const [value, setValue] = React.useState(0);
+  const { groupsInfo } = props;
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  function handleTabs(groupsInfo: models.GroupsInfo) {
+  function handleTabs() {
     const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
       const { id, name } = groupInfo.group;
+
       return <Tab key={id} label={name} {...a11yProps(index)} />;
     });
     return tabs;
   }
 
-  function handleTabPanels(groupsInfo: models.GroupsInfo) {
+  function handleTabPanels() {
     const tabPanels = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
       const { id, name } = groupInfo.group;
       return (
@@ -89,9 +89,9 @@ export default function GroupTabs(props: GroupTabsProps) {
         aria-label="Vertical tabs example"
         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
-        {handleTabs(props.groupsInfo)}
+        {handleTabs()}
       </Tabs>
-      {handleTabPanels(props.groupsInfo)}
+      {handleTabPanels()}
     </Box>
   );
 }

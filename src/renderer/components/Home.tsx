@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Button from '@mui/material/Button';
 import * as React from 'react';
 import useAuth from '../hooks/useAuth';
@@ -25,12 +26,10 @@ const Home = () => {
     axiosPrivate
       .get('/v1/private')
       .then((response) => {
-        // eslint-disable-next-line no-console
         console.log(response);
         return true;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
         console.log(error);
 
         return false;

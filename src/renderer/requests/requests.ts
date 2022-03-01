@@ -62,11 +62,35 @@ export function GetGroups(client: AxiosInstance) {
 
 export type GetGroupUsersResponse = {
   success: boolean;
-  users: models.GroupUserInfo[];
+  group_users: models.GroupUserInfo[];
 };
 
 export function GetGroupUsers(client: AxiosInstance, group_id: number) {
   const url = `/v1/private/groups/${group_id}/users`;
+  return client.get(url);
+}
+
+export type GetRoomsResponse = {
+  success: boolean;
+  rooms: models.Room[];
+};
+
+export function GetRooms(client: AxiosInstance, group_id: number) {
+  const url = `/v1/private/groups/${group_id}/rooms`;
+  return client.get(url);
+}
+
+export type GetRoomUsersResponse = {
+  success: boolean;
+  room_users: models.RoomUserInfo[];
+};
+
+export function GetRoomUsers(
+  client: AxiosInstance,
+  group_id: number,
+  room_id: number
+) {
+  const url = `/v1/private/groups/${group_id}/rooms/${room_id}/users`;
   return client.get(url);
 }
 

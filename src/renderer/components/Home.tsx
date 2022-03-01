@@ -17,12 +17,11 @@ type GroupInfo = {
 };
 
 type GroupsInfo = GroupInfo[];
-// todo: getGroups() should be refactored into getGroupsInfo() and should populate the a GroupsInfo object
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const auth = useAuth();
-  const [groups, setGroups] = React.useState({} as requests.GetGroupsResponse);
+  const [groupsInfo, setGroupsInfo] = React.useState([] as GroupsInfo);
 
   const setAuthExpire = () => {
     const { token } = auth.state;
@@ -50,27 +49,43 @@ const Home = () => {
       });
   };
 
-  const getGroups = () => {
-    requests
-      .GetGroups(axiosPrivate)
-      .then((response) => {
-        setGroups(response.data);
-        return true;
-      })
-      .catch(() => {
-        setGroups({ success: false } as requests.GetGroupsResponse);
-        return false;
-      });
+  const getRoomsInfo = async (groupId: number) => {
+    const rreq = await requests.GetRooms(axiosPrivate, groupId);
+    const { rooms } = rreq.data as requests.GetRoomsResponse;
+
+    const handleRoom = async (room: models.Room) => {
+      const rureq = await requests.GetRoomUsers(axiosPrivate, groupId, room.id);
+      const { room_users: users } = rureq.data as requests.GetRoomUsersResponse;
+      return { users, room } as RoomInfo;
+    };
+
+    const roomsInfo = await Promise.all(rooms.map(handleRoom));
+    return roomsInfo;
+  };
+
+  const getGroupsInfo = async () => {
+    const greq = await requests.GetGroups(axiosPrivate);
+    const { groups } = greq.data as requests.GetGroupsResponse;
+
+    const handleGroup = async (group: models.Group) => {
+      const ureq = await requests.GetGroupUsers(axiosPrivate, group.id);
+      const { group_users: users } =
+        ureq.data as requests.GetGroupUsersResponse;
+      const rooms = await getRoomsInfo(group.id);
+      return { group, users, rooms } as GroupInfo;
+    };
+
+    setGroupsInfo(await Promise.all(groups.map(handleGroup)));
   };
 
   React.useEffect(() => {
-    console.log('useEffect -> getGroups');
-    getGroups(); // this will run just once
+    console.log('useEffect -> getGroupsInfo');
+    getGroupsInfo(); // this will run just once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logGroups = () => {
-    console.log(groups);
+    console.log(groupsInfo);
   };
 
   return (
@@ -89,7 +104,7 @@ const Home = () => {
       <Button variant="contained" onClick={pingPrivateWelcome}>
         Ping Private Welcome
       </Button>
-      <Button variant="contained" onClick={getGroups}>
+      <Button variant="contained" onClick={getGroupsInfo}>
         Get Groups
       </Button>
       <Button variant="contained" onClick={logGroups}>

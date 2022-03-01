@@ -4,6 +4,7 @@ import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import * as requests from '../requests/requests';
 import * as models from '../models/models';
+import GroupTabs from './GroupTabs';
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -97,6 +98,7 @@ const Home = () => {
       <Button variant="contained" onClick={logGroups}>
         Log Groups
       </Button>
+      <GroupTabs groupsInfo={groupsInfo} />
     </div>
   );
 };

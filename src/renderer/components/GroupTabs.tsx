@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
+import AddIcon from '@mui/icons-material/Add';
 import * as models from '../models/models';
 
 interface GroupTabsProps {
@@ -53,14 +54,29 @@ export default function GroupTabs(props: GroupTabsProps) {
     setValue(newValue);
   };
 
-  // function handleTabs() {
-  //   const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
-  //     const { id, name } = groupInfo.group;
+  function addGroupTab() {
+    return (
+      <Tooltip title="Add a Group" key="add-group" placement="right" arrow>
+        <Tab
+          icon={
+            <Avatar>
+              <AddIcon />
+            </Avatar>
+          }
+          key="add-group"
+          {...a11yProps(groupsInfo.length)}
+        />
+      </Tooltip>
+    );
+  }
 
-  //     return <Tab key={id} label={name} {...a11yProps(index)} />;
-  //   });
-  //   return tabs;
-  // }
+  function addGroupTabPanel() {
+    return (
+      <TabPanel key="add-group" value={value} index={groupsInfo.length}>
+        Add a Group
+      </TabPanel>
+    );
+  }
 
   function handleTabs() {
     const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
@@ -76,6 +92,7 @@ export default function GroupTabs(props: GroupTabsProps) {
         </Tooltip>
       );
     });
+    tabs.push(addGroupTab());
     return tabs;
   }
 
@@ -88,6 +105,7 @@ export default function GroupTabs(props: GroupTabsProps) {
         </TabPanel>
       );
     });
+    tabPanels.push(addGroupTabPanel());
     return tabPanels;
   }
 

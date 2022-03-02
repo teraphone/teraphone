@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
@@ -9,32 +11,7 @@ import GroupTabs from './GroupTabs';
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
-  const auth = useAuth();
   const [groupsInfo, setGroupsInfo] = React.useState([] as models.GroupsInfo);
-
-  const setAuthExpire = () => {
-    const { token } = auth.state;
-    auth.setState({ token, expiration: 0 });
-  };
-
-  const setAuthExpireSoon = () => {
-    const { token } = auth.state;
-    auth.setState({ token, expiration: Math.floor(Date.now() / 1000) + 1000 });
-  };
-
-  const pingPrivateWelcome = () => {
-    axiosPrivate
-      .get('/v1/private')
-      .then((response) => {
-        console.log(response);
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-
-        return false;
-      });
-  };
 
   const getRoomsInfo = async (groupId: number) => {
     const rreq = await requests.GetRooms(axiosPrivate, groupId);
@@ -71,33 +48,18 @@ const Home = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const logGroups = () => {
-    console.log(groupsInfo);
-  };
-
   return (
     <div>
-      <h1>Home</h1>
-      <p>Unix time: {Math.floor(Date.now() / 1000)}</p>
-      <p>Expiration: {auth.state.expiration}</p>
-      <p>Token: {auth.state.token}</p>
-      {/* <p>{groups}</p> */}
-      <Button variant="contained" onClick={setAuthExpire}>
-        Set Auth Expire
-      </Button>
-      <Button variant="contained" onClick={setAuthExpireSoon}>
-        Set Auth Expire Soon
-      </Button>
-      <Button variant="contained" onClick={pingPrivateWelcome}>
-        Ping Private Welcome
-      </Button>
-      <Button variant="contained" onClick={getGroupsInfo}>
-        Get Groups
-      </Button>
-      <Button variant="contained" onClick={logGroups}>
-        Log Groups
-      </Button>
-      <GroupTabs groupsInfo={groupsInfo} />
+      <Box
+        sx={{
+          flexGrow: 1,
+          bgcolor: 'background.paper',
+          display: 'flex',
+          height: 500,
+        }}
+      >
+        <GroupTabs groupsInfo={groupsInfo} />
+      </Box>
     </div>
   );
 };

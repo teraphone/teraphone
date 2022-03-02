@@ -7,7 +7,9 @@ import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
+import Stack from '@mui/material/Stack';
 import * as models from '../models/models';
+import GroupTabPanel from './GroupTabPanel';
 
 interface GroupTabsProps {
   groupsInfo: models.GroupsInfo;
@@ -96,39 +98,63 @@ export default function GroupTabs(props: GroupTabsProps) {
     return tabs;
   }
 
-  function handleTabPanels() {
+  function GroupTabPanels() {
     const tabPanels = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
       const { id, name } = groupInfo.group;
       return (
-        <TabPanel key={id} value={value} index={index}>
+        <GroupTabPanel
+          key={id}
+          value={value}
+          index={index}
+          groupinfo={groupInfo}
+        >
           {name}
-        </TabPanel>
+        </GroupTabPanel>
       );
     });
     tabPanels.push(addGroupTabPanel());
-    return tabPanels;
+    return <>{tabPanels}</>;
   }
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        bgcolor: 'background.paper',
-        display: 'flex',
-        height: 224,
-      }}
-    >
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
-      >
-        {handleTabs()}
-      </Tabs>
-      {handleTabPanels()}
-    </Box>
+    <>
+      <Stack>
+        <Box
+          sx={{
+            // center the text vertically and horizontally
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: 42,
+            backgroundColor: 'background.paper',
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            Groups
+          </Typography>
+        </Box>
+
+        <Tabs
+          orientation="vertical"
+          variant="scrollable"
+          value={value}
+          onChange={handleChange}
+          aria-label="Vertical tabs example"
+          sx={{
+            borderRight: 1,
+            borderColor: 'divider',
+          }}
+        >
+          {handleTabs()}
+        </Tabs>
+      </Stack>
+      <GroupTabPanels />
+    </>
   );
 }

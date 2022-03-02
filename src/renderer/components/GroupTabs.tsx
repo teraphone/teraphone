@@ -4,6 +4,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 import * as models from '../models/models';
 
 interface GroupTabsProps {
@@ -51,11 +53,28 @@ export default function GroupTabs(props: GroupTabsProps) {
     setValue(newValue);
   };
 
+  // function handleTabs() {
+  //   const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
+  //     const { id, name } = groupInfo.group;
+
+  //     return <Tab key={id} label={name} {...a11yProps(index)} />;
+  //   });
+  //   return tabs;
+  // }
+
   function handleTabs() {
     const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
       const { id, name } = groupInfo.group;
 
-      return <Tab key={id} label={name} {...a11yProps(index)} />;
+      return (
+        <Tooltip title={name} key={id} placement="right" arrow>
+          <Tab
+            icon={<Avatar>{name[0]}</Avatar>}
+            key={id}
+            {...a11yProps(index)}
+          />
+        </Tooltip>
+      );
     });
     return tabs;
   }

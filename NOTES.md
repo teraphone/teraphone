@@ -15,6 +15,18 @@ Follow the instructions [here](https://mui.com/getting-started/installation/).
 
 Groups can use [vertical tabs](https://mui.com/components/tabs/#vertical-tabs).
 
+## Rooms
+
+Rooms can use a [list](https://mui.com/components/lists/). Users can show up as nested list items. 
+
+## Participants
+
+Use [account menu](https://mui.com/components/menus/#account-menu) to mute/unmute etc.
+
+## Bottom navigation
+
+Use [bottom navigation](https://mui.com/components/bottom-navigation/) for mute/deafen/disconnect buttons... or should these go somewhere else?
+
 # TODO:
 - [x] save JWT on successful login/signup
 - [x] on successful login/signup, redirect to /home

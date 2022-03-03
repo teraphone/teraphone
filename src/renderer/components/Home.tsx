@@ -1,9 +1,6 @@
 /* eslint-disable no-console */
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import * as requests from '../requests/requests';
 import * as models from '../models/models';

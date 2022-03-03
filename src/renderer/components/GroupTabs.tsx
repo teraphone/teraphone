@@ -100,16 +100,14 @@ export default function GroupTabs(props: GroupTabsProps) {
 
   function GroupTabPanels() {
     const tabPanels = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
-      const { id, name } = groupInfo.group;
+      const { id } = groupInfo.group;
       return (
         <GroupTabPanel
           key={id}
           value={value}
           index={index}
           groupinfo={groupInfo}
-        >
-          {name}
-        </GroupTabPanel>
+        />
       );
     });
     tabPanels.push(addGroupTabPanel());

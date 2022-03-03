@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import GroupsIcon from '@mui/icons-material/Groups';
-import { useCallback } from 'react';
+import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 
@@ -12,7 +12,7 @@ function GroupRoom(props: { roominfo: models.RoomInfo }) {
   const { room, users } = roominfo;
   const { id, name, group_id: groupId } = room;
 
-  const handleClick = useCallback(() => {
+  const handleClick = React.useCallback(() => {
     console.log('clicked room', roominfo);
   }, [roominfo]);
 

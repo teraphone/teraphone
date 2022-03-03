@@ -113,6 +113,7 @@ export const InviteStatusMap = {
 export type RoomInfo = {
   room: Room;
   users: RoomUserInfo[];
+  token: string;
 };
 
 export type GroupInfo = {

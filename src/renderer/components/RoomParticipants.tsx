@@ -13,7 +13,7 @@ function RoomParticipants(props: { users: models.RoomUserInfo[] }) {
     const userItems = users.map((userinfo: models.RoomUserInfo) => {
       const { name, user_id: id } = userinfo;
       return (
-        <ListItemButton key={`user-${id}`}>
+        <ListItemButton key={`user-${id}`} dense>
           <ListItemIcon>
             <Avatar sx={{ width: 24, height: 24 }}>{name[0]}</Avatar>
           </ListItemIcon>

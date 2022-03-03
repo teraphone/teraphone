@@ -1,10 +1,6 @@
 import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import GroupsIcon from '@mui/icons-material/Groups';
 import * as models from '../models/models';
-import RoomParticipants from './RoomParticipants';
+import GroupRoom from './GroupRoom';
 
 function GroupRooms(props: { groupinfo: models.GroupInfo }) {
   const { groupinfo } = props;
@@ -12,19 +8,9 @@ function GroupRooms(props: { groupinfo: models.GroupInfo }) {
 
   function handleRooms() {
     const roomItems = rooms.map((roominfo: models.RoomInfo) => {
-      const { room, users } = roominfo;
-      const { name, id } = room;
-      return (
-        <div key={`room-${id}`}>
-          <ListItemButton>
-            <ListItemIcon>
-              <GroupsIcon />
-            </ListItemIcon>
-            <ListItemText primary={name} />
-          </ListItemButton>
-          <RoomParticipants users={users} key={`room-${id}-participants`} />
-        </div>
-      );
+      const groupId = roominfo.room.group_id;
+      const roomId = roominfo.room.id;
+      return <GroupRoom roominfo={roominfo} key={`${groupId}/${roomId}`} />;
     });
 
     return roomItems;

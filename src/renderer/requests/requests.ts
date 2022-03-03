@@ -103,3 +103,17 @@ export function CreateGroupInvite(client: AxiosInstance, group_id: number) {
   const url = `/v1/private/groups/${group_id}/invites`;
   return client.post(url);
 }
+
+export type JoinLiveKitRoomResponse = {
+  success: boolean;
+  token: string;
+};
+
+export function JoinLiveKitRoom(
+  client: AxiosInstance,
+  group_id: number,
+  room_id: number
+) {
+  const url = `/v1/roomservice/rooms/${group_id}/${room_id}/join`;
+  return client.get(url);
+}

@@ -17,7 +17,13 @@ const Home = () => {
     const handleRoom = async (room: models.Room) => {
       const rureq = await requests.GetRoomUsers(axiosPrivate, groupId, room.id);
       const { room_users: users } = rureq.data as requests.GetRoomUsersResponse;
-      return { users, room } as models.RoomInfo;
+      const treq = await requests.JoinLiveKitRoom(
+        axiosPrivate,
+        groupId,
+        room.id
+      );
+      const { token } = treq.data as requests.JoinLiveKitRoomResponse;
+      return { users, room, token } as models.RoomInfo;
     };
 
     const roomsInfo = await Promise.all(rooms.map(handleRoom));
@@ -42,6 +48,7 @@ const Home = () => {
   React.useEffect(() => {
     console.log('useEffect -> getGroupsInfo');
     getGroupsInfo(); // this will run just once
+    console.log('groupsInfo', groupsInfo);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

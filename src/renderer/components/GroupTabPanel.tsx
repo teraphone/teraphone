@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as models from '../models/models';

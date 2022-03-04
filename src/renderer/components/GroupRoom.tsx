@@ -14,8 +14,14 @@ const connectConfigMeta: Livekit.RoomConnectOptions = {
 
 const connectConfig: Livekit.RoomConnectOptions = {};
 
-function GroupRoom(props: { roominfo: models.RoomInfo }) {
-  const { roominfo } = props;
+export type ActiveState = {
+  activeRoom: number;
+  setActiveRoom: (x: number) => void;
+};
+
+function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
+  const { roominfo, active } = props;
+  const { activeRoom, setActiveRoom } = active;
   const { room, users, token } = roominfo;
   const { id, name, group_id: groupId } = room;
   const livekitRoom = React.useMemo(() => {
@@ -24,17 +30,29 @@ function GroupRoom(props: { roominfo: models.RoomInfo }) {
 
   // TODO: this isn't right. probably need to use livekit react library
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     const url = 'wss://demo.dally.app';
-
-    livekitRoom.connect(url, token, { autoSubscribe: true });
+    if (activeRoom === id) {
+      livekitRoom
+        .connect(url, token, { autoSubscribe: false })
+        .then(() => {
+          console.log(`connected to room ${id}`, livekitRoom);
+          return true;
+        })
+        .catch(() => {
+          return false;
+        });
+    } else if (livekitRoom.state !== 'disconnected') {
+      livekitRoom.disconnect();
+    }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [activeRoom]);
 
   const handleClick = React.useCallback(() => {
-    console.log('clicked room', roominfo, livekitRoom);
-  }, [roominfo, livekitRoom]);
+    setActiveRoom(id);
+    console.log(`clicked room ${id}`, roominfo);
+  }, [setActiveRoom, id, roominfo]);
 
   return (
     <>

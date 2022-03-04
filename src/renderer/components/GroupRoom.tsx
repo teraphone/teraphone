@@ -44,7 +44,7 @@ function GroupRoom(props: { roominfo: models.RoomInfo }) {
         </ListItemIcon>
         <ListItemText primary={name} />
       </ListItemButton>
-      <RoomParticipants users={users} key={`${groupId}/${id}-participants`} />
+      {/* <RoomParticipants users={users} key={`${groupId}/${id}-participants`} /> */}
     </>
   );
 }

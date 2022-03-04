@@ -28,7 +28,7 @@ function GroupRoom(props: { roominfo: models.RoomInfo }) {
     const url = 'wss://demo.dally.app';
 
     livekitRoom.connect(url, token, { autoSubscribe: true });
-    // setLivekitRoom(new Livekit.Room());
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

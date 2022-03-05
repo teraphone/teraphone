@@ -5,14 +5,10 @@ import ListItemText from '@mui/material/ListItemText';
 import GroupsIcon from '@mui/icons-material/Groups';
 import * as React from 'react';
 import * as Livekit from 'livekit-client';
+import { useParticipant } from 'livekit-react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
-
-const connectConfigMeta: Livekit.RoomConnectOptions = {
-  autoSubscribe: true,
-};
-
-const connectConfig: Livekit.RoomConnectOptions = {};
+import useRoom from '../hooks/useRoom';
 
 export type ActiveState = {
   activeRoom: number;
@@ -22,37 +18,49 @@ export type ActiveState = {
 function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
   const { roominfo, active } = props;
   const { activeRoom, setActiveRoom } = active;
-  const { room, users, token } = roominfo;
-  const { id, name, group_id: groupId } = room;
-  const livekitRoom = React.useMemo(() => {
-    return new Livekit.Room();
-  }, []);
+  const connectConfig: Livekit.ConnectOptions = {
+    autoSubscribe: true,
+    adaptiveStream: true,
+    autoManageVideo: true,
+    dynacast: true,
+    audio: true,
+    video: false,
+  };
+  const url = 'wss://demo.dally.app';
+  const { connect, isConnecting, room, error, participants, audioTracks } =
+    useRoom();
 
-  // TODO: this isn't right. probably need to use livekit react library
-
-  React.useMemo(() => {
-    const url = 'wss://demo.dally.app';
-    if (activeRoom === id) {
-      livekitRoom
-        .connect(url, token, { autoSubscribe: false })
+  const handleClick = () => {
+    const connectRoom = () => {
+      connect(url, roominfo.token, connectConfig)
         .then(() => {
-          console.log(`connected to room ${id}`, livekitRoom);
+          console.log(`connected to room ${roominfo.room.id}`, room);
+          // Note: the room being logged to console is stale. setRoom hasn't run yet.
+          setActiveRoom(roominfo.room.id);
           return true;
         })
         .catch(() => {
           return false;
         });
-    } else if (livekitRoom.state !== 'disconnected') {
-      livekitRoom.disconnect();
+    };
+
+    console.log(`clicked room ${roominfo.room.id}`, roominfo);
+
+    // if changing rooms: disconnect first, then connect
+    if (activeRoom !== roominfo.room.id) {
+      if (room?.state) {
+        console.log(
+          `disconnecting from room ${activeRoom} and connecting to room ${roominfo.room.id}`
+        );
+        room.disconnect();
+      }
+      connectRoom();
+
+      // else already connected
+    } else {
+      console.log(`already connected to room ${roominfo.room.id}`, room);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeRoom]);
-
-  const handleClick = React.useCallback(() => {
-    setActiveRoom(id);
-    console.log(`clicked room ${id}`, roominfo);
-  }, [setActiveRoom, id, roominfo]);
+  };
 
   return (
     <>
@@ -60,7 +68,7 @@ function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
         <ListItemIcon>
           <GroupsIcon />
         </ListItemIcon>
-        <ListItemText primary={name} />
+        <ListItemText primary={roominfo.room.name} />
       </ListItemButton>
       {/* <RoomParticipants users={users} key={`${groupId}/${id}-participants`} /> */}
     </>

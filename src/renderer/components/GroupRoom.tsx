@@ -49,10 +49,12 @@ function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
     // if changing rooms: disconnect first, then connect
     if (activeRoom !== roominfo.room.id) {
       if (room?.state) {
-        console.log(
-          `disconnecting from room ${activeRoom} and connecting to room ${roominfo.room.id}`
-        );
-        room.disconnect();
+        if (room.state !== 'disconnected') {
+          console.log(
+            `disconnecting from room ${activeRoom} and connecting to room ${roominfo.room.id}`
+          );
+          room.disconnect();
+        }
       }
       connectRoom();
 

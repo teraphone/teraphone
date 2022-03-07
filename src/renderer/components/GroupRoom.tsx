@@ -17,6 +17,9 @@ export type ActiveState = {
 
 function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
   const { roominfo, active } = props;
+  const { users } = roominfo;
+  const groupId = roominfo.room.group_id;
+  const { id } = roominfo.room;
   const { activeRoom, setActiveRoom } = active;
   const connectConfig: Livekit.ConnectOptions = {
     autoSubscribe: true,
@@ -64,6 +67,15 @@ function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
     }
   };
 
+  const showUsers = () => {
+    if (activeRoom === roominfo.room.id) {
+      return (
+        <RoomParticipants users={users} key={`${groupId}/${id}-participants`} />
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <ListItemButton dense onClick={handleClick}>
@@ -72,7 +84,7 @@ function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
         </ListItemIcon>
         <ListItemText primary={roominfo.room.name} />
       </ListItemButton>
-      {/* <RoomParticipants users={users} key={`${groupId}/${id}-participants`} /> */}
+      {showUsers()}
     </>
   );
 }

@@ -15,6 +15,7 @@ function RoomParticipant(props: {
   const { userinfo, participant } = props;
   const { name } = userinfo;
   const participantState: ParticipantState = useParticipant(participant);
+  const speech = participantState.isSpeaking ? ' 🗣' : '';
 
   const handleClick = React.useCallback(() => {
     console.log('clicked user', userinfo, participantState);
@@ -25,7 +26,7 @@ function RoomParticipant(props: {
       <ListItemIcon>
         <Avatar sx={{ width: 24, height: 24 }}>{name[0]}</Avatar>
       </ListItemIcon>
-      <ListItemText primary={name} />
+      <ListItemText primary={name + speech} />
     </ListItemButton>
   );
 }

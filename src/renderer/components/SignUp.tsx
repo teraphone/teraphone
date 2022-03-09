@@ -16,10 +16,11 @@ import useAuth from '../hooks/useAuth';
 
 const theme = createTheme();
 
-type SignUpRequest = {
+type SignUpWithInviteRequest = {
   name: string;
   email: string;
   password: string;
+  invite_code: string;
 };
 
 function SignUp() {
@@ -32,6 +33,9 @@ function SignUp() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordHelperText, setPasswordHelperText] = React.useState('');
   const [passwordValid, setPasswordValid] = React.useState(false);
+  const [inviteCodeError, setInviteCodeError] = React.useState(false);
+  const [inviteCodeHelperText, setInviteCodeHelperText] = React.useState('');
+  const [inviteCodeValid, setInviteCodeValid] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
@@ -76,6 +80,21 @@ function SignUp() {
     }
   };
 
+  const handleInviteCodeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+    if (value.length < 16) {
+      setInviteCodeError(true);
+      setInviteCodeHelperText('Must be 16 digits');
+      setInviteCodeValid(false);
+    } else {
+      setInviteCodeError(false);
+      setInviteCodeHelperText('');
+      setInviteCodeValid(true);
+    }
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -84,30 +103,24 @@ function SignUp() {
       name: data.get('name'),
       email: data.get('email'),
       password: data.get('password'),
+      invite_code: data.get('invite_code'),
     });
-    const request: SignUpRequest = {
+    const request: SignUpWithInviteRequest = {
       name: data.get('name') as string,
       email: data.get('email') as string,
       password: data.get('password') as string,
+      invite_code: data.get('invite_code') as string,
     };
     axios
-      .post('/v1/public/signup', request)
+      .post('/v1/public/signup-with-invite', request)
       .then((response) => {
-        // eslint-disable-next-line no-console
-        console.log(response);
         const { token, expiration } = response.data;
         auth.setState({ token, expiration });
-        // eslint-disable-next-line no-console
-        console.log(`aatoken`);
-        // eslint-disable-next-line no-console
-        console.log(auth);
         setSubmitError(false);
         navigate('/home');
         return true;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log(error);
         setErrorMessage(error.response.data);
         setSubmitError(true);
         return false;
@@ -190,9 +203,23 @@ function SignUp() {
                   name="password"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  error={inviteCodeError}
+                  helperText={inviteCodeHelperText}
+                  onChange={handleInviteCodeChange}
+                  required
+                  fullWidth
+                  id="invite_code"
+                  label="Invite Code"
+                  name="invite_code"
+                />
+              </Grid>
             </Grid>
             <Button
-              disabled={!(nameValid && emailValid && passwordValid)}
+              disabled={
+                !(nameValid && emailValid && passwordValid && inviteCodeValid)
+              }
               type="submit"
               fullWidth
               variant="contained"

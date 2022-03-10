@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
@@ -15,32 +16,6 @@ interface GroupTabsProps {
   groupsInfo: models.GroupsInfo;
 }
 
-interface TabPanelProps {
-  children: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
 function a11yProps(index: number) {
   return {
     id: `vertical-tab-${index}`,
@@ -53,30 +28,29 @@ export default function GroupTabs(props: GroupTabsProps) {
   const { groupsInfo } = props;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    if (newValue < groupsInfo.length) {
+      setValue(newValue);
+    }
   };
 
   function addGroupTab() {
+    const handleClick = () => {
+      console.log('Clicked "Add a Group"');
+    };
+
     return (
       <Tooltip title="Add a Group" key="add-group" placement="right" arrow>
         <Tab
+          onClick={handleClick}
           icon={
             <Avatar>
               <AddIcon />
             </Avatar>
           }
           key="add-group"
-          {...a11yProps(groupsInfo.length)}
+          aria-controls="vertical-tabpanel-add-group"
         />
       </Tooltip>
-    );
-  }
-
-  function addGroupTabPanel() {
-    return (
-      <TabPanel key="add-group" value={value} index={groupsInfo.length}>
-        Add a Group
-      </TabPanel>
     );
   }
 
@@ -94,6 +68,7 @@ export default function GroupTabs(props: GroupTabsProps) {
         </Tooltip>
       );
     });
+
     tabs.push(addGroupTab());
     return tabs;
   }
@@ -110,7 +85,6 @@ export default function GroupTabs(props: GroupTabsProps) {
         />
       );
     });
-    tabPanels.push(addGroupTabPanel());
     return <>{tabPanels}</>;
   }
 

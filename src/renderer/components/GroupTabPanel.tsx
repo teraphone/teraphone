@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as models from '../models/models';
 import GroupRooms from './GroupRooms';
+import BottomControls from './BottomControls';
 
 interface GroupTabPanelProps {
   index: number;
@@ -46,6 +47,7 @@ function GroupTabPanel(props: GroupTabPanelProps) {
           <Box>
             <GroupRooms groupinfo={groupinfo} />
           </Box>
+          <BottomControls />
         </>
       )}
     </div>

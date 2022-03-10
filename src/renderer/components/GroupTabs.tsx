@@ -49,6 +49,7 @@ export default function GroupTabs(props: GroupTabsProps) {
           }
           key="add-group"
           aria-controls="vertical-tabpanel-add-group"
+          disabled
         />
       </Tooltip>
     );

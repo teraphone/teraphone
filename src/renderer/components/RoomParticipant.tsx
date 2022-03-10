@@ -4,7 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
-import { Participant } from 'livekit-client';
+import { LocalAudioTrack, Participant } from 'livekit-client';
 import { useParticipant, ParticipantState } from 'livekit-react';
 import * as models from '../models/models';
 import AudioRenderer from './AudioRenderer';
@@ -18,11 +18,14 @@ function RoomParticipant(props: {
   const participantState: ParticipantState = useParticipant(participant);
   const speech = participantState.isSpeaking ? ' 🗣' : '';
   const track = participantState.microphonePublication?.track;
+
   const { isLocal } = participantState;
 
   if (isLocal) {
     if (track) {
-      track.isMuted = false;
+      const at = participantState.microphonePublication
+        ?.audioTrack as LocalAudioTrack;
+      at.unmute();
     }
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 import IconButton from '@mui/material/IconButton';
 import HeadsetIcon from '@mui/icons-material/Headset';
@@ -72,22 +73,19 @@ function BottomControls() {
 
   const MenuButton = () => {
     const handleClick = () => {
-      console.log('Clicked "Settings"');
+      alert('Not implemented yet.');
     };
 
     return (
       <Tooltip title="Settings" placement="top" arrow>
-        <span>
-          <IconButton
-            color="primary"
-            aria-label="settings"
-            component="span"
-            onClick={handleClick}
-            disabled
-          >
-            <SettingsIcon />
-          </IconButton>
-        </span>
+        <IconButton
+          color="primary"
+          aria-label="settings"
+          component="span"
+          onClick={handleClick}
+        >
+          <SettingsIcon />
+        </IconButton>
       </Tooltip>
     );
   };

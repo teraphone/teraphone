@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
@@ -35,24 +36,21 @@ export default function GroupTabs(props: GroupTabsProps) {
 
   function addGroupTab() {
     const handleClick = () => {
-      console.log('Clicked "Add a Group"');
+      alert('Not implemented yet.');
     };
 
     return (
       <Tooltip title="Add a Group" key="add-group" placement="right" arrow>
-        <span>
-          <Tab
-            onClick={handleClick}
-            icon={
-              <Avatar>
-                <AddIcon />
-              </Avatar>
-            }
-            key="add-group"
-            aria-controls="vertical-tabpanel-add-group"
-            disabled
-          />
-        </span>
+        <Tab
+          onClick={handleClick}
+          icon={
+            <Avatar>
+              <AddIcon />
+            </Avatar>
+          }
+          key="add-group"
+          aria-controls="vertical-tabpanel-add-group"
+        />
       </Tooltip>
     );
   }

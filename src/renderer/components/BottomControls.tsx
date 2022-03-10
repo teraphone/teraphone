@@ -77,15 +77,17 @@ function BottomControls() {
 
     return (
       <Tooltip title="Settings" placement="top" arrow>
-        <IconButton
-          color="primary"
-          aria-label="settings"
-          component="span"
-          onClick={handleClick}
-          disabled
-        >
-          <SettingsIcon />
-        </IconButton>
+        <span>
+          <IconButton
+            color="primary"
+            aria-label="settings"
+            component="span"
+            onClick={handleClick}
+            disabled
+          >
+            <SettingsIcon />
+          </IconButton>
+        </span>
       </Tooltip>
     );
   };

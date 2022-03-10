@@ -40,17 +40,19 @@ export default function GroupTabs(props: GroupTabsProps) {
 
     return (
       <Tooltip title="Add a Group" key="add-group" placement="right" arrow>
-        <Tab
-          onClick={handleClick}
-          icon={
-            <Avatar>
-              <AddIcon />
-            </Avatar>
-          }
-          key="add-group"
-          aria-controls="vertical-tabpanel-add-group"
-          disabled
-        />
+        <span>
+          <Tab
+            onClick={handleClick}
+            icon={
+              <Avatar>
+                <AddIcon />
+              </Avatar>
+            }
+            key="add-group"
+            aria-controls="vertical-tabpanel-add-group"
+            disabled
+          />
+        </span>
       </Tooltip>
     );
   }

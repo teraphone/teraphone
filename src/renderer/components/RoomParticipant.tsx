@@ -8,6 +8,7 @@ import { LocalAudioTrack, Participant } from 'livekit-client';
 import { useParticipant, ParticipantState } from 'livekit-react';
 import * as models from '../models/models';
 import AudioRenderer from './AudioRenderer';
+import useMute from '../hooks/useMute';
 
 function RoomParticipant(props: {
   userinfo: models.RoomUserInfo;
@@ -18,14 +19,18 @@ function RoomParticipant(props: {
   const participantState: ParticipantState = useParticipant(participant);
   const speech = participantState.isSpeaking ? ' 🗣' : '';
   const track = participantState.microphonePublication?.track;
-
   const { isLocal } = participantState;
+  const { mute, deafen } = useMute();
 
   if (isLocal) {
     if (track) {
       const at = participantState.microphonePublication
         ?.audioTrack as LocalAudioTrack;
-      at.unmute();
+      if (mute) {
+        at.mute();
+      } else {
+        at.unmute();
+      }
     }
   }
 
@@ -39,7 +44,7 @@ function RoomParticipant(props: {
         <Avatar sx={{ width: 24, height: 24 }}>{name[0]}</Avatar>
       </ListItemIcon>
       <ListItemText primary={name + speech} />
-      {true && track && (
+      {!deafen && track && (
         <AudioRenderer track={track} isLocal={isLocal} volume={0.5} />
       )}
     </ListItemButton>

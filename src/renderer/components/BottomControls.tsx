@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import HeadsetIcon from '@mui/icons-material/Headset';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
@@ -8,18 +7,10 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import useMute from '../hooks/useMute';
 
 function BottomControls() {
-  const [mute, setMute] = React.useState(false);
-  const [deafen, setDeafen] = React.useState(false);
-
-  const toggleMute = () => {
-    setMute(!mute);
-  };
-
-  const toggleDeafen = () => {
-    setDeafen(!deafen);
-  };
+  const { mute, toggleMute, deafen, toggleDeafen } = useMute();
 
   const MuteButton = () => {
     if (mute) {
@@ -91,6 +82,7 @@ function BottomControls() {
           aria-label="settings"
           component="span"
           onClick={handleClick}
+          disabled
         >
           <SettingsIcon />
         </IconButton>

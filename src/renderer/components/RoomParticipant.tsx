@@ -7,6 +7,7 @@ import * as React from 'react';
 import { Participant } from 'livekit-client';
 import { useParticipant, ParticipantState } from 'livekit-react';
 import * as models from '../models/models';
+import AudioRenderer from './AudioRenderer';
 
 function RoomParticipant(props: {
   userinfo: models.RoomUserInfo;
@@ -16,6 +17,14 @@ function RoomParticipant(props: {
   const { name } = userinfo;
   const participantState: ParticipantState = useParticipant(participant);
   const speech = participantState.isSpeaking ? ' 🗣' : '';
+  const track = participantState.microphonePublication?.track;
+  const { isLocal } = participantState;
+
+  if (isLocal) {
+    if (track) {
+      track.isMuted = false;
+    }
+  }
 
   const handleClick = React.useCallback(() => {
     console.log('clicked user', userinfo, participantState);
@@ -27,6 +36,9 @@ function RoomParticipant(props: {
         <Avatar sx={{ width: 24, height: 24 }}>{name[0]}</Avatar>
       </ListItemIcon>
       <ListItemText primary={name + speech} />
+      {true && track && (
+        <AudioRenderer track={track} isLocal={isLocal} volume={0.5} />
+      )}
     </ListItemButton>
   );
 }

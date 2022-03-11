@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import * as models from '../models/models';
 import GroupRooms from './GroupRooms';
 import BottomControls from './BottomControls';
+import CurrentRoomControls from './CurrentRoomControls';
 
 interface GroupTabPanelProps {
   index: number;
@@ -47,7 +48,17 @@ function GroupTabPanel(props: GroupTabPanelProps) {
           <Box>
             <GroupRooms groupinfo={groupinfo} />
           </Box>
-          <BottomControls />
+          <Box
+            sx={{
+              position: 'fixed',
+              bottom: '0',
+              width: '100%',
+              backgroundColor: 'background.paper',
+            }}
+          >
+            <CurrentRoomControls />
+            <BottomControls />
+          </Box>
         </>
       )}
     </div>

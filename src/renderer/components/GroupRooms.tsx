@@ -14,6 +14,7 @@ function GroupRooms(props: { groupinfo: models.GroupInfo }) {
       const roomId = roominfo.room.id;
       return (
         <GroupRoom
+          groupinfo={groupinfo}
           roominfo={roominfo}
           key={`${groupId}/${roomId}`}
           active={{ activeRoom, setActiveRoom } as ActiveState}

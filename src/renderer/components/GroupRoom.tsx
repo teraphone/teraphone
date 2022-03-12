@@ -3,20 +3,23 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import GroupsIcon from '@mui/icons-material/Groups';
-import * as React from 'react';
 import * as Livekit from 'livekit-client';
-import { useParticipant } from 'livekit-react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
+import useCurrentRoom from '../hooks/useCurrentRoom';
 
 export type ActiveState = {
   activeRoom: number;
   setActiveRoom: (x: number) => void;
 };
 
-function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
-  const { roominfo, active } = props;
+function GroupRoom(props: {
+  groupinfo: models.GroupInfo;
+  roominfo: models.RoomInfo;
+  active: ActiveState;
+}) {
+  const { groupinfo, roominfo, active } = props;
   const { users } = roominfo;
   const groupId = roominfo.room.group_id;
   const { id } = roominfo.room;
@@ -30,8 +33,8 @@ function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
     video: false,
   };
   const url = 'wss://demo.dally.app';
-  const { connect, isConnecting, room, error, participants, audioTracks } =
-    useRoom();
+  const { connect, room } = useRoom();
+  const { setCurrentRoom } = useCurrentRoom();
 
   const handleClick = () => {
     const connectRoom = () => {
@@ -48,6 +51,14 @@ function GroupRoom(props: { roominfo: models.RoomInfo; active: ActiveState }) {
     };
 
     console.log(`clicked room ${roominfo.room.id}`, roominfo);
+
+    // set current room to this room
+    setCurrentRoom({
+      roomId: roominfo.room.id,
+      roomName: roominfo.room.name,
+      groupId: roominfo.room.group_id,
+      groupName: groupinfo.group.name,
+    });
 
     // if changing rooms: disconnect first, then connect
     if (activeRoom !== roominfo.room.id) {

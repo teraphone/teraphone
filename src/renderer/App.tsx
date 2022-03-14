@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { MuteProvider } from './contexts/MuteContext';
 import { RoomProvider } from './contexts/RoomContext';
 import { CurrentRoomProvider } from './contexts/CurrentRoomContext';
+import { ConnectionProvider } from './contexts/ConnectionContext';
 
 export default function App() {
   return (
@@ -13,14 +14,16 @@ export default function App() {
       <MuteProvider>
         <RoomProvider>
           <CurrentRoomProvider>
-            <Router>
-              <Routes>
-                <Route path="/" element={<SignIn />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/home" element={<Home />} />
-              </Routes>
-            </Router>
+            <ConnectionProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<SignIn />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/home" element={<Home />} />
+                </Routes>
+              </Router>
+            </ConnectionProvider>
           </CurrentRoomProvider>
         </RoomProvider>
       </MuteProvider>

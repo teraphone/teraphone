@@ -79,13 +79,15 @@ function CurentRoomControls() {
   console.log('msg', msg);
 
   return (
-    isActive && (
-      <Box sx={{}}>
-        <Status />
+    <>
+      {isActive && (
+        <Box sx={{}}>
+          <Status />
 
-        <Typography variant="body2">Room Name: {msg}.</Typography>
-      </Box>
-    )
+          <Typography variant="body2">Room Name: {msg}.</Typography>
+        </Box>
+      )}
+    </>
   );
 }
 

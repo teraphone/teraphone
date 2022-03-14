@@ -101,6 +101,8 @@ export default function GroupTabs(props: GroupTabsProps) {
             alignItems: 'center',
             height: 42,
             backgroundColor: 'background.paper',
+            borderRight: 1,
+            borderColor: 'divider',
           }}
         >
           <Typography
@@ -120,6 +122,7 @@ export default function GroupTabs(props: GroupTabsProps) {
           onChange={handleChange}
           aria-label="Vertical tabs example"
           sx={{
+            height: '100%',
             borderRight: 1,
             borderColor: 'divider',
           }}

@@ -59,7 +59,7 @@ const Home = () => {
           flexGrow: 1,
           bgcolor: 'background.paper',
           display: 'flex',
-          height: 500,
+          height: '100vh',
         }}
       >
         <GroupTabs groupsInfo={groupsInfo} />

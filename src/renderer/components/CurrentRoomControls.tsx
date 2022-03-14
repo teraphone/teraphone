@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import useCurrentRoom from 'renderer/hooks/useCurrentRoom';
@@ -9,17 +10,28 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Logout';
 import useRoom from '../hooks/useRoom';
+import useConnection from '../hooks/useConnection';
+import { ConnectionState } from '../contexts/ConnectionContext';
 
 function CurentRoomControls() {
   const { currentRoom } = useCurrentRoom();
   const { isConnecting, error, room } = useRoom();
-  const isActive: boolean =
-    currentRoom.roomId !== 0 &&
-    currentRoom.roomId !== undefined &&
-    room?.state !== 'disconnected';
-  const msg = isActive
-    ? `${currentRoom.groupName} / ${currentRoom.roomName}`
-    : 'none';
+  const { connectionState, setConnectionState } = useConnection();
+
+  React.useEffect(() => {
+    // set connection state
+    if (error) {
+      setConnectionState(ConnectionState.Error);
+    } else if (isConnecting) {
+      setConnectionState(ConnectionState.Connecting);
+    } else if (room && room.state === 'connected') {
+      setConnectionState(ConnectionState.Connected);
+    } else if (room && room.state === 'reconnecting') {
+      setConnectionState(ConnectionState.Reconnecting);
+    } else {
+      setConnectionState(ConnectionState.Disconnected);
+    }
+  }, [error, isConnecting, room, setConnectionState]);
 
   const StatusConnected = () => {
     return (
@@ -70,13 +82,23 @@ function CurentRoomControls() {
   };
 
   const Status = () => {
-    if (error) {
-      return <StatusError />;
+    switch (connectionState) {
+      case ConnectionState.Connected: {
+        return <StatusConnected />;
+      }
+      case ConnectionState.Connecting: {
+        return <StatusConnecting />;
+      }
+      case ConnectionState.Error: {
+        return <StatusError />;
+      }
+      case ConnectionState.Reconnecting: {
+        return <StatusConnecting />;
+      }
+      default: {
+        return <></>;
+      }
     }
-    if (isConnecting) {
-      return <StatusConnecting />;
-    }
-    return <StatusConnected />;
   };
 
   const DisconnectButton = () => {
@@ -99,11 +121,11 @@ function CurentRoomControls() {
 
   return (
     <>
-      {isActive && (
+      {connectionState !== ConnectionState.Disconnected && (
         <Box sx={{}}>
           <Status />
 
-          <Typography variant="body2">{msg}.</Typography>
+          <Typography variant="body2">{`${currentRoom.groupName} / ${currentRoom.roomName}`}</Typography>
           <DisconnectButton />
         </Box>
       )}

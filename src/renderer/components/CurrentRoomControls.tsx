@@ -5,13 +5,18 @@ import useCurrentRoom from 'renderer/hooks/useCurrentRoom';
 import PendingIcon from '@mui/icons-material/Pending';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import LogoutIcon from '@mui/icons-material/Logout';
 import useRoom from '../hooks/useRoom';
 
 function CurentRoomControls() {
   const { currentRoom } = useCurrentRoom();
-  const { isConnecting, error } = useRoom();
+  const { isConnecting, error, room } = useRoom();
   const isActive: boolean =
-    currentRoom.roomId !== 0 && currentRoom.roomId !== undefined;
+    currentRoom.roomId !== 0 &&
+    currentRoom.roomId !== undefined &&
+    room?.state !== 'disconnected';
   const msg = isActive
     ? `${currentRoom.groupName} / ${currentRoom.roomName}`
     : 'none';
@@ -74,9 +79,23 @@ function CurentRoomControls() {
     return <StatusConnected />;
   };
 
-  console.log('currentRoom', currentRoom);
-  console.log('isActive', isActive);
-  console.log('msg', msg);
+  const DisconnectButton = () => {
+    return (
+      <Tooltip title="Disconnect" placement="top" arrow>
+        <IconButton
+          color="primary"
+          aria-label="disconnect"
+          component="span"
+          onClick={() => {
+            room?.disconnect();
+            console.log('room', room);
+          }}
+        >
+          <LogoutIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
   return (
     <>
@@ -84,7 +103,8 @@ function CurentRoomControls() {
         <Box sx={{}}>
           <Status />
 
-          <Typography variant="body2">Room Name: {msg}.</Typography>
+          <Typography variant="body2">{msg}.</Typography>
+          <DisconnectButton />
         </Box>
       )}
     </>

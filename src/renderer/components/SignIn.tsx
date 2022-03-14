@@ -161,12 +161,12 @@ function SignIn() {
               label="Password"
               name="password"
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               id="remember"
               label="Remember me"
               name="remember"
-            />
+            /> */}
             <Button
               disabled={!(emailValid && passwordValid)}
               type="submit"

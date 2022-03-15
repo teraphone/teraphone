@@ -3,7 +3,7 @@ import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import useCurrentRoom from 'renderer/hooks/useCurrentRoom';
-import PendingIcon from '@mui/icons-material/Pending';
+import CircularProgress from '@mui/material/CircularProgress';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import IconButton from '@mui/material/IconButton';
@@ -52,15 +52,8 @@ function CurentRoomControls() {
   const StatusConnecting = () => {
     return (
       <Typography variant="body1" sx={{ color: 'warning.light' }}>
-        <PendingIcon
-          fontSize="medium"
-          sx={{
-            mb: -0.5,
-
-            color: 'warning.light',
-          }}
-        />
-        {' Voice Connecting'}
+        <CircularProgress size={16} sx={{ mx: 0.5, color: 'warning.light' }} />
+        {'  Voice Connecting'}
       </Typography>
     );
   };

@@ -75,9 +75,12 @@ function GroupRoom(props: {
       }
       connectRoom();
 
-      // else already connected
-    } else {
+      // else clicked on same room. already connected?
+      // if so, do nothing. otherwise, connect.
+    } else if (connectionState === ConnectionState.Connected) {
       console.log(`already connected to room ${roominfo.room.id}`, room);
+    } else {
+      connectRoom();
     }
   };
 

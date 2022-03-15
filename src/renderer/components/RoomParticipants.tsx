@@ -18,28 +18,23 @@ function useUserMap(users: models.RoomUserInfo[]) {
 
 function RoomParticipants(props: { users: models.RoomUserInfo[] }) {
   const { users } = props;
-  const { connect, isConnecting, room, error, participants, audioTracks } =
-    useRoom();
+  const { participants } = useRoom();
   const userMap = useUserMap(users);
 
-  function handleUsers() {
-    const participantItems = participants.map((participant: Participant) => {
-      const id = participant.identity;
-      const userinfo = userMap.get(id) as models.RoomUserInfo;
+  const participantItems = participants.map((participant: Participant) => {
+    const id = participant.identity;
+    const userinfo = userMap.get(id) as models.RoomUserInfo;
 
-      return (
-        <RoomParticipant
-          key={participant.sid}
-          userinfo={userinfo}
-          participant={participant}
-        />
-      );
-    });
+    return (
+      <RoomParticipant
+        key={participant.sid}
+        userinfo={userinfo}
+        participant={participant}
+      />
+    );
+  });
 
-    return participantItems;
-  }
-
-  return <List>{handleUsers()}</List>;
+  return <List>{participantItems}</List>;
 }
 
 export default RoomParticipants;

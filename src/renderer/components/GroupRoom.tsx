@@ -8,6 +8,8 @@ import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
 import useCurrentRoom from '../hooks/useCurrentRoom';
+import useConnection from '../hooks/useConnection';
+import { ConnectionState } from '../contexts/ConnectionContext';
 
 export type ActiveState = {
   activeRoom: number;
@@ -35,6 +37,7 @@ function GroupRoom(props: {
   const url = 'wss://demo.dally.app';
   const { connect, room } = useRoom();
   const { setCurrentRoom } = useCurrentRoom();
+  const { connectionState } = useConnection();
 
   const handleClick = () => {
     const connectRoom = () => {
@@ -79,7 +82,10 @@ function GroupRoom(props: {
   };
 
   const showUsers = () => {
-    if (activeRoom === roominfo.room.id) {
+    if (
+      activeRoom === roominfo.room.id &&
+      connectionState === ConnectionState.Connected
+    ) {
       return (
         <RoomParticipants users={users} key={`${groupId}/${id}-participants`} />
       );

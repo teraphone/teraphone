@@ -14,7 +14,6 @@ interface GroupTabPanelProps {
 
 function GroupTabPanel(props: GroupTabPanelProps) {
   const { index, value, groupinfo } = props;
-  const { group } = groupinfo;
 
   return (
     <div
@@ -24,27 +23,8 @@ function GroupTabPanel(props: GroupTabPanelProps) {
       aria-labelledby={`vertical-tab-${index}`}
     >
       {value === index && (
-        <>
-          <Box
-            sx={{
-              // center the text vertically and horizontally
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 42,
-              width: 300,
-              backgroundColor: 'background.paper',
-            }}
-          >
-            {/* <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-              }}
-            >
-              {group.name}
-            </Typography> */}
+        <Box sx={{ width: 310 }}>
+          <Box>
             <GroupMenu groupinfo={groupinfo} />
           </Box>
           <Box>
@@ -61,7 +41,7 @@ function GroupTabPanel(props: GroupTabPanelProps) {
             <CurrentRoomControls />
             <BottomControls />
           </Box>
-        </>
+        </Box>
       )}
     </div>
   );

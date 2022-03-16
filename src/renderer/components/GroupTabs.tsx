@@ -91,7 +91,7 @@ export default function GroupTabs(props: GroupTabsProps) {
 
   return (
     <>
-      <Stack>
+      <Stack sx={{ width: 90 }}>
         <Box
           sx={{
             // center the text vertically and horizontally
@@ -99,7 +99,7 @@ export default function GroupTabs(props: GroupTabsProps) {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: 42,
+            height: 48,
             backgroundColor: 'background.paper',
             borderRight: 1,
             borderColor: 'divider',
@@ -120,7 +120,7 @@ export default function GroupTabs(props: GroupTabsProps) {
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          aria-label="Vertical tabs example"
+          aria-label="group-tabs"
           sx={{
             height: '100%',
             borderRight: 1,

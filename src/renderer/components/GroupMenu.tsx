@@ -28,9 +28,14 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
     <Box
       sx={{
         width: '100%',
+        height: '100%',
       }}
     >
-      <List component="nav" aria-label="group-menu">
+      <List
+        component="nav"
+        aria-label="group-menu"
+        sx={{ height: '100%', p: 0 }}
+      >
         <ListItem
           button
           onClick={handleClick}

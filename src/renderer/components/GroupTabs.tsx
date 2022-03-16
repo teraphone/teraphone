@@ -125,6 +125,9 @@ export default function GroupTabs(props: GroupTabsProps) {
             height: '100%',
             borderRight: 1,
             borderColor: 'divider',
+            '.MuiTabs-indicator': {
+              left: 0,
+            },
           }}
         >
           {handleTabs()}

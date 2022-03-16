@@ -1,8 +1,11 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import useCurrentRoom from 'renderer/hooks/useCurrentRoom';
+import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
+import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import CircularProgress from '@mui/material/CircularProgress';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -94,20 +97,63 @@ function CurentRoomControls() {
     }
   };
 
+  const ShareCameraButton = () => {
+    return (
+      <Tooltip title="Share Camera" placement="top" arrow>
+        <span>
+          <IconButton
+            color="primary"
+            aria-label="disconnect"
+            component="span"
+            onClick={() => {
+              alert('Not implemented yet.');
+            }}
+            disabled
+          >
+            <VideoCameraFrontIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
+    );
+  };
+
+  const ShareScreenButton = () => {
+    return (
+      <Tooltip title="Share Screen" placement="top" arrow>
+        <span>
+          <IconButton
+            color="primary"
+            aria-label="disconnect"
+            component="span"
+            onClick={() => {
+              alert('Not implemented yet.');
+            }}
+            disabled
+          >
+            <ScreenShareIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
+    );
+  };
+
   const DisconnectButton = () => {
     return (
       <Tooltip title="Disconnect" placement="top" arrow>
-        <IconButton
-          color="primary"
-          aria-label="disconnect"
-          component="span"
-          onClick={() => {
-            room?.disconnect();
-            console.log('room', room);
-          }}
-        >
-          <LogoutIcon />
-        </IconButton>
+        <span>
+          <IconButton
+            color="primary"
+            aria-label="disconnect"
+            component="span"
+            onClick={() => {
+              room?.disconnect();
+              console.log('room', room);
+            }}
+            disabled={connectionState !== ConnectionState.Connected}
+          >
+            <LogoutIcon />
+          </IconButton>
+        </span>
       </Tooltip>
     );
   };
@@ -119,7 +165,11 @@ function CurentRoomControls() {
           <Status />
 
           <Typography variant="body2">{`${currentRoom.groupName} / ${currentRoom.roomName}`}</Typography>
-          <DisconnectButton />
+          <Box>
+            <ShareCameraButton />
+            <ShareScreenButton />
+            <DisconnectButton />
+          </Box>
         </Box>
       )}
     </>

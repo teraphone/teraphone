@@ -24,6 +24,7 @@ function RoomParticipants(props: { users: models.RoomUserInfo[] }) {
   const participantItems = participants.map((participant: Participant) => {
     const id = participant.identity;
     const userinfo = userMap.get(id) as models.RoomUserInfo;
+    // todo: if id not found, use a placeholder
 
     return (
       <RoomParticipant

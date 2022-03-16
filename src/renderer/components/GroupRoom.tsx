@@ -98,9 +98,14 @@ function GroupRoom(props: {
 
   return (
     <>
-      <ListItemButton dense onClick={handleClick} component="li">
+      <ListItemButton
+        dense
+        onClick={handleClick}
+        component="li"
+        sx={{ py: 0.5 }}
+      >
         <ListItemIcon>
-          <VolumeUpIcon sx={{ fontSize: 16 }} />
+          <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
         <ListItemText primary={roominfo.room.name} />
       </ListItemButton>

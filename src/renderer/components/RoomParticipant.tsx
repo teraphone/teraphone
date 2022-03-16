@@ -41,9 +41,14 @@ function RoomParticipant(props: {
   }, [participantState, userinfo, participant]);
 
   return (
-    <ListItemButton dense onClick={handleClick} component="li" sx={{ pl: 4 }}>
+    <ListItemButton
+      dense
+      onClick={handleClick}
+      component="li"
+      sx={{ pl: 4, py: 0.5 }}
+    >
       <ListItemIcon>
-        <Avatar sx={{ width: 24, height: 24 }}>{name[0]}</Avatar>
+        <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>{name[0]}</Avatar>
       </ListItemIcon>
       <ListItemText primary={name + speech} />
       {!deafen && track && (

@@ -14,3 +14,7 @@
   min-height: 100vh;
   margin: 0 auto;
 }
+
+.MuiListItemIcon-root {
+  min-width: 32px !important;
+}

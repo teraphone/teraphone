@@ -9,20 +9,11 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import MenuItem from '@mui/material/MenuItem';
+import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import * as models from '../models/models';
 
 function GroupMenu(props: { groupinfo: models.GroupInfo }) {
   const { groupinfo } = props;
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   return (
     <Box
@@ -36,27 +27,42 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
         aria-label="group-menu"
         sx={{ height: '100%', p: 0 }}
       >
-        <ListItem
-          button
-          onClick={handleClick}
-          divider
-          secondaryAction={
-            <KeyboardArrowDownIcon
-              sx={{ color: 'text.secondary', fontSize: 20, marginTop: 0.5 }}
-            />
-          }
-        >
-          <ListItemText disableTypography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-              }}
-            >
-              {groupinfo.group.name}
-            </Typography>
-          </ListItemText>
-        </ListItem>
+        <PopupState variant="popover" popupId="group-popup-menu">
+          {(popupState) => (
+            <>
+              <ListItem
+                button
+                divider
+                secondaryAction={
+                  <KeyboardArrowDownIcon
+                    sx={{
+                      color: 'text.secondary',
+                      fontSize: 20,
+                      marginTop: 0.5,
+                    }}
+                  />
+                }
+                {...bindTrigger(popupState)}
+              >
+                <ListItemText disableTypography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                    }}
+                  >
+                    {groupinfo.group.name}
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Menu {...bindMenu(popupState)}>
+                <MenuItem onClick={popupState.close}>Profile</MenuItem>
+                <MenuItem onClick={popupState.close}>My account</MenuItem>
+                <MenuItem onClick={popupState.close}>Logout</MenuItem>
+              </Menu>
+            </>
+          )}
+        </PopupState>
       </List>
     </Box>
   );

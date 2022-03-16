@@ -25,7 +25,7 @@ function GroupRooms(props: { groupinfo: models.GroupInfo }) {
     return roomItems;
   }
 
-  return <List sx={{ p: 0 }}>{handleRooms()}</List>;
+  return <List disablePadding>{handleRooms()}</List>;
 }
 
 export default GroupRooms;

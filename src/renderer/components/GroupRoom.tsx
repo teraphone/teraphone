@@ -91,7 +91,7 @@ function GroupRoom(props: {
       connectionState === ConnectionState.Connected
     ) {
       return (
-        <List sx={{ p: 0 }}>
+        <List disablePadding>
           <RoomParticipants
             users={users}
             key={`${groupId}/${id}-participants`}

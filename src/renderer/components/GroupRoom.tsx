@@ -2,7 +2,8 @@
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import GroupsIcon from '@mui/icons-material/Groups';
+import List from '@mui/material/List';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
@@ -90,7 +91,12 @@ function GroupRoom(props: {
       connectionState === ConnectionState.Connected
     ) {
       return (
-        <RoomParticipants users={users} key={`${groupId}/${id}-participants`} />
+        <List sx={{ p: 0 }}>
+          <RoomParticipants
+            users={users}
+            key={`${groupId}/${id}-participants`}
+          />
+        </List>
       );
     }
     return null;
@@ -100,7 +106,7 @@ function GroupRoom(props: {
     <>
       <ListItemButton dense onClick={handleClick}>
         <ListItemIcon>
-          <GroupsIcon />
+          <VolumeUpIcon sx={{ fontSize: 16 }} />
         </ListItemIcon>
         <ListItemText primary={roominfo.room.name} />
       </ListItemButton>

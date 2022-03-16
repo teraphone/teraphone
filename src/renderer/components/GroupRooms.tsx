@@ -25,7 +25,7 @@ function GroupRooms(props: { groupinfo: models.GroupInfo }) {
     return roomItems;
   }
 
-  return <List>{handleRooms()}</List>;
+  return <List sx={{ p: 0 }}>{handleRooms()}</List>;
 }
 
 export default GroupRooms;

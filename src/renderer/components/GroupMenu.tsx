@@ -68,20 +68,27 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
                   vertical: 'top',
                   horizontal: 'center',
                 }}
+                marginThreshold={0}
+                elevation={0}
+                PaperProps={{
+                  sx: { my: 1 },
+                  variant: 'outlined',
+                  square: true,
+                }}
               >
-                <MenuItem onClick={popupState.close} sx={{ width: 280 }}>
+                <MenuItem onClick={popupState.close} sx={{ width: 290 }} dense>
                   <ListItemText>Invite People</ListItemText>
                   <PersonAddIcon sx={{ fontSize: 20 }} />
                 </MenuItem>
-                <MenuItem onClick={popupState.close} disabled>
+                <MenuItem onClick={popupState.close} disabled dense>
                   <ListItemText>Edit Group Profile</ListItemText>
                   <EditIcon sx={{ fontSize: 20 }} />
                 </MenuItem>
-                <MenuItem onClick={popupState.close} disabled>
+                <MenuItem onClick={popupState.close} disabled dense>
                   <ListItemText>Add a New Room</ListItemText>
                   <PlaylistAddIcon sx={{ fontSize: 20 }} />
                 </MenuItem>
-                <MenuItem onClick={popupState.close} disabled>
+                <MenuItem onClick={popupState.close} disabled dense>
                   <ListItemText>Leave Group</ListItemText>
                   <DeleteForeverIcon sx={{ fontSize: 20 }} />
                 </MenuItem>

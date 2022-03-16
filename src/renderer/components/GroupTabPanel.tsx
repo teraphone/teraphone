@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as models from '../models/models';
 import GroupRooms from './GroupRooms';
+import GroupMenu from './GroupMenu';
 import BottomControls from './BottomControls';
 import CurrentRoomControls from './CurrentRoomControls';
 
@@ -32,18 +33,19 @@ function GroupTabPanel(props: GroupTabPanelProps) {
               justifyContent: 'center',
               alignItems: 'center',
               height: 42,
-              width: 200,
+              width: 300,
               backgroundColor: 'background.paper',
             }}
           >
-            <Typography
+            {/* <Typography
               variant="body2"
               sx={{
                 color: 'text.secondary',
               }}
             >
               {group.name}
-            </Typography>
+            </Typography> */}
+            <GroupMenu groupinfo={groupinfo} />
           </Box>
           <Box>
             <GroupRooms groupinfo={groupinfo} />

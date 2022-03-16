@@ -35,7 +35,7 @@ function RoomParticipants(props: { users: models.RoomUserInfo[] }) {
     );
   });
 
-  return <List>{participantItems}</List>;
+  return <List disablePadding>{participantItems}</List>;
 }
 
 export default RoomParticipants;

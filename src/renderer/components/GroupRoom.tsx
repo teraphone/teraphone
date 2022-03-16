@@ -2,7 +2,6 @@
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import List from '@mui/material/List';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
 import * as models from '../models/models';
@@ -91,12 +90,7 @@ function GroupRoom(props: {
       connectionState === ConnectionState.Connected
     ) {
       return (
-        <List disablePadding>
-          <RoomParticipants
-            users={users}
-            key={`${groupId}/${id}-participants`}
-          />
-        </List>
+        <RoomParticipants users={users} key={`${groupId}/${id}-participants`} />
       );
     }
     return null;

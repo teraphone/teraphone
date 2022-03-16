@@ -41,7 +41,7 @@ function RoomParticipant(props: {
   }, [participantState, userinfo, participant]);
 
   return (
-    <ListItemButton dense onClick={handleClick}>
+    <ListItemButton dense onClick={handleClick} component="li" sx={{ pl: 4 }}>
       <ListItemIcon>
         <Avatar sx={{ width: 24, height: 24 }}>{name[0]}</Avatar>
       </ListItemIcon>

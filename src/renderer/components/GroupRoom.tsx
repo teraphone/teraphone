@@ -98,7 +98,7 @@ function GroupRoom(props: {
 
   return (
     <>
-      <ListItemButton dense onClick={handleClick}>
+      <ListItemButton dense onClick={handleClick} component="li">
         <ListItemIcon>
           <VolumeUpIcon sx={{ fontSize: 16 }} />
         </ListItemIcon>

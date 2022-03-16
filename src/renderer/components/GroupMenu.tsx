@@ -85,7 +85,7 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
                   <EditIcon sx={{ fontSize: 20 }} />
                 </MenuItem>
                 <MenuItem onClick={popupState.close} disabled dense>
-                  <ListItemText>Add a New Room</ListItemText>
+                  <ListItemText>Add New Room</ListItemText>
                   <PlaylistAddIcon sx={{ fontSize: 20 }} />
                 </MenuItem>
                 <MenuItem onClick={popupState.close} disabled dense>

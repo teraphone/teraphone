@@ -74,7 +74,9 @@ const createWindow = async () => {
     width: 400,
     height: 600,
     minHeight: 600,
+    minWidth: 400,
     icon: getAssetPath('icon.png'),
+    useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },

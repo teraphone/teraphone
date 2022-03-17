@@ -6,7 +6,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import * as models from '../models/models';
+import {
+  CreateGroupInvite,
+  CreateGroupInviteResponse,
+} from '../requests/requests';
 
 export interface GroupIniviteDialogProps {
   groupinfo: models.GroupInfo;
@@ -17,15 +22,17 @@ export interface GroupIniviteDialogProps {
 function GroupInviteDialog(props: GroupIniviteDialogProps) {
   const { groupinfo, open, onClose } = props;
   const [inviteCode, setInviteCode] = React.useState('');
+  const axiosPrivate = useAxiosPrivate();
 
   const handleClose = () => {
     onClose();
-    setInviteCode('');
   };
 
-  const getInviteCode = () => {
+  const getInviteCode = async () => {
     console.log('getInviteCode');
-    setInviteCode('1234567890123456');
+    const req = await CreateGroupInvite(axiosPrivate, groupinfo.group.id);
+    const { group_invite: groupInvite } = req.data as CreateGroupInviteResponse;
+    setInviteCode(groupInvite.code);
   };
 
   return (
@@ -33,14 +40,17 @@ function GroupInviteDialog(props: GroupIniviteDialogProps) {
       <DialogTitle>Invite to {groupinfo.group.name}</DialogTitle>
       <DialogContent>
         <Box textAlign="center" sx={{ pb: 2 }}>
-          <Button onClick={getInviteCode}>Generate Code</Button>
+          <Button onClick={getInviteCode}>Generate New Code</Button>
         </Box>
         <TextField
           id="invite-code"
           label=""
-          defaultValue=""
           value={inviteCode}
-          InputProps={{ readOnly: true }}
+          InputProps={{
+            readOnly: true,
+            disableUnderline: true,
+            inputProps: { style: { textAlign: 'center', padding: 12 } },
+          }}
           helperText="Invite codes are single-use."
           fullWidth
           size="small"

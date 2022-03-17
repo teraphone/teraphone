@@ -32,7 +32,7 @@ function GroupInviteDialog(props: GroupIniviteDialogProps) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>Invite to {groupinfo.group.name}</DialogTitle>
       <DialogContent>
-        <Box textAlign="center">
+        <Box textAlign="center" sx={{ pb: 2 }}>
           <Button onClick={getInviteCode}>Generate Code</Button>
         </Box>
         <TextField
@@ -41,8 +41,11 @@ function GroupInviteDialog(props: GroupIniviteDialogProps) {
           defaultValue=""
           value={inviteCode}
           InputProps={{ readOnly: true }}
+          helperText="Invite codes are single-use."
+          fullWidth
+          size="small"
+          variant="filled"
         />
-        <DialogContentText>Invite codes are single-use.</DialogContentText>
       </DialogContent>
     </Dialog>
   );

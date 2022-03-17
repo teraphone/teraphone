@@ -12,10 +12,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import * as React from 'react';
 import * as models from '../models/models';
+import GroupInviteDialog from './GroupInviteDialog';
 
 function GroupMenu(props: { groupinfo: models.GroupInfo }) {
   const { groupinfo } = props;
+  const [inviteDialogOpen, setInviteDialogOpen] = React.useState(false);
+
+  const handleInviteDialogClickOpen = () => {
+    setInviteDialogOpen(true);
+  };
+
+  const handleInviteDialogClose = () => {
+    setInviteDialogOpen(false);
+  };
 
   return (
     <Box
@@ -76,7 +87,14 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
                   square: true,
                 }}
               >
-                <MenuItem onClick={popupState.close} sx={{ width: 290 }} dense>
+                <MenuItem
+                  onClick={() => {
+                    handleInviteDialogClickOpen();
+                    popupState.close();
+                  }}
+                  sx={{ width: 290 }}
+                  dense
+                >
                   <ListItemText>Invite People</ListItemText>
                   <PersonAddIcon sx={{ fontSize: 20 }} />
                 </MenuItem>
@@ -97,6 +115,11 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
           )}
         </PopupState>
       </List>
+      <GroupInviteDialog
+        groupinfo={groupinfo}
+        open={inviteDialogOpen}
+        onClose={handleInviteDialogClose}
+      />
     </Box>
   );
 }

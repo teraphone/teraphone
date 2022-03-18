@@ -6,6 +6,7 @@ import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import MicIcon from '@mui/icons-material/Mic';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import useMute from '../hooks/useMute';
@@ -90,11 +91,31 @@ function BottomControls() {
     );
   };
 
+  const InfoButton = () => {
+    const handleClick = () => {
+      alert('Not implemented yet.');
+    };
+
+    return (
+      <Tooltip title="Info" placement="top" arrow>
+        <IconButton
+          color="primary"
+          aria-label="info"
+          component="span"
+          onClick={handleClick}
+        >
+          <InfoIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  };
+
   return (
     <Stack direction="row" alignItems="right" spacing={0}>
       <MuteButton />
       <DeafenButton />
       <MenuButton />
+      <InfoButton />
     </Stack>
   );
 }

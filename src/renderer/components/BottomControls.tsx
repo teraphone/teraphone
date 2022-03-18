@@ -9,6 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
+import { electron } from 'process';
 import useMute from '../hooks/useMute';
 
 function BottomControls() {
@@ -93,7 +94,7 @@ function BottomControls() {
 
   const InfoButton = () => {
     const handleClick = () => {
-      alert('Not implemented yet.');
+      window.electron.ipcRenderer.myPing();
     };
 
     return (

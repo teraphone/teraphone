@@ -42,13 +42,23 @@ const Home = () => {
       return { group, users, rooms } as models.GroupInfo;
     };
 
-    setGroupsInfo(await Promise.all(groups.map(handleGroup)));
+    return Promise.all(groups.map(handleGroup));
   };
 
   React.useEffect(() => {
     console.log('useEffect -> getGroupsInfo');
-    getGroupsInfo(); // this will run just once
-    console.log('groupsInfo', groupsInfo);
+    getGroupsInfo() // this will run just once
+      .then((infos: models.GroupsInfo) => {
+        console.log('useEffect -> setGroupsInfo');
+        console.log('groupsInfo', infos);
+        setGroupsInfo(infos);
+        return true;
+      })
+      .catch((error) => {
+        console.log('getGroupsInfo -> error', error);
+        return false;
+      });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

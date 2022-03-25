@@ -4,7 +4,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
-import { ref, onValue } from 'firebase/database';
+import { get, ref, onValue, DataSnapshot } from 'firebase/database';
+import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -18,6 +19,15 @@ export type ActiveState = {
   activeRoom: number;
   setActiveRoom: (x: number) => void;
 };
+
+type ParticipantRTInfo = {
+  isMuted: boolean;
+  isDeafened: boolean;
+  isCameraShare: boolean;
+  isScreenShare: boolean;
+};
+
+export type RoomRTInfo = Map<string, ParticipantRTInfo>;
 
 function useUserMap(users: models.RoomUserInfo[]) {
   const userMap = new Map<string, models.RoomUserInfo>();
@@ -54,7 +64,29 @@ function GroupRoom(props: {
   const { connectionState } = useConnection();
   const { database } = useFirebase();
   const appUser = useAppUser();
-  const roomRef = ref(database, `participants/${groupId}/${id}`);
+  const roomRTRef = ref(database, `participants/${groupId}/${id}`);
+  const [roomRTInfo, setRoomRTInfo] = React.useState<RoomRTInfo>(
+    new Map<string, ParticipantRTInfo>()
+  );
+
+  React.useEffect(() => {
+    console.log(`GroupRoom.useEffect for group ${groupId} room ${id}`);
+
+    onValue(
+      roomRTRef,
+      (snapshot: DataSnapshot) => {
+        console.log(
+          `GroupRoom.onValue.Callback for group ${groupId} room ${id}`
+        );
+        console.log('snapshot.val()', snapshot.val());
+        setRoomRTInfo(snapshot.val() as RoomRTInfo);
+      },
+      (error) => {
+        console.log('onValue error', error);
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleClick = () => {
     const connectRoom = () => {
@@ -71,6 +103,7 @@ function GroupRoom(props: {
     };
 
     console.log(`clicked room ${roominfo.room.id}`, roominfo);
+    console.log('roomRTInfo', roomRTInfo);
 
     // set current room to this room
     setCurrentRoom({

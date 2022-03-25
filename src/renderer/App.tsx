@@ -8,28 +8,31 @@ import { RoomProvider } from './contexts/RoomContext';
 import { CurrentRoomProvider } from './contexts/CurrentRoomContext';
 import { ConnectionProvider } from './contexts/ConnectionContext';
 import { FirebaseProvider } from './contexts/FirebaseContext';
+import { AppUserProvider } from './contexts/AppUserContext';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <MuteProvider>
-        <RoomProvider>
-          <CurrentRoomProvider>
-            <ConnectionProvider>
-              <FirebaseProvider>
-                <Router>
-                  <Routes>
-                    <Route path="/" element={<SignIn />} />
-                    <Route path="/signin" element={<SignIn />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/home" element={<Home />} />
-                  </Routes>
-                </Router>
-              </FirebaseProvider>
-            </ConnectionProvider>
-          </CurrentRoomProvider>
-        </RoomProvider>
-      </MuteProvider>
-    </AuthProvider>
+    <AppUserProvider>
+      <AuthProvider>
+        <MuteProvider>
+          <RoomProvider>
+            <CurrentRoomProvider>
+              <ConnectionProvider>
+                <FirebaseProvider>
+                  <Router>
+                    <Routes>
+                      <Route path="/" element={<SignIn />} />
+                      <Route path="/signin" element={<SignIn />} />
+                      <Route path="/signup" element={<SignUp />} />
+                      <Route path="/home" element={<Home />} />
+                    </Routes>
+                  </Router>
+                </FirebaseProvider>
+              </ConnectionProvider>
+            </CurrentRoomProvider>
+          </RoomProvider>
+        </MuteProvider>
+      </AuthProvider>
+    </AppUserProvider>
   );
 }

@@ -4,17 +4,30 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
+import { ref, onValue } from 'firebase/database';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
 import useCurrentRoom from '../hooks/useCurrentRoom';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
+import useFirebase from '../hooks/useFirebase';
+import useAppUser from '../hooks/useAppUser';
 
 export type ActiveState = {
   activeRoom: number;
   setActiveRoom: (x: number) => void;
 };
+
+function useUserMap(users: models.RoomUserInfo[]) {
+  const userMap = new Map<string, models.RoomUserInfo>();
+  users.forEach((userinfo: models.RoomUserInfo) => {
+    const { user_id: id } = userinfo;
+    userMap.set(`${id}`, userinfo);
+  });
+
+  return userMap;
+}
 
 function GroupRoom(props: {
   groupinfo: models.GroupInfo;
@@ -23,6 +36,7 @@ function GroupRoom(props: {
 }) {
   const { groupinfo, roominfo, active } = props;
   const { users } = roominfo;
+  const userMap = useUserMap(users);
   const groupId = roominfo.room.group_id;
   const { id } = roominfo.room;
   const { activeRoom, setActiveRoom } = active;
@@ -38,6 +52,9 @@ function GroupRoom(props: {
   const { connect, room } = useRoom();
   const { setCurrentRoom } = useCurrentRoom();
   const { connectionState } = useConnection();
+  const { database } = useFirebase();
+  const appUser = useAppUser();
+  const roomRef = ref(database, `participants/${groupId}/${id}`);
 
   const handleClick = () => {
     const connectRoom = () => {
@@ -89,11 +106,9 @@ function GroupRoom(props: {
       activeRoom === roominfo.room.id &&
       connectionState === ConnectionState.Connected
     ) {
-      return (
-        <RoomParticipants users={users} key={`${groupId}/${id}-participants`} />
-      );
+      return <RoomParticipants userMap={userMap} />;
     }
-    return null;
+    return null; // TODO: <PeekParticipants users={users} />
   };
 
   return (

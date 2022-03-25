@@ -6,20 +6,11 @@ import * as models from '../models/models';
 import RoomParticipant from './RoomParticipant';
 import useRoom from '../hooks/useRoom';
 
-function useUserMap(users: models.RoomUserInfo[]) {
-  const userMap = new Map<string, models.RoomUserInfo>();
-  users.forEach((userinfo: models.RoomUserInfo) => {
-    const { user_id: id } = userinfo;
-    userMap.set(`${id}`, userinfo);
-  });
-
-  return userMap;
-}
-
-function RoomParticipants(props: { users: models.RoomUserInfo[] }) {
-  const { users } = props;
+function RoomParticipants(props: {
+  userMap: Map<string, models.RoomUserInfo>;
+}) {
+  const { userMap } = props;
   const { participants } = useRoom();
-  const userMap = useUserMap(users);
 
   const participantItems = participants.map((participant: Participant) => {
     const id = participant.identity;

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -13,8 +14,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
+import { signInWithCustomToken } from 'firebase/auth';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
+import useFirebase from '../hooks/useFirebase';
 
 const theme = createTheme();
 
@@ -34,6 +37,7 @@ function SignIn() {
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
   const auth = useAuth();
+  const { signIn } = useFirebase();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -77,20 +81,28 @@ function SignIn() {
     axios
       .post('/v1/public/login', request)
       .then((response) => {
-        // eslint-disable-next-line no-console
         console.log(response);
-        const { token, expiration } = response.data;
+        const {
+          token,
+          expiration,
+          firebase_auth_token: fbToken,
+        } = response.data;
         auth.setState({ token, expiration });
-        // eslint-disable-next-line no-console
-        console.log(`bbtoken`);
-        // eslint-disable-next-line no-console
-        console.log(auth);
+        console.log('auth', auth);
+
+        return fbToken;
+      })
+      .then((fbToken) => {
+        const userCredential = signIn(fbToken);
+        return userCredential;
+      })
+      .then((userCredential) => {
+        console.log('userCredential', userCredential);
         setSubmitError(false);
         navigate('/home');
         return true;
       })
       .catch((error) => {
-        // eslint-disable-next-line no-console
         console.log(error);
         setErrorMessage(error.response.data);
         setSubmitError(true);

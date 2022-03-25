@@ -14,7 +14,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
-import { signInWithCustomToken } from 'firebase/auth';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
 import useFirebase from '../hooks/useFirebase';

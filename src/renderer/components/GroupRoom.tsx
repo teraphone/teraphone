@@ -4,7 +4,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
-import { get, ref, onValue, DataSnapshot } from 'firebase/database';
+import {
+  remove,
+  update,
+  child,
+  get,
+  ref,
+  onValue,
+  DataSnapshot,
+} from 'firebase/database';
 import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
@@ -63,7 +71,7 @@ function GroupRoom(props: {
   const { setCurrentRoom } = useCurrentRoom();
   const { connectionState } = useConnection();
   const { database } = useFirebase();
-  const appUser = useAppUser();
+  const { appUser } = useAppUser();
   const roomRTRef = ref(database, `participants/${groupId}/${id}`);
   const [roomRTInfo, setRoomRTInfo] = React.useState<RoomRTInfo>(
     new Map<string, ParticipantRTInfo>()
@@ -95,6 +103,12 @@ function GroupRoom(props: {
           console.log(`connected to room ${roominfo.room.id}`, room);
           // Note: the room being logged to console is stale. setRoom hasn't run yet.
           setActiveRoom(roominfo.room.id);
+          update(child(roomRTRef, `${appUser.id}`), {
+            isMuted: false,
+            isDeafened: false,
+            isCameraShare: false,
+            isScreenShare: false,
+          });
           return true;
         })
         .catch(() => {
@@ -121,6 +135,12 @@ function GroupRoom(props: {
             `disconnecting from room ${activeRoom} and connecting to room ${roominfo.room.id}`
           );
           room.disconnect();
+          const nodeRef = ref(
+            database,
+            `participants/${groupId}/${activeRoom}/${appUser.id}`
+          );
+          console.log('removing RT node:', nodeRef);
+          remove(nodeRef);
         }
       }
       connectRoom();

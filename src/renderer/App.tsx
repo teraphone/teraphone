@@ -36,3 +36,5 @@ export default function App() {
     </AppUserProvider>
   );
 }
+
+// todo: drop user from Firebase RT DB when user quits the app.

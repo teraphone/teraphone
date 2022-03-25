@@ -12,14 +12,23 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { ref, remove } from 'firebase/database';
 import useRoom from '../hooks/useRoom';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
+import useFirebase from '../hooks/useFirebase';
+import useAppUser from '../hooks/useAppUser';
 
 function CurentRoomControls() {
   const { currentRoom } = useCurrentRoom();
   const { isConnecting, error, room } = useRoom();
   const { connectionState, setConnectionState } = useConnection();
+  const { database } = useFirebase();
+  const { appUser } = useAppUser();
+  const userRTRef = ref(
+    database,
+    `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
+  );
 
   React.useEffect(() => {
     // set connection state
@@ -147,6 +156,7 @@ function CurentRoomControls() {
             component="span"
             onClick={() => {
               room?.disconnect();
+              remove(userRTRef);
               console.log('room', room);
             }}
             disabled={connectionState !== ConnectionState.Connected}

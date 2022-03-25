@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
@@ -13,6 +14,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
+import useFirebase from '../hooks/useFirebase';
 
 const theme = createTheme();
 
@@ -40,6 +42,7 @@ function SignUp() {
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
   const auth = useAuth();
+  const { signIn } = useFirebase();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -98,7 +101,6 @@ function SignUp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
     console.log({
       name: data.get('name'),
       email: data.get('email'),
@@ -114,13 +116,27 @@ function SignUp() {
     axios
       .post('/v1/public/signup-with-invite', request)
       .then((response) => {
-        const { token, expiration } = response.data;
+        const {
+          token,
+          expiration,
+          firebase_auth_token: fbToken,
+        } = response.data;
         auth.setState({ token, expiration });
+
+        return fbToken;
+      })
+      .then((fbToken) => {
+        const userCredential = signIn(fbToken);
+        return userCredential;
+      })
+      .then((userCredential) => {
+        console.log('userCredential', userCredential);
         setSubmitError(false);
         navigate('/home');
         return true;
       })
       .catch((error) => {
+        console.log(error);
         setErrorMessage(error.response.data);
         setSubmitError(true);
         return false;

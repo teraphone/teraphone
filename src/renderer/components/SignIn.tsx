@@ -5,8 +5,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+// import FormControlLabel from '@mui/material/FormControlLabel';
+// import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -17,6 +17,7 @@ import validator from 'validator';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
 import useFirebase from '../hooks/useFirebase';
+import useAppUser from '../hooks/useAppUser';
 
 const theme = createTheme();
 
@@ -37,6 +38,7 @@ function SignIn() {
   const navigate = useNavigate();
   const auth = useAuth();
   const { signIn } = useFirebase();
+  const { setAppUser } = useAppUser();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -85,10 +87,11 @@ function SignIn() {
           token,
           expiration,
           firebase_auth_token: fbToken,
+          user,
         } = response.data;
         auth.setState({ token, expiration });
         console.log('auth', auth);
-
+        setAppUser(user);
         return fbToken;
       })
       .then((fbToken) => {

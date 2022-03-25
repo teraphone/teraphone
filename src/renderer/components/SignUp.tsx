@@ -15,6 +15,7 @@ import validator from 'validator';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
 import useFirebase from '../hooks/useFirebase';
+import useAppUser from '../hooks/useAppUser';
 
 const theme = createTheme();
 
@@ -43,6 +44,7 @@ function SignUp() {
   const navigate = useNavigate();
   const auth = useAuth();
   const { signIn } = useFirebase();
+  const { setAppUser } = useAppUser();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -120,9 +122,10 @@ function SignUp() {
           token,
           expiration,
           firebase_auth_token: fbToken,
+          user,
         } = response.data;
         auth.setState({ token, expiration });
-
+        setAppUser(user);
         return fbToken;
       })
       .then((fbToken) => {

@@ -7,6 +7,7 @@ import { MuteProvider } from './contexts/MuteContext';
 import { RoomProvider } from './contexts/RoomContext';
 import { CurrentRoomProvider } from './contexts/CurrentRoomContext';
 import { ConnectionProvider } from './contexts/ConnectionContext';
+import { FirebaseProvider } from './contexts/FirebaseContext';
 
 export default function App() {
   return (
@@ -15,14 +16,16 @@ export default function App() {
         <RoomProvider>
           <CurrentRoomProvider>
             <ConnectionProvider>
-              <Router>
-                <Routes>
-                  <Route path="/" element={<SignIn />} />
-                  <Route path="/signin" element={<SignIn />} />
-                  <Route path="/signup" element={<SignUp />} />
-                  <Route path="/home" element={<Home />} />
-                </Routes>
-              </Router>
+              <FirebaseProvider>
+                <Router>
+                  <Routes>
+                    <Route path="/" element={<SignIn />} />
+                    <Route path="/signin" element={<SignIn />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    <Route path="/home" element={<Home />} />
+                  </Routes>
+                </Router>
+              </FirebaseProvider>
             </ConnectionProvider>
           </CurrentRoomProvider>
         </RoomProvider>

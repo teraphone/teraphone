@@ -174,5 +174,3 @@ function GroupRoom(props: {
 }
 
 export default GroupRoom;
-// todo: if connected to Room A in Group A, then connecting to Room A in Group B
-// will not drop rt db entry from Room A in Group A.

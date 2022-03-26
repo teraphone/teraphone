@@ -100,14 +100,16 @@ function GroupRoom(props: {
       });
       // connect to room
       connect(url, roominfo.token, connectConfig)
-        .then(() => {
-          console.log(`connected to room ${roominfo.room.id}`, room);
-          update(child(roomRTRef, `${appUser.id}`), {
-            isMuted: false,
-            isDeafened: false,
-            isCameraShare: false,
-            isScreenShare: false,
-          });
+        .then((livekitRoom) => {
+          console.log(`connected to room ${roominfo.room.id}`, livekitRoom);
+          if (livekitRoom) {
+            update(child(roomRTRef, `${appUser.id}`), {
+              isMuted: false,
+              isDeafened: false,
+              isCameraShare: false,
+              isScreenShare: false,
+            });
+          }
           return true;
         })
         .catch(() => {

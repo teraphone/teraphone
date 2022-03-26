@@ -23,11 +23,6 @@ import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
 import useAppUser from '../hooks/useAppUser';
 
-export type ActiveState = {
-  activeRoom: number;
-  setActiveRoom: (x: number) => void;
-};
-
 type ParticipantRTInfo = {
   isMuted: boolean;
   isDeafened: boolean;
@@ -50,14 +45,12 @@ function useUserMap(users: models.RoomUserInfo[]) {
 function GroupRoom(props: {
   groupinfo: models.GroupInfo;
   roominfo: models.RoomInfo;
-  active: ActiveState;
 }) {
-  const { groupinfo, roominfo, active } = props;
+  const { groupinfo, roominfo } = props;
   const { users } = roominfo;
   const userMap = useUserMap(users);
   const groupId = roominfo.room.group_id;
   const { id } = roominfo.room;
-  const { activeRoom, setActiveRoom } = active;
   const connectConfig: Livekit.ConnectOptions = {
     autoSubscribe: true,
     adaptiveStream: true,
@@ -68,7 +61,7 @@ function GroupRoom(props: {
   };
   const url = 'wss://demo.dally.app';
   const { connect, room } = useRoom();
-  const { setCurrentRoom } = useCurrentRoom();
+  const { currentRoom, setCurrentRoom } = useCurrentRoom();
   const { connectionState } = useConnection();
   const { database } = useFirebase();
   const { appUser } = useAppUser();
@@ -98,11 +91,17 @@ function GroupRoom(props: {
 
   const handleClick = () => {
     const connectRoom = () => {
+      // set current room to this room
+      setCurrentRoom({
+        roomId: roominfo.room.id,
+        roomName: roominfo.room.name,
+        groupId: roominfo.room.group_id,
+        groupName: groupinfo.group.name,
+      });
+      // connect to room
       connect(url, roominfo.token, connectConfig)
         .then(() => {
           console.log(`connected to room ${roominfo.room.id}`, room);
-          // Note: the room being logged to console is stale. setRoom hasn't run yet.
-          setActiveRoom(roominfo.room.id);
           update(child(roomRTRef, `${appUser.id}`), {
             isMuted: false,
             isDeafened: false,
@@ -119,25 +118,17 @@ function GroupRoom(props: {
     console.log(`clicked room ${roominfo.room.id}`, roominfo);
     console.log('roomRTInfo', roomRTInfo);
 
-    // set current room to this room
-    setCurrentRoom({
-      roomId: roominfo.room.id,
-      roomName: roominfo.room.name,
-      groupId: roominfo.room.group_id,
-      groupName: groupinfo.group.name,
-    });
-
     // if changing rooms: disconnect first, then connect
-    if (activeRoom !== roominfo.room.id) {
+    if (currentRoom.roomId !== roominfo.room.id) {
       if (room?.state) {
         if (room.state !== 'disconnected') {
           console.log(
-            `disconnecting from room ${activeRoom} and connecting to room ${roominfo.room.id}`
+            `disconnecting from room ${currentRoom.roomId} and connecting to room ${roominfo.room.id}`
           );
           room.disconnect();
           const nodeRef = ref(
             database,
-            `participants/${groupId}/${activeRoom}/${appUser.id}`
+            `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
           );
           console.log('removing RT node:', nodeRef);
           remove(nodeRef);
@@ -156,7 +147,7 @@ function GroupRoom(props: {
 
   const showUsers = () => {
     if (
-      activeRoom === roominfo.room.id &&
+      currentRoom.roomId === roominfo.room.id &&
       connectionState === ConnectionState.Connected
     ) {
       return <RoomParticipants userMap={userMap} />;
@@ -183,3 +174,5 @@ function GroupRoom(props: {
 }
 
 export default GroupRoom;
+// todo: if connected to Room A in Group A, then connecting to Room A in Group B
+// will not drop rt db entry from Room A in Group A.

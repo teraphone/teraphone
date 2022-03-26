@@ -1,12 +1,11 @@
 import * as React from 'react';
 import List from '@mui/material/List';
 import * as models from '../models/models';
-import GroupRoom, { ActiveState } from './GroupRoom';
+import GroupRoom from './GroupRoom';
 
 function GroupRooms(props: { groupinfo: models.GroupInfo }) {
   const { groupinfo } = props;
   const { rooms } = groupinfo;
-  const [activeRoom, setActiveRoom] = React.useState(0);
 
   function handleRooms() {
     const roomItems = rooms.map((roominfo: models.RoomInfo) => {
@@ -17,7 +16,6 @@ function GroupRooms(props: { groupinfo: models.GroupInfo }) {
           groupinfo={groupinfo}
           roominfo={roominfo}
           key={`${groupId}/${roomId}`}
-          active={{ activeRoom, setActiveRoom } as ActiveState}
         />
       );
     });

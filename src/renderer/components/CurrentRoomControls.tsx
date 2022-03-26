@@ -45,6 +45,14 @@ function CurentRoomControls() {
     }
   }, [error, isConnecting, room, setConnectionState]);
 
+  React.useEffect(() => {
+    // remove userRTRef on windlow unload event
+    window.addEventListener('beforeunload', () => {
+      console.log('handling window unloaded event');
+      remove(userRTRef);
+    });
+  }, [userRTRef]);
+
   const StatusConnected = () => {
     return (
       <Typography variant="body1" sx={{ color: 'success.light' }}>

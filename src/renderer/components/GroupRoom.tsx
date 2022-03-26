@@ -87,7 +87,7 @@ function GroupRoom(props: {
       }
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [groupId, id, setRoomRTInfo]);
 
   const handleClick = () => {
     const connectRoom = () => {
@@ -176,3 +176,5 @@ function GroupRoom(props: {
 }
 
 export default GroupRoom;
+
+// todo: changing rooms while connecting to a room will de-sync the RT state.

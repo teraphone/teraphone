@@ -46,7 +46,7 @@ function CurentRoomControls() {
   }, [error, isConnecting, room, setConnectionState]);
 
   React.useEffect(() => {
-    // remove userRTRef on windlow unload event
+    // remove userRTRef on window unload event
     window.addEventListener('beforeunload', () => {
       console.log('handling window unloaded event');
       remove(userRTRef);

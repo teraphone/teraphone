@@ -70,6 +70,26 @@ function GroupRoom(props: {
     new Map<string, ParticipantRTInfo>()
   );
 
+  const pushUserRTInfo = () => {
+    const nodeRef = child(roomRTRef, `${appUser.id}`);
+    console.log('pushing RT node:', nodeRef);
+    update(nodeRef, {
+      isMuted: false,
+      isDeafened: false,
+      isCameraShare: false,
+      isScreenShare: false,
+    });
+  };
+
+  const removeUserRTInfo = () => {
+    const nodeRef = ref(
+      database,
+      `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
+    );
+    console.log('removing RT node:', nodeRef);
+    remove(nodeRef);
+  };
+
   React.useEffect(() => {
     console.log(`GroupRoom.useEffect for group ${groupId} room ${id}`);
 
@@ -103,12 +123,7 @@ function GroupRoom(props: {
         .then((livekitRoom) => {
           console.log(`connected to room ${roominfo.room.id}`, livekitRoom);
           if (livekitRoom) {
-            update(child(roomRTRef, `${appUser.id}`), {
-              isMuted: false,
-              isDeafened: false,
-              isCameraShare: false,
-              isScreenShare: false,
-            });
+            pushUserRTInfo();
           }
           return true;
         })
@@ -128,12 +143,7 @@ function GroupRoom(props: {
             `disconnecting from room ${currentRoom.roomId} and connecting to room ${roominfo.room.id}`
           );
           room.disconnect();
-          const nodeRef = ref(
-            database,
-            `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
-          );
-          console.log('removing RT node:', nodeRef);
-          remove(nodeRef);
+          removeUserRTInfo();
         }
       }
       connectRoom();

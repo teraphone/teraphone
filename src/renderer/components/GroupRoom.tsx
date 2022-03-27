@@ -197,4 +197,5 @@ function GroupRoom(props: {
 
 export default GroupRoom;
 
-// todo: changing rooms while connecting to a room will de-sync the RT state.
+// todo: changing rooms rapidly can get you into a state where you're connected to multiple rooms.
+// need understand how this can happen and how to prevent it.

@@ -92,7 +92,7 @@ function GroupRoom(props: {
 
   React.useEffect(() => {
     console.log(`GroupRoom.useEffect for group ${groupId} room ${id}`);
-
+    let isMounted = true;
     onValue(
       roomRTRef,
       (snapshot: DataSnapshot) => {
@@ -100,14 +100,19 @@ function GroupRoom(props: {
         //   `GroupRoom.onValue.Callback for group ${groupId} room ${id}`
         // );
         // console.log('snapshot.val()', snapshot.val());
-        setRoomRTInfo(snapshot.val() as RoomRTInfo);
+        if (isMounted) {
+          setRoomRTInfo(snapshot.val() as RoomRTInfo);
+        }
       },
       (error) => {
         console.log('onValue error', error);
       }
     );
+    return () => {
+      isMounted = false;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groupId, id, setRoomRTInfo]);
+  }, []);
 
   const handleClick = () => {
     const connectRoom = () => {

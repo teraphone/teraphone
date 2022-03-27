@@ -96,10 +96,10 @@ function GroupRoom(props: {
     onValue(
       roomRTRef,
       (snapshot: DataSnapshot) => {
-        console.log(
-          `GroupRoom.onValue.Callback for group ${groupId} room ${id}`
-        );
-        console.log('snapshot.val()', snapshot.val());
+        // console.log(
+        //   `GroupRoom.onValue.Callback for group ${groupId} room ${id}`
+        // );
+        // console.log('snapshot.val()', snapshot.val());
         setRoomRTInfo(snapshot.val() as RoomRTInfo);
       },
       (error) => {
@@ -147,13 +147,17 @@ function GroupRoom(props: {
         }
       }
       connectRoom();
+    }
 
-      // else clicked on same room. already connected?
-      // if so, do nothing. otherwise, connect.
-    } else if (connectionState === ConnectionState.Connected) {
-      console.log(`already connected to room ${roominfo.room.id}`, room);
-    } else {
-      connectRoom();
+    if (currentRoom.roomId === roominfo.room.id) {
+      if (connectionState === ConnectionState.Connected) {
+        console.log(`already connected to room ${roominfo.room.id}`);
+      } else if (connectionState === ConnectionState.Connecting) {
+        console.log(`already connecting to room ${roominfo.room.id}`);
+      } else {
+        console.log(`connecting to room ${roominfo.room.id}`);
+        connectRoom();
+      }
     }
   };
 

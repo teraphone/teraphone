@@ -137,19 +137,20 @@ function GroupRoom(props: {
 
     // if changing rooms: disconnect first, then connect
     if (currentRoom.roomId !== roominfo.room.id) {
-      if (room?.state) {
-        if (room.state !== 'disconnected') {
-          console.log(
-            `disconnecting from room ${currentRoom.roomId} and connecting to room ${roominfo.room.id}`
-          );
-          room.disconnect();
-          removeUserRTInfo();
-        }
+      if (connectionState === ConnectionState.Connected) {
+        console.log(
+          `disconnecting from room ${currentRoom.roomId} and connecting to room ${roominfo.room.id}`
+        );
+        room?.disconnect();
+        removeUserRTInfo();
+        connectRoom();
+      } else if (connectionState === ConnectionState.Connecting) {
+        console.log(`already trying to connect to room ${currentRoom.roomId}`);
+      } else {
+        console.log(`connecting to room ${roominfo.room.id}`);
+        connectRoom();
       }
-      connectRoom();
-    }
-
-    if (currentRoom.roomId === roominfo.room.id) {
+    } else if (currentRoom.roomId === roominfo.room.id) {
       if (connectionState === ConnectionState.Connected) {
         console.log(`already connected to room ${roominfo.room.id}`);
       } else if (connectionState === ConnectionState.Connecting) {

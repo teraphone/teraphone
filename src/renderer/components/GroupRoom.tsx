@@ -22,15 +22,7 @@ import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
 import useAppUser from '../hooks/useAppUser';
-
-type ParticipantRTInfo = {
-  isMuted: boolean;
-  isDeafened: boolean;
-  isCameraShare: boolean;
-  isScreenShare: boolean;
-};
-
-export type RoomRTInfo = Map<string, ParticipantRTInfo>;
+import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
 
 function useUserMap(users: models.RoomUserInfo[]) {
   const userMap = new Map<string, models.RoomUserInfo>();

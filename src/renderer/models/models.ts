@@ -123,3 +123,12 @@ export type GroupInfo = {
 };
 
 export type GroupsInfo = GroupInfo[];
+
+export type ParticipantRTInfo = {
+  isMuted: boolean;
+  isDeafened: boolean;
+  isCameraShare: boolean;
+  isScreenShare: boolean;
+};
+
+export type RoomRTInfo = Map<string, ParticipantRTInfo>;

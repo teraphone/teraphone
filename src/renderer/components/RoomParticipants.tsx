@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/naming-convention */
 import List from '@mui/material/List';
 import { Participant } from 'livekit-client';
 import * as models from '../models/models';

@@ -9,11 +9,38 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import { electron } from 'process';
+import { update, ref } from 'firebase/database';
 import useMute from '../hooks/useMute';
+import useCurrentRoom from '../hooks/useCurrentRoom';
+import useFirebase from '../hooks/useFirebase';
+import useAppUser from '../hooks/useAppUser';
+import useConnection from '../hooks/useConnection';
+import { ConnectionState } from '../contexts/ConnectionContext';
 
 function BottomControls() {
   const { mute, toggleMute, deafen, toggleDeafen } = useMute();
+  const { currentRoom } = useCurrentRoom();
+  const { database } = useFirebase();
+  const { appUser } = useAppUser();
+  const { connectionState } = useConnection();
+
+  const pushUserRTInfoIfConnected = (isMuted: boolean, isDeafened: boolean) => {
+    const nodeRef = ref(
+      database,
+      `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
+    );
+    if (connectionState === ConnectionState.Connected) {
+      console.log('pushing RT node:', nodeRef);
+      update(nodeRef, {
+        isMuted,
+        isDeafened,
+        isCameraShare: false,
+        isScreenShare: false,
+      });
+    } else {
+      console.log('skip pushing RT node:', nodeRef);
+    }
+  };
 
   const MuteButton = () => {
     if (mute) {
@@ -23,7 +50,10 @@ function BottomControls() {
             color="primary"
             aria-label="unmute"
             component="span"
-            onClick={toggleMute}
+            onClick={() => {
+              pushUserRTInfoIfConnected(!mute, deafen);
+              toggleMute();
+            }}
           >
             <MicOffIcon />
           </IconButton>
@@ -36,7 +66,10 @@ function BottomControls() {
           color="primary"
           aria-label="mute"
           component="span"
-          onClick={toggleMute}
+          onClick={() => {
+            pushUserRTInfoIfConnected(!mute, deafen);
+            toggleMute();
+          }}
         >
           <MicIcon />
         </IconButton>
@@ -52,7 +85,10 @@ function BottomControls() {
             color="primary"
             aria-label="undeafen"
             component="span"
-            onClick={toggleDeafen}
+            onClick={() => {
+              pushUserRTInfoIfConnected(mute, !deafen);
+              toggleDeafen();
+            }}
           >
             <HeadsetOffIcon />
           </IconButton>
@@ -65,7 +101,10 @@ function BottomControls() {
           color="primary"
           aria-label="deafen"
           component="span"
-          onClick={toggleDeafen}
+          onClick={() => {
+            pushUserRTInfoIfConnected(mute, !deafen);
+            toggleDeafen();
+          }}
         >
           <HeadsetIcon />
         </IconButton>

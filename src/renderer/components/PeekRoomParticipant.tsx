@@ -18,6 +18,13 @@ function PeekRoomParticipant(props: {
     console.log('participantRTInfo', participantRTInfo);
   }, [userinfo, participantRTInfo]);
 
+  let muteStr: string;
+  if (participantRTInfo.isMuted) {
+    muteStr = ' (muted)';
+  } else {
+    muteStr = '';
+  }
+
   return (
     <ListItemButton
       dense
@@ -28,7 +35,7 @@ function PeekRoomParticipant(props: {
       <ListItemIcon>
         <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>{name[0]}</Avatar>
       </ListItemIcon>
-      <ListItemText primary={name} />
+      <ListItemText primary={name + muteStr} />
     </ListItemButton>
   );
 }

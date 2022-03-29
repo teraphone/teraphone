@@ -6,14 +6,30 @@ import useRoom from '../hooks/useRoom';
 
 function RoomParticipants(props: {
   userMap: Map<string, models.RoomUserInfo>;
+  roomRTInfo: Map<string, models.ParticipantRTInfo>;
 }) {
-  const { userMap } = props;
+  const { userMap, roomRTInfo } = props;
   const { participants } = useRoom();
 
   const participantItems = participants.map((participant: Participant) => {
     const id = participant.identity;
-    const userinfo = userMap.get(id) as models.RoomUserInfo;
-    // todo: if id not found, use a placeholder
+    let userinfo = {} as models.RoomUserInfo;
+    if (userMap.has(id)) {
+      userinfo = userMap.get(id) as models.RoomUserInfo;
+    } else {
+      userinfo.name = 'Unknown User';
+      userinfo.user_id = +id;
+    }
+
+    let participantRTInfo = {} as models.ParticipantRTInfo;
+    if (roomRTInfo.has(id)) {
+      participantRTInfo = roomRTInfo.get(id) as models.ParticipantRTInfo;
+    } else {
+      participantRTInfo.isMuted = false;
+      participantRTInfo.isDeafened = false;
+      participantRTInfo.isCameraShare = false;
+      participantRTInfo.isScreenShare = false;
+    }
 
     return (
       <RoomParticipant

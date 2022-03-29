@@ -173,7 +173,7 @@ function GroupRoom(props: {
       currentRoom.roomId === roominfo.room.id &&
       connectionState === ConnectionState.Connected
     ) {
-      return <RoomParticipants userMap={userMap} />;
+      return <RoomParticipants userMap={userMap} roomRTInfo={roomRTInfo} />;
     }
     return <PeekRoomParticipants userMap={userMap} roomRTInfo={roomRTInfo} />;
   };

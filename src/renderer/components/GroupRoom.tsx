@@ -23,6 +23,7 @@ import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
 import useAppUser from '../hooks/useAppUser';
 import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
+import PeekRoomParticipants from './PeekRoomParticipants';
 
 function useUserMap(users: models.RoomUserInfo[]) {
   const userMap = new Map<string, models.RoomUserInfo>();
@@ -166,7 +167,7 @@ function GroupRoom(props: {
     ) {
       return <RoomParticipants userMap={userMap} />;
     }
-    return null; // TODO: <PeekParticipants users={users} />
+    return <PeekRoomParticipants userMap={userMap} roomRTInfo={roomRTInfo} />;
   };
 
   return (

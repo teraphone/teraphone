@@ -24,6 +24,7 @@ import useFirebase from '../hooks/useFirebase';
 import useAppUser from '../hooks/useAppUser';
 import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
 import PeekRoomParticipants from './PeekRoomParticipants';
+import useMute from '../hooks/useMute';
 
 function useUserMap(users: models.RoomUserInfo[]) {
   const userMap = new Map<string, models.RoomUserInfo>();
@@ -62,13 +63,14 @@ function GroupRoom(props: {
   const [roomRTInfo, setRoomRTInfo] = React.useState<RoomRTInfo>(
     new Map<string, ParticipantRTInfo>()
   );
+  const { mute, deafen } = useMute();
 
-  const pushUserRTInfo = () => {
+  const pushUserRTInfo = (isMuted: boolean, isDeafened: boolean) => {
     const nodeRef = child(roomRTRef, `${appUser.id}`);
     console.log('pushing RT node:', nodeRef);
     update(nodeRef, {
-      isMuted: false,
-      isDeafened: false,
+      isMuted,
+      isDeafened,
       isCameraShare: false,
       isScreenShare: false,
     });
@@ -129,7 +131,7 @@ function GroupRoom(props: {
         .then((livekitRoom) => {
           console.log(`connected to room ${roominfo.room.id}`, livekitRoom);
           if (livekitRoom) {
-            pushUserRTInfo();
+            pushUserRTInfo(mute, deafen);
           }
           return true;
         })

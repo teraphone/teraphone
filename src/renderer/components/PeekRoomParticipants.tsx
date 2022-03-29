@@ -10,24 +10,26 @@ function PeakRoomParticipants(props: {
   const { userMap, roomRTInfo } = props;
   const roomParticipants: JSX.Element[] = [];
 
-  roomRTInfo.forEach(
-    (participantRTInfo: models.ParticipantRTInfo, userId: string) => {
-      let userinfo = {} as models.RoomUserInfo;
-      if (userMap.has(userId)) {
-        userinfo = userMap.get(userId) as models.RoomUserInfo;
-      } else {
-        userinfo.name = 'Unknown User';
-        userinfo.user_id = +userId;
+  if (roomRTInfo !== null) {
+    roomRTInfo.forEach(
+      (participantRTInfo: models.ParticipantRTInfo, userId: string) => {
+        let userinfo = {} as models.RoomUserInfo;
+        if (userMap.has(userId)) {
+          userinfo = userMap.get(userId) as models.RoomUserInfo;
+        } else {
+          userinfo.name = 'Unknown User';
+          userinfo.user_id = +userId;
+        }
+        roomParticipants.push(
+          <PeekRoomParticipant
+            key={`${userId}`}
+            userinfo={userinfo}
+            participantRTInfo={participantRTInfo}
+          />
+        );
       }
-      roomParticipants.push(
-        <PeekRoomParticipant
-          key={`${userId}`}
-          userinfo={userinfo}
-          participantRTInfo={participantRTInfo}
-        />
-      );
-    }
-  );
+    );
+  }
 
   return <List disablePadding>{roomParticipants}</List>;
 }

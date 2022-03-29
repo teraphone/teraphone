@@ -155,7 +155,7 @@ function BottomControls() {
       <MuteButton />
       <DeafenButton />
       <MenuButton />
-      <InfoButton />
+      {/* <InfoButton /> */}
     </Stack>
   );
 }

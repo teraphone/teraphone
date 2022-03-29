@@ -36,6 +36,7 @@ function RoomParticipants(props: {
         key={participant.sid}
         userinfo={userinfo}
         participant={participant}
+        participantRTInfo={participantRTInfo}
       />
     );
   });

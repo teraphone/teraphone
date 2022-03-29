@@ -13,8 +13,9 @@ import useMute from '../hooks/useMute';
 function RoomParticipant(props: {
   userinfo: models.RoomUserInfo;
   participant: Participant;
+  participantRTInfo: models.ParticipantRTInfo;
 }) {
-  const { userinfo, participant } = props;
+  const { userinfo, participant, participantRTInfo } = props;
   const { name } = userinfo;
   const participantState: ParticipantState = useParticipant(participant);
   const speech = participantState.isSpeaking ? ' 🗣' : '';
@@ -40,6 +41,13 @@ function RoomParticipant(props: {
     console.log('participant', participant);
   }, [participantState, userinfo, participant]);
 
+  let muteStr: string;
+  if (participantRTInfo.isMuted) {
+    muteStr = ' (muted)';
+  } else {
+    muteStr = '';
+  }
+
   return (
     <ListItemButton
       dense
@@ -50,7 +58,7 @@ function RoomParticipant(props: {
       <ListItemIcon>
         <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>{name[0]}</Avatar>
       </ListItemIcon>
-      <ListItemText primary={name + speech} />
+      <ListItemText primary={`${name + speech + muteStr}`} />
       {!deafen && track && (
         <AudioRenderer track={track} isLocal={isLocal} volume={0.5} />
       )}

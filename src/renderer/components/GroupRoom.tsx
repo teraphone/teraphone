@@ -94,7 +94,15 @@ function GroupRoom(props: {
         // );
         // console.log('snapshot.val()', snapshot.val());
         if (isMounted) {
-          setRoomRTInfo(snapshot.val() as RoomRTInfo);
+          const raw = snapshot.val();
+          if (raw === null) {
+            setRoomRTInfo(new Map() as RoomRTInfo);
+          } else {
+            const entries = Object.entries(
+              raw as Record<string, ParticipantRTInfo>
+            );
+            setRoomRTInfo(new Map(entries) as RoomRTInfo);
+          }
         }
       },
       (error) => {

@@ -17,7 +17,8 @@ import validator from 'validator';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
 import useFirebase from '../hooks/useFirebase';
-import useAppUser from '../hooks/useAppUser';
+import { useAppDispatch } from '../redux/hooks';
+import { setAppUser } from '../redux/AppUserSlice';
 
 const theme = createTheme();
 
@@ -38,7 +39,7 @@ function SignIn() {
   const navigate = useNavigate();
   const auth = useAuth();
   const { signIn } = useFirebase();
-  const { setAppUser } = useAppUser();
+  const dispatch = useAppDispatch();
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -91,7 +92,7 @@ function SignIn() {
         } = response.data;
         auth.setState({ token, expiration });
         console.log('auth', auth);
-        setAppUser(user);
+        dispatch(setAppUser(user));
         return fbToken;
       })
       .then((fbToken) => {

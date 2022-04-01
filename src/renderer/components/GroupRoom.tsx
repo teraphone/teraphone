@@ -21,7 +21,8 @@ import useCurrentRoom from '../hooks/useCurrentRoom';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
-import useAppUser from '../hooks/useAppUser';
+import { useAppSelector } from '../redux/hooks';
+import { selectAppUser } from '../redux/AppUserSlice';
 import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
 import PeekRoomParticipants from './PeekRoomParticipants';
 import useMute from '../hooks/useMute';
@@ -58,7 +59,7 @@ function GroupRoom(props: {
   const { currentRoom, setCurrentRoom } = useCurrentRoom();
   const { connectionState } = useConnection();
   const { database } = useFirebase();
-  const { appUser } = useAppUser();
+  const { appUser } = useAppSelector(selectAppUser);
   const roomRTRef = ref(database, `participants/${groupId}/${id}`);
   const [roomRTInfo, setRoomRTInfo] = React.useState<RoomRTInfo>(
     new Map<string, ParticipantRTInfo>()

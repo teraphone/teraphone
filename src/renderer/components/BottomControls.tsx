@@ -13,16 +13,18 @@ import { update, ref } from 'firebase/database';
 import useMute from '../hooks/useMute';
 import useCurrentRoom from '../hooks/useCurrentRoom';
 import useFirebase from '../hooks/useFirebase';
-import useAppUser from '../hooks/useAppUser';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
+import { useAppSelector } from '../redux/hooks';
+import { selectAppUser } from '../redux/AppUserSlice';
 
 function BottomControls() {
   const { mute, toggleMute, deafen, toggleDeafen } = useMute();
   const { currentRoom } = useCurrentRoom();
   const { database } = useFirebase();
-  const { appUser } = useAppUser();
+  const { appUser } = useAppSelector(selectAppUser);
   const { connectionState } = useConnection();
+  const debug = false;
 
   const pushUserRTInfoIfConnected = (isMuted: boolean, isDeafened: boolean) => {
     const nodeRef = ref(
@@ -155,7 +157,7 @@ function BottomControls() {
       <MuteButton />
       <DeafenButton />
       <MenuButton />
-      {/* <InfoButton /> */}
+      {debug && <InfoButton />}
     </Stack>
   );
 }

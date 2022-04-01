@@ -17,14 +17,15 @@ import useRoom from '../hooks/useRoom';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
-import useAppUser from '../hooks/useAppUser';
+import { useAppSelector } from '../redux/hooks';
+import { selectAppUser } from '../redux/AppUserSlice';
 
 function CurentRoomControls() {
   const { currentRoom } = useCurrentRoom();
   const { isConnecting, error, room } = useRoom();
   const { connectionState, setConnectionState } = useConnection();
   const { database } = useFirebase();
-  const { appUser } = useAppUser();
+  const { appUser } = useAppSelector(selectAppUser);
   const userRTRef = ref(
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`

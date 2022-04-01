@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import useCurrentRoom from 'renderer/hooks/useCurrentRoom';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -19,9 +18,10 @@ import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
 import { useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
+import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 
 function CurentRoomControls() {
-  const { currentRoom } = useCurrentRoom();
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { isConnecting, error, room } = useRoom();
   const { connectionState, setConnectionState } = useConnection();
   const { database } = useFirebase();

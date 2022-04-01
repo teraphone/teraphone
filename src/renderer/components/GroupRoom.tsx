@@ -16,15 +16,15 @@ import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
-import useCurrentRoom from '../hooks/useCurrentRoom';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
 import useFirebase from '../hooks/useFirebase';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
 import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
+import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 
 function useUserMap(users: models.RoomUserInfo[]) {
   const userMap = new Map<string, models.RoomUserInfo>();
@@ -55,7 +55,7 @@ function GroupRoom(props: {
   };
   const url = 'wss://demo.dally.app';
   const { connect, room } = useRoom();
-  const { currentRoom, setCurrentRoom } = useCurrentRoom();
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionState } = useConnection();
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
@@ -65,6 +65,7 @@ function GroupRoom(props: {
   );
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
+  const dispatch = useAppDispatch();
 
   const pushUserRTInfo = (isMuted: boolean, isDeafened: boolean) => {
     const nodeRef = child(roomRTRef, `${appUser.id}`);
@@ -121,12 +122,14 @@ function GroupRoom(props: {
   const handleClick = () => {
     const connectRoom = () => {
       // set current room to this room
-      setCurrentRoom({
-        roomId: roominfo.room.id,
-        roomName: roominfo.room.name,
-        groupId: roominfo.room.group_id,
-        groupName: groupinfo.group.name,
-      });
+      dispatch(
+        setCurrentRoom({
+          roomId: roominfo.room.id,
+          roomName: roominfo.room.name,
+          groupId: roominfo.room.group_id,
+          groupName: groupinfo.group.name,
+        })
+      );
       // connect to room
       connect(url, roominfo.token, connectConfig)
         .then((livekitRoom) => {

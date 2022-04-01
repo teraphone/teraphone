@@ -10,7 +10,6 @@ import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { update, ref } from 'firebase/database';
-import useCurrentRoom from '../hooks/useCurrentRoom';
 import useFirebase from '../hooks/useFirebase';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
@@ -22,12 +21,13 @@ import {
   toggleMute,
   toggleDeafen,
 } from '../redux/MuteSlice';
+import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 
 function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
-  const { currentRoom } = useCurrentRoom();
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
   const { connectionState } = useConnection();

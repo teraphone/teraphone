@@ -16,8 +16,10 @@ import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
-import useConnection from '../hooks/useConnection';
-import { ConnectionState } from '../contexts/ConnectionContext';
+import {
+  ConnectionStatus,
+  selectConnectionStatus,
+} from '../redux/ConnectionStatusSlice';
 import useFirebase from '../hooks/useFirebase';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
@@ -56,7 +58,7 @@ function GroupRoom(props: {
   const url = 'wss://demo.dally.app';
   const { connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { connectionState } = useConnection();
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
   const roomRTRef = ref(database, `participants/${groupId}/${id}`);
@@ -149,23 +151,23 @@ function GroupRoom(props: {
 
     // if changing rooms: disconnect first, then connect
     if (currentRoom.roomId !== roominfo.room.id) {
-      if (connectionState === ConnectionState.Connected) {
+      if (connectionStatus === ConnectionStatus.Connected) {
         console.log(
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${roominfo.room.id}`
         );
         room?.disconnect();
         removeUserRTInfo();
         connectRoom();
-      } else if (connectionState === ConnectionState.Connecting) {
+      } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);
       } else {
         console.log(`connecting to room ${roominfo.room.id}`);
         connectRoom();
       }
     } else if (currentRoom.roomId === roominfo.room.id) {
-      if (connectionState === ConnectionState.Connected) {
+      if (connectionStatus === ConnectionStatus.Connected) {
         console.log(`already connected to room ${roominfo.room.id}`);
-      } else if (connectionState === ConnectionState.Connecting) {
+      } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already connecting to room ${roominfo.room.id}`);
       } else {
         console.log(`connecting to room ${roominfo.room.id}`);
@@ -177,7 +179,7 @@ function GroupRoom(props: {
   const showUsers = () => {
     if (
       currentRoom.roomId === roominfo.room.id &&
-      connectionState === ConnectionState.Connected
+      connectionStatus === ConnectionStatus.Connected
     ) {
       return <RoomParticipants userMap={userMap} roomRTInfo={roomRTInfo} />;
     }

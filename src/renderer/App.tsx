@@ -4,7 +4,6 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
 import { RoomProvider } from './contexts/RoomContext';
-import { ConnectionProvider } from './contexts/ConnectionContext';
 import { FirebaseProvider } from './contexts/FirebaseContext';
 import { store } from './redux/store';
 
@@ -12,7 +11,6 @@ export default function App() {
   return (
     <Provider store={store}>
       <RoomProvider>
-          <ConnectionProvider>
             <FirebaseProvider>
               <Router>
                 <Routes>
@@ -23,7 +21,6 @@ export default function App() {
                 </Routes>
               </Router>
             </FirebaseProvider>
-          </ConnectionProvider>
       </RoomProvider>
     </Provider>
   );

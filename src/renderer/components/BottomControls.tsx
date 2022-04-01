@@ -11,8 +11,10 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { update, ref } from 'firebase/database';
 import useFirebase from '../hooks/useFirebase';
-import useConnection from '../hooks/useConnection';
-import { ConnectionState } from '../contexts/ConnectionContext';
+import {
+  ConnectionStatus,
+  selectConnectionStatus,
+} from '../redux/ConnectionStatusSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import {
@@ -30,7 +32,7 @@ function BottomControls() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
-  const { connectionState } = useConnection();
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const debug = false;
 
   const pushUserRTInfoIfConnected = (isMuted: boolean, isDeafened: boolean) => {
@@ -38,7 +40,7 @@ function BottomControls() {
       database,
       `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
     );
-    if (connectionState === ConnectionState.Connected) {
+    if (connectionStatus === ConnectionStatus.Connected) {
       console.log('pushing RT node:', nodeRef);
       update(nodeRef, {
         isMuted,

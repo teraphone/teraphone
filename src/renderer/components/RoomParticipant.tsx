@@ -10,7 +10,8 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import * as models from '../models/models';
 import AudioRenderer from './AudioRenderer';
-import useMute from '../hooks/useMute';
+import { useAppSelector } from '../redux/hooks';
+import { selectMute, selectDeafen } from '../redux/MuteSlice';
 
 function RoomParticipant(props: {
   userinfo: models.RoomUserInfo;
@@ -23,7 +24,8 @@ function RoomParticipant(props: {
   const speech = participantState.isSpeaking ? ' 🗣' : '';
   const track = participantState.microphonePublication?.track;
   const { isLocal } = participantState;
-  const { mute, deafen } = useMute();
+  const mute = useAppSelector(selectMute);
+  const deafen = useAppSelector(selectDeafen);
   const { isMuted, isDeafened } = participantRTInfo;
 
   if (isLocal) {

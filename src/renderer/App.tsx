@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import Home from './components/Home';
-import { MuteProvider } from './contexts/MuteContext';
 import { RoomProvider } from './contexts/RoomContext';
 import { CurrentRoomProvider } from './contexts/CurrentRoomContext';
 import { ConnectionProvider } from './contexts/ConnectionContext';
@@ -13,24 +12,22 @@ import { store } from './redux/store';
 export default function App() {
   return (
     <Provider store={store}>
-      <MuteProvider>
-        <RoomProvider>
-          <CurrentRoomProvider>
-            <ConnectionProvider>
-              <FirebaseProvider>
-                <Router>
-                  <Routes>
-                    <Route path="/" element={<SignIn />} />
-                    <Route path="/signin" element={<SignIn />} />
-                    <Route path="/signup" element={<SignUp />} />
-                    <Route path="/home" element={<Home />} />
-                  </Routes>
-                </Router>
-              </FirebaseProvider>
-            </ConnectionProvider>
-          </CurrentRoomProvider>
-        </RoomProvider>
-      </MuteProvider>
+      <RoomProvider>
+        <CurrentRoomProvider>
+          <ConnectionProvider>
+            <FirebaseProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<SignIn />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/home" element={<Home />} />
+                </Routes>
+              </Router>
+            </FirebaseProvider>
+          </ConnectionProvider>
+        </CurrentRoomProvider>
+      </RoomProvider>
     </Provider>
   );
 }

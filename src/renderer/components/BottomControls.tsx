@@ -10,16 +10,23 @@ import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { update, ref } from 'firebase/database';
-import useMute from '../hooks/useMute';
 import useCurrentRoom from '../hooks/useCurrentRoom';
 import useFirebase from '../hooks/useFirebase';
 import useConnection from '../hooks/useConnection';
 import { ConnectionState } from '../contexts/ConnectionContext';
-import { useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
+import {
+  selectMute,
+  selectDeafen,
+  toggleMute,
+  toggleDeafen,
+} from '../redux/MuteSlice';
 
 function BottomControls() {
-  const { mute, toggleMute, deafen, toggleDeafen } = useMute();
+  const dispatch = useAppDispatch();
+  const mute = useAppSelector(selectMute);
+  const deafen = useAppSelector(selectDeafen);
   const { currentRoom } = useCurrentRoom();
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
@@ -54,7 +61,7 @@ function BottomControls() {
             component="span"
             onClick={() => {
               pushUserRTInfoIfConnected(!mute, deafen);
-              toggleMute();
+              dispatch(toggleMute());
             }}
           >
             <MicOffIcon />
@@ -70,7 +77,7 @@ function BottomControls() {
           component="span"
           onClick={() => {
             pushUserRTInfoIfConnected(!mute, deafen);
-            toggleMute();
+            dispatch(toggleMute());
           }}
         >
           <MicIcon />
@@ -89,7 +96,7 @@ function BottomControls() {
             component="span"
             onClick={() => {
               pushUserRTInfoIfConnected(mute, !deafen);
-              toggleDeafen();
+              dispatch(toggleDeafen());
             }}
           >
             <HeadsetOffIcon />
@@ -105,7 +112,7 @@ function BottomControls() {
           component="span"
           onClick={() => {
             pushUserRTInfoIfConnected(mute, !deafen);
-            toggleDeafen();
+            dispatch(toggleDeafen());
           }}
         >
           <HeadsetIcon />

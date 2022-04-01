@@ -8,7 +8,6 @@ import {
   remove,
   update,
   child,
-  get,
   ref,
   onValue,
   DataSnapshot,
@@ -25,7 +24,7 @@ import { useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
 import PeekRoomParticipants from './PeekRoomParticipants';
-import useMute from '../hooks/useMute';
+import { selectMute, selectDeafen } from '../redux/MuteSlice';
 
 function useUserMap(users: models.RoomUserInfo[]) {
   const userMap = new Map<string, models.RoomUserInfo>();
@@ -64,7 +63,8 @@ function GroupRoom(props: {
   const [roomRTInfo, setRoomRTInfo] = React.useState<RoomRTInfo>(
     new Map<string, ParticipantRTInfo>()
   );
-  const { mute, deafen } = useMute();
+  const mute = useAppSelector(selectMute);
+  const deafen = useAppSelector(selectDeafen);
 
   const pushUserRTInfo = (isMuted: boolean, isDeafened: boolean) => {
     const nodeRef = child(roomRTRef, `${appUser.id}`);

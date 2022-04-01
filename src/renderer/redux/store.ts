@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import appUserReducer from './AppUserSlice';
 import authReducer from './AuthSlice';
+import muteReducer from './MuteSlice';
 
 export const store = configureStore({
   reducer: {
     appUser: appUserReducer,
     auth: authReducer,
+    mute: muteReducer,
   },
 });
 

@@ -13,9 +13,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
 import axios from '../api/axios';
-import useAuth from '../hooks/useAuth';
 import useFirebase from '../hooks/useFirebase';
-import useAppUser from '../hooks/useAppUser';
+import { useAppDispatch } from '../redux/hooks';
+import { setAppUser } from '../redux/AppUserSlice';
+import { setAuth } from '../redux/AuthSlice';
 
 const theme = createTheme();
 
@@ -42,9 +43,8 @@ function SignUp() {
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
-  const auth = useAuth();
   const { signIn } = useFirebase();
-  const { setAppUser } = useAppUser();
+  const dispatch = useAppDispatch();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -124,8 +124,8 @@ function SignUp() {
           firebase_auth_token: fbToken,
           user,
         } = response.data;
-        auth.setState({ token, expiration });
-        setAppUser(user);
+        dispatch(setAuth({ token, expiration }));
+        dispatch(setAppUser(user));
         return fbToken;
       })
       .then((fbToken) => {

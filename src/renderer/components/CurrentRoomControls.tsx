@@ -3,7 +3,6 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import useCurrentRoom from 'renderer/hooks/useCurrentRoom';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -14,17 +13,23 @@ import Tooltip from '@mui/material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ref, remove } from 'firebase/database';
 import useRoom from '../hooks/useRoom';
-import useConnection from '../hooks/useConnection';
-import { ConnectionState } from '../contexts/ConnectionContext';
+import {
+  ConnectionStatus,
+  selectConnectionStatus,
+  setConnectionStatus,
+} from '../redux/ConnectionStatusSlice';
 import useFirebase from '../hooks/useFirebase';
-import useAppUser from '../hooks/useAppUser';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { selectAppUser } from '../redux/AppUserSlice';
+import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 
 function CurentRoomControls() {
-  const { currentRoom } = useCurrentRoom();
+  const dispatch = useAppDispatch();
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { isConnecting, error, room } = useRoom();
-  const { connectionState, setConnectionState } = useConnection();
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { database } = useFirebase();
-  const { appUser } = useAppUser();
+  const { appUser } = useAppSelector(selectAppUser);
   const userRTRef = ref(
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
@@ -33,17 +38,17 @@ function CurentRoomControls() {
   React.useEffect(() => {
     // set connection state
     if (error) {
-      setConnectionState(ConnectionState.Error);
+      dispatch(setConnectionStatus(ConnectionStatus.Error));
     } else if (isConnecting) {
-      setConnectionState(ConnectionState.Connecting);
+      dispatch(setConnectionStatus(ConnectionStatus.Connecting));
     } else if (room && room.state === 'connected') {
-      setConnectionState(ConnectionState.Connected);
+      dispatch(setConnectionStatus(ConnectionStatus.Connected));
     } else if (room && room.state === 'reconnecting') {
-      setConnectionState(ConnectionState.Reconnecting);
+      dispatch(setConnectionStatus(ConnectionStatus.Reconnecting));
     } else {
-      setConnectionState(ConnectionState.Disconnected);
+      dispatch(setConnectionStatus(ConnectionStatus.Disconnected));
     }
-  }, [error, isConnecting, room, setConnectionState]);
+  }, [error, isConnecting, room, dispatch]);
 
   React.useEffect(() => {
     // remove userRTRef on window unload event
@@ -95,17 +100,17 @@ function CurentRoomControls() {
   };
 
   const Status = () => {
-    switch (connectionState) {
-      case ConnectionState.Connected: {
+    switch (connectionStatus) {
+      case ConnectionStatus.Connected: {
         return <StatusConnected />;
       }
-      case ConnectionState.Connecting: {
+      case ConnectionStatus.Connecting: {
         return <StatusConnecting />;
       }
-      case ConnectionState.Error: {
+      case ConnectionStatus.Error: {
         return <StatusError />;
       }
-      case ConnectionState.Reconnecting: {
+      case ConnectionStatus.Reconnecting: {
         return <StatusConnecting />;
       }
       default: {
@@ -167,7 +172,7 @@ function CurentRoomControls() {
               remove(userRTRef);
               console.log('room', room);
             }}
-            disabled={connectionState !== ConnectionState.Connected}
+            disabled={connectionStatus !== ConnectionStatus.Connected}
           >
             <LogoutIcon />
           </IconButton>
@@ -178,7 +183,7 @@ function CurentRoomControls() {
 
   return (
     <>
-      {connectionState !== ConnectionState.Disconnected && (
+      {connectionStatus !== ConnectionStatus.Disconnected && (
         <Box sx={{}}>
           <Status />
 

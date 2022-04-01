@@ -1,28 +1,29 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios, { axiosPrivate } from '../api/axios';
-import useAuth from './useAuth';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { setAuth, selectAuth } from '../redux/AuthSlice';
 
 const useAxiosPrivate = () => {
-  const auth = useAuth();
+  const dispatch = useAppDispatch();
+  const { auth } = useAppSelector(selectAuth);
   const navigate = useNavigate();
 
   const updateAuthHeader = () => {
     const refreshAuth = async () => {
       const config = {
         headers: {
-          Authorization: `Bearer ${auth.state.token}`,
+          Authorization: `Bearer ${auth.token}`,
         },
       };
       const response = await axios.get('/v1/private/auth', config);
       const { token, expiration } = response.data;
-      auth.setState({ token, expiration });
+      dispatch(setAuth({ token, expiration }));
     };
 
-    const isExpired = auth.state.expiration - Math.floor(Date.now() / 1000) < 0;
+    const isExpired = auth.expiration - Math.floor(Date.now() / 1000) < 0;
     const expiresSoon =
-      auth.state.expiration - Math.floor(Date.now() / 1000) < 3600 &&
-      !isExpired;
+      auth.expiration - Math.floor(Date.now() / 1000) < 3600 && !isExpired;
 
     if (isExpired) {
       // eslint-disable-next-line no-console
@@ -42,7 +43,7 @@ const useAxiosPrivate = () => {
         }
         // eslint-disable-next-line no-console
         console.log(`updateAuthHeader, time: ${Math.floor(Date.now() / 1000)}`);
-        config.headers.Authorization = `Bearer ${auth.state.token}`;
+        config.headers.Authorization = `Bearer ${auth.token}`;
 
         return config;
       },
@@ -55,8 +56,7 @@ const useAxiosPrivate = () => {
     };
   };
 
-  // initAuthHeader();
-  React.useEffect(updateAuthHeader, [auth, navigate]);
+  React.useEffect(updateAuthHeader, [auth, dispatch, navigate]);
 
   return axiosPrivate;
 };

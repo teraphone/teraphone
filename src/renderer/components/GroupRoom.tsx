@@ -28,9 +28,9 @@ import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 
-function useUserMap(users: models.RoomUserInfo[]) {
-  const userMap = new Map<string, models.RoomUserInfo>();
-  users.forEach((userinfo: models.RoomUserInfo) => {
+function useUserMap(users: models.GroupUserInfo[]) {
+  const userMap = new Map<string, models.GroupUserInfo>();
+  users.forEach((userinfo: models.GroupUserInfo) => {
     const { user_id: id } = userinfo;
     userMap.set(`${id}`, userinfo);
   });
@@ -43,7 +43,7 @@ function GroupRoom(props: {
   roominfo: models.RoomInfo;
 }) {
   const { groupinfo, roominfo } = props;
-  const { users } = roominfo;
+  const { users } = groupinfo;
   const userMap = useUserMap(users);
   const groupId = roominfo.room.group_id;
   const { id } = roominfo.room;

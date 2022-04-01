@@ -9,7 +9,7 @@ import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import * as models from '../models/models';
 
 function PeekRoomParticipant(props: {
-  userinfo: models.RoomUserInfo;
+  userinfo: models.GroupUserInfo;
   participantRTInfo: models.ParticipantRTInfo;
 }) {
   const { userinfo, participantRTInfo } = props;

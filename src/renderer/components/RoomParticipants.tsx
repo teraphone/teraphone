@@ -5,7 +5,7 @@ import RoomParticipant from './RoomParticipant';
 import useRoom from '../hooks/useRoom';
 
 function RoomParticipants(props: {
-  userMap: Map<string, models.RoomUserInfo>;
+  userMap: Map<string, models.GroupUserInfo>;
   roomRTInfo: Map<string, models.ParticipantRTInfo>;
 }) {
   const { userMap, roomRTInfo } = props;
@@ -13,9 +13,9 @@ function RoomParticipants(props: {
 
   const participantItems = participants.map((participant: Participant) => {
     const id = participant.identity;
-    let userinfo = {} as models.RoomUserInfo;
+    let userinfo = {} as models.GroupUserInfo;
     if (userMap.has(id)) {
-      userinfo = userMap.get(id) as models.RoomUserInfo;
+      userinfo = userMap.get(id) as models.GroupUserInfo;
     } else {
       userinfo.name = 'Unknown User';
       userinfo.user_id = +id;

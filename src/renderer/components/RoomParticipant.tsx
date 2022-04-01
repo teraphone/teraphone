@@ -14,7 +14,7 @@ import { useAppSelector } from '../redux/hooks';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 
 function RoomParticipant(props: {
-  userinfo: models.RoomUserInfo;
+  userinfo: models.GroupUserInfo;
   participant: Participant;
   participantRTInfo: models.ParticipantRTInfo;
 }) {

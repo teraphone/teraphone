@@ -1,7 +1,11 @@
+/* eslint-disable import/no-cycle */
 import { configureStore } from '@reduxjs/toolkit';
+import appUserReducer from './AppUserSlice';
 
-const store = configureStore({
-  reducer: {},
+export const store = configureStore({
+  reducer: {
+    appUser: appUserReducer,
+  },
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

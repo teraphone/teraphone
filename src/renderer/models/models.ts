@@ -121,10 +121,12 @@ export type RoomInfo = {
   token: string;
 };
 
+export type RoomsInfo = RoomInfo[];
+
 export type GroupInfo = {
   group: Group;
   users: GroupUserInfo[];
-  rooms: RoomInfo[];
+  rooms: RoomsInfo;
 };
 
 export type GroupsInfo = GroupInfo[];

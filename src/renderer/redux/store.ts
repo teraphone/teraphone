@@ -4,6 +4,7 @@ import authReducer from './AuthSlice';
 import muteReducer from './MuteSlice';
 import currentRoomReducer from './CurrentRoomSlice';
 import connectionStatusReducer from './ConnectionStatusSlice';
+import worldReducer from './WorldSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     mute: muteReducer,
     currentRoom: currentRoomReducer,
     connectionStatus: connectionStatusReducer,
+    world: worldReducer,
   },
 });
 

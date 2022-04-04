@@ -12,10 +12,8 @@ import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import * as models from '../models/models';
 import GroupTabPanel from './GroupTabPanel';
-
-interface GroupTabsProps {
-  groupsInfo: models.GroupsInfo;
-}
+import { useAppSelector } from '../redux/hooks';
+import { selectGroups } from '../redux/WorldSlice';
 
 function a11yProps(index: number) {
   return {
@@ -24,9 +22,10 @@ function a11yProps(index: number) {
   };
 }
 
-export default function GroupTabs(props: GroupTabsProps) {
+export default function GroupTabs() {
   const [value, setValue] = React.useState(0);
-  const { groupsInfo } = props;
+
+  const groupsInfo = useAppSelector(selectGroups);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     if (newValue < groupsInfo.length) {

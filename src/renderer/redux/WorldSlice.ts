@@ -16,7 +16,7 @@ export const getWorld = createAsyncThunk(
   'world/getWorld',
   async (client: AxiosInstance) => {
     const response = await GetWorld(client);
-    return response.data as models.GroupsInfo;
+    return response.data.groups_info as models.GroupsInfo;
   }
 );
 

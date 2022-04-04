@@ -5,10 +5,13 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import * as requests from '../requests/requests';
 import * as models from '../models/models';
 import GroupTabs from './GroupTabs';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { getWorld } from '../redux/WorldSlice';
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const [groupsInfo, setGroupsInfo] = React.useState([] as models.GroupsInfo);
+  const dispatch = useAppDispatch();
 
   const getRoomsInfo = async (groupId: number) => {
     const rreq = await requests.GetRooms(axiosPrivate, groupId);
@@ -56,6 +59,15 @@ const Home = () => {
       })
       .catch((error) => {
         console.log('getGroupsInfo -> error', error);
+        return false;
+      });
+    dispatch(getWorld(axiosPrivate))
+      .then((groups) => {
+        console.log('dispatch getWorld -> then', groups);
+        return true;
+      })
+      .catch((error) => {
+        console.log('dispatch getWorld -> error', error);
         return false;
       });
 

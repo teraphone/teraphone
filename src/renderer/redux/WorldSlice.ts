@@ -1,6 +1,8 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 import * as models from '../models/models';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { GetWorld } from '../requests/requests';
 
 type WorldState = {
   groups: models.GroupsInfo;
@@ -10,6 +12,12 @@ const initialState: WorldState = {
   groups: [] as models.GroupsInfo,
 };
 
+export const getWorld = createAsyncThunk('world/getWorld', async () => {
+  const axiosPrivate = useAxiosPrivate();
+  const response = await GetWorld(axiosPrivate);
+  return response.data as models.GroupsInfo;
+});
+
 export const worldSlice = createSlice({
   name: 'world',
   initialState,
@@ -17,6 +25,11 @@ export const worldSlice = createSlice({
     setGroups: (state, action: PayloadAction<models.GroupsInfo>) => {
       state.groups = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(getWorld.fulfilled, (state, action) => {
+      state.groups = action.payload;
+    });
   },
 });
 

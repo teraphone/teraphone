@@ -117,3 +117,8 @@ export function JoinLiveKitRoom(
   const url = `/v1/roomservice/rooms/${group_id}/${room_id}/join`;
   return client.get(url);
 }
+
+export function GetWorld(client: AxiosInstance) {
+  const url = '/v1/private/world';
+  return client.get(url);
+}

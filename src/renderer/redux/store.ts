@@ -6,7 +6,7 @@ import muteReducer from './MuteSlice';
 import currentRoomReducer from './CurrentRoomSlice';
 import connectionStatusReducer from './ConnectionStatusSlice';
 import worldReducer from './WorldSlice';
-import artyReducer from './ArtySlice';
+import artyReducer, { addParticipantRTListener } from './ArtySlice';
 
 export const store = configureStore({
   reducer: {
@@ -19,7 +19,11 @@ export const store = configureStore({
     arty: artyReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoreActions: [addParticipantRTListener],
+      },
+    }).prepend(listenerMiddleware.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

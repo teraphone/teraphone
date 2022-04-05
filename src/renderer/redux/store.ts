@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import listenerMiddleware from './Middleware';
 import appUserReducer from './AppUserSlice';
 import authReducer from './AuthSlice';
 import muteReducer from './MuteSlice';
@@ -17,6 +18,8 @@ export const store = configureStore({
     world: worldReducer,
     arty: artyReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

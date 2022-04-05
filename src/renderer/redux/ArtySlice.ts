@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAction } from '@reduxjs/toolkit';
+import { Database } from 'firebase/database';
 import type { RootState } from './store';
 import * as models from '../models/models';
 
@@ -31,3 +32,13 @@ export const { setGroup } = artySlice.actions;
 export const selectParticipants = (state: RootState) => state.arty.participants;
 
 export default artySlice.reducer;
+
+export type AddParticipantRTListenerPayload = {
+  db: Database;
+  groupId: string;
+};
+
+export const addParticipantRTListener =
+  createAction<AddParticipantRTListenerPayload>(
+    'arty/addParticipantRTListener'
+  );

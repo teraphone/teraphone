@@ -1,4 +1,3 @@
-import * as React from 'react';
 import List from '@mui/material/List';
 import * as models from '../models/models';
 import GroupRoom from './GroupRoom';
@@ -13,8 +12,8 @@ function GroupRooms(props: { groupinfo: models.GroupInfo }) {
       const roomId = roominfo.room.id;
       return (
         <GroupRoom
-          groupinfo={groupinfo}
-          roominfo={roominfo}
+          groupInfo={groupinfo}
+          roomInfo={roominfo}
           key={`${groupId}/${roomId}`}
         />
       );

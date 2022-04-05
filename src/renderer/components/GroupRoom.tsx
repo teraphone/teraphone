@@ -4,15 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
-import {
-  remove,
-  update,
-  child,
-  ref,
-  onValue,
-  DataSnapshot,
-} from 'firebase/database';
-import * as React from 'react';
+import { remove, update, child, ref } from 'firebase/database';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -23,7 +15,6 @@ import {
 import useFirebase from '../hooks/useFirebase';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
-import { ParticipantRTInfo, RoomRTInfo } from '../models/models';
 import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
@@ -39,14 +30,14 @@ function useUserMap(users: models.GroupUserInfo[]) {
 }
 
 function GroupRoom(props: {
-  groupinfo: models.GroupInfo;
-  roominfo: models.RoomInfo;
+  groupInfo: models.GroupInfo;
+  roomInfo: models.RoomInfo;
 }) {
-  const { groupinfo, roominfo } = props;
-  const { users } = groupinfo;
+  const { groupInfo, roomInfo } = props;
+  const { users } = groupInfo;
   const userMap = useUserMap(users);
-  const groupId = roominfo.room.group_id;
-  const { id } = roominfo.room;
+  const groupId = roomInfo.room.group_id;
+  const { id: roomId } = roomInfo.room;
   const connectConfig: Livekit.ConnectOptions = {
     autoSubscribe: true,
     adaptiveStream: true,
@@ -61,10 +52,7 @@ function GroupRoom(props: {
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
-  const roomRTRef = ref(database, `participants/${groupId}/${id}`);
-  const [roomRTInfo, setRoomRTInfo] = React.useState<RoomRTInfo>(
-    new Map<string, ParticipantRTInfo>()
-  );
+  const roomRTRef = ref(database, `participants/${groupId}/${roomId}`);
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
   const dispatch = useAppDispatch();
@@ -89,53 +77,21 @@ function GroupRoom(props: {
     remove(nodeRef);
   };
 
-  React.useEffect(() => {
-    console.log(`GroupRoom.useEffect for group ${groupId} room ${id}`);
-    let isMounted = true;
-    onValue(
-      roomRTRef,
-      (snapshot: DataSnapshot) => {
-        // console.log(
-        //   `GroupRoom.onValue.Callback for group ${groupId} room ${id}`
-        // );
-        // console.log('snapshot.val()', snapshot.val());
-        if (isMounted) {
-          const raw = snapshot.val();
-          if (raw === null) {
-            setRoomRTInfo(new Map() as RoomRTInfo);
-          } else {
-            const entries = Object.entries(
-              raw as Record<string, ParticipantRTInfo>
-            );
-            setRoomRTInfo(new Map(entries) as RoomRTInfo);
-          }
-        }
-      },
-      (error) => {
-        console.log('onValue error', error);
-      }
-    );
-    return () => {
-      isMounted = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleClick = () => {
     const connectRoom = () => {
       // set current room to this room
       dispatch(
         setCurrentRoom({
-          roomId: roominfo.room.id,
-          roomName: roominfo.room.name,
-          groupId: roominfo.room.group_id,
-          groupName: groupinfo.group.name,
+          roomId: roomInfo.room.id,
+          roomName: roomInfo.room.name,
+          groupId: roomInfo.room.group_id,
+          groupName: groupInfo.group.name,
         })
       );
       // connect to room
-      connect(url, roominfo.token, connectConfig)
+      connect(url, roomInfo.token, connectConfig)
         .then((livekitRoom) => {
-          console.log(`connected to room ${roominfo.room.id}`, livekitRoom);
+          console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
           if (livekitRoom) {
             pushUserRTInfo(mute, deafen);
           }
@@ -146,14 +102,13 @@ function GroupRoom(props: {
         });
     };
 
-    console.log(`clicked room ${roominfo.room.id}`, roominfo);
-    console.log('roomRTInfo', roomRTInfo);
+    console.log(`clicked room ${roomInfo.room.id}`, roomInfo);
 
     // if changing rooms: disconnect first, then connect
-    if (currentRoom.roomId !== roominfo.room.id) {
+    if (currentRoom.roomId !== roomInfo.room.id) {
       if (connectionStatus === ConnectionStatus.Connected) {
         console.log(
-          `disconnecting from room ${currentRoom.roomId} and connecting to room ${roominfo.room.id}`
+          `disconnecting from room ${currentRoom.roomId} and connecting to room ${roomInfo.room.id}`
         );
         room?.disconnect();
         removeUserRTInfo();
@@ -161,16 +116,16 @@ function GroupRoom(props: {
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);
       } else {
-        console.log(`connecting to room ${roominfo.room.id}`);
+        console.log(`connecting to room ${roomInfo.room.id}`);
         connectRoom();
       }
-    } else if (currentRoom.roomId === roominfo.room.id) {
+    } else if (currentRoom.roomId === roomInfo.room.id) {
       if (connectionStatus === ConnectionStatus.Connected) {
-        console.log(`already connected to room ${roominfo.room.id}`);
+        console.log(`already connected to room ${roomInfo.room.id}`);
       } else if (connectionStatus === ConnectionStatus.Connecting) {
-        console.log(`already connecting to room ${roominfo.room.id}`);
+        console.log(`already connecting to room ${roomInfo.room.id}`);
       } else {
-        console.log(`connecting to room ${roominfo.room.id}`);
+        console.log(`connecting to room ${roomInfo.room.id}`);
         connectRoom();
       }
     }
@@ -178,12 +133,12 @@ function GroupRoom(props: {
 
   const showUsers = () => {
     if (
-      currentRoom.roomId === roominfo.room.id &&
+      currentRoom.roomId === roomInfo.room.id &&
       connectionStatus === ConnectionStatus.Connected
     ) {
-      return <RoomParticipants userMap={userMap} roomRTInfo={roomRTInfo} />;
+      return <RoomParticipants roomInfo={roomInfo} userMap={userMap} />;
     }
-    return <PeekRoomParticipants userMap={userMap} roomRTInfo={roomRTInfo} />;
+    return <PeekRoomParticipants roomInfo={roomInfo} userMap={userMap} />;
   };
 
   return (
@@ -197,7 +152,7 @@ function GroupRoom(props: {
         <ListItemIcon>
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
-        <ListItemText primary={roominfo.room.name} />
+        <ListItemText primary={roomInfo.room.name} />
       </ListItemButton>
       {showUsers()}
     </>

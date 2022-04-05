@@ -31,6 +31,22 @@ export const { setGroup } = artySlice.actions;
 
 export const selectParticipants = (state: RootState) => state.arty.participants;
 
+export const selectRoomParticipants = (
+  state: RootState,
+  groupId: string,
+  roomId: string
+) => {
+  if (groupId in state.arty.participants) {
+    if (
+      state.arty.participants[groupId] !== null &&
+      roomId in state.arty.participants[groupId]
+    ) {
+      return state.arty.participants[groupId][roomId];
+    }
+  }
+  return {} as models.ParticipantRTUsers;
+};
+
 export default artySlice.reducer;
 
 export type AddParticipantRTListenerPayload = {

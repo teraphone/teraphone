@@ -148,6 +148,6 @@ export type ParticipantRTRooms = {
   [roomId: string]: ParticipantRTUsers;
 };
 
-export type ParticiipantRTGroups = {
+export type ParticipantRTGroups = {
   [groupId: string]: ParticipantRTRooms;
 };

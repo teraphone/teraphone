@@ -139,3 +139,15 @@ export type ParticipantRTInfo = {
 };
 
 export type RoomRTInfo = Map<string, ParticipantRTInfo>;
+
+export type ParticipantRTUsers = {
+  [userId: string]: ParticipantRTInfo;
+};
+
+export type ParticipantRTRooms = {
+  [roomId: string]: ParticipantRTUsers;
+};
+
+export type ParticiipantRTGroups = {
+  [groupId: string]: ParticipantRTRooms;
+};

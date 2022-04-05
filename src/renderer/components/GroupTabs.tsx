@@ -81,7 +81,7 @@ export default function GroupTabs() {
           key={id}
           value={value}
           index={index}
-          groupinfo={groupInfo}
+          groupInfo={groupInfo}
         />
       );
     });

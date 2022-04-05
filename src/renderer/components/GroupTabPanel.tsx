@@ -1,4 +1,3 @@
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import * as models from '../models/models';
 import GroupRooms from './GroupRooms';
@@ -9,11 +8,11 @@ import CurrentRoomControls from './CurrentRoomControls';
 interface GroupTabPanelProps {
   index: number;
   value: number;
-  groupinfo: models.GroupInfo;
+  groupInfo: models.GroupInfo;
 }
 
 function GroupTabPanel(props: GroupTabPanelProps) {
-  const { index, value, groupinfo } = props;
+  const { index, value, groupInfo } = props;
 
   return (
     <div
@@ -25,10 +24,10 @@ function GroupTabPanel(props: GroupTabPanelProps) {
       {value === index && (
         <Box sx={{ width: 310 }}>
           <Box>
-            <GroupMenu groupinfo={groupinfo} />
+            <GroupMenu groupInfo={groupInfo} />
           </Box>
           <Box>
-            <GroupRooms groupinfo={groupinfo} />
+            <GroupRooms groupInfo={groupInfo} />
           </Box>
           <Box
             sx={{

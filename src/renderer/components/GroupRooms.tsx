@@ -2,18 +2,18 @@ import List from '@mui/material/List';
 import * as models from '../models/models';
 import GroupRoom from './GroupRoom';
 
-function GroupRooms(props: { groupinfo: models.GroupInfo }) {
-  const { groupinfo } = props;
-  const { rooms } = groupinfo;
+function GroupRooms(props: { groupInfo: models.GroupInfo }) {
+  const { groupInfo } = props;
+  const { rooms } = groupInfo;
 
   function handleRooms() {
-    const roomItems = rooms.map((roominfo: models.RoomInfo) => {
-      const groupId = roominfo.room.group_id;
-      const roomId = roominfo.room.id;
+    const roomItems = rooms.map((roomInfo: models.RoomInfo) => {
+      const groupId = roomInfo.room.group_id;
+      const roomId = roomInfo.room.id;
       return (
         <GroupRoom
-          groupInfo={groupinfo}
-          roomInfo={roominfo}
+          groupInfo={groupInfo}
+          roomInfo={roomInfo}
           key={`${groupId}/${roomId}`}
         />
       );

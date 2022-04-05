@@ -16,8 +16,8 @@ import * as React from 'react';
 import * as models from '../models/models';
 import GroupInviteDialog from './GroupInviteDialog';
 
-function GroupMenu(props: { groupinfo: models.GroupInfo }) {
-  const { groupinfo } = props;
+function GroupMenu(props: { groupInfo: models.GroupInfo }) {
+  const { groupInfo } = props;
   const [inviteDialogOpen, setInviteDialogOpen] = React.useState(false);
 
   const handleInviteDialogClickOpen = () => {
@@ -64,7 +64,7 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
                       color: 'text.secondary',
                     }}
                   >
-                    {groupinfo.group.name}
+                    {groupInfo.group.name}
                   </Typography>
                 </ListItemText>
               </ListItem>
@@ -116,7 +116,7 @@ function GroupMenu(props: { groupinfo: models.GroupInfo }) {
         </PopupState>
       </List>
       <GroupInviteDialog
-        groupinfo={groupinfo}
+        groupInfo={groupInfo}
         open={inviteDialogOpen}
         onClose={handleInviteDialogClose}
       />

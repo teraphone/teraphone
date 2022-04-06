@@ -2,7 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import type { RootState } from './store';
 import * as models from '../models/models';
-import { GetWorld } from '../requests/requests';
+import { GetWorld, GetGroupUser, GetRoomUser } from '../requests/requests';
 
 type WorldState = {
   groups: models.GroupsInfo;
@@ -20,6 +20,37 @@ export const getWorld = createAsyncThunk(
   }
 );
 
+type GetGroupUserInfoAsyncThunkArgs = {
+  client: AxiosInstance;
+  groupId: number;
+  userId: number;
+};
+
+export const getGroupUserInfo = createAsyncThunk(
+  'world/getGroupUserInfo',
+  async (args: GetGroupUserInfoAsyncThunkArgs) => {
+    const { client, groupId, userId } = args;
+    const response = await GetGroupUser(client, groupId, userId);
+    return response.data.group_user as models.GroupUserInfo;
+  }
+);
+
+type GetRoomUserInfoAsyncThunkArgs = {
+  client: AxiosInstance;
+  groupId: number;
+  roomId: number;
+  userId: number;
+};
+
+export const getRoomUserInfo = createAsyncThunk(
+  'world/getRoomUserInfo',
+  async (args: GetRoomUserInfoAsyncThunkArgs) => {
+    const { client, groupId, roomId, userId } = args;
+    const response = await GetRoomUser(client, groupId, roomId, userId);
+    return response.data.room_user as models.RoomUserInfo;
+  }
+);
+
 export const worldSlice = createSlice({
   name: 'world',
   initialState,
@@ -31,6 +62,31 @@ export const worldSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getWorld.fulfilled, (state, action) => {
       state.groups = action.payload;
+    });
+
+    builder.addCase(getGroupUserInfo.fulfilled, (state, action) => {
+      const { groupId } = action.meta.arg;
+      state.groups = state.groups.map((groupInfo) => {
+        if (groupInfo.group.id === groupId) {
+          groupInfo.users.push(action.payload);
+        }
+        return groupInfo;
+      });
+    });
+
+    builder.addCase(getRoomUserInfo.fulfilled, (state, action) => {
+      const { groupId, roomId } = action.meta.arg;
+      state.groups = state.groups.map((groupInfo) => {
+        if (groupInfo.group.id === groupId) {
+          groupInfo.rooms = groupInfo.rooms.map((roomInfo) => {
+            if (roomInfo.room.id === roomId) {
+              roomInfo.users.push(action.payload);
+            }
+            return roomInfo;
+          });
+        }
+        return groupInfo;
+      });
     });
   },
 });

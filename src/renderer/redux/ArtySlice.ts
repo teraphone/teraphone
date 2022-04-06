@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAction } from '@reduxjs/toolkit';
 import { Database } from 'firebase/database';
+import { AxiosInstance } from 'axios';
 import type { RootState } from './store';
 import * as models from '../models/models';
 
@@ -58,3 +59,13 @@ export const addParticipantRTListener =
   createAction<AddParticipantRTListenerPayload>(
     'arty/addParticipantRTListener'
   );
+
+export type UnknownParticipantPayload = {
+  client: AxiosInstance;
+  groupId: number;
+  userId: number;
+};
+
+export const unknownParticipant = createAction<UnknownParticipantPayload>(
+  'arty/unknownParticipant'
+);

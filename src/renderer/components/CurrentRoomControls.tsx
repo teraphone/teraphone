@@ -16,17 +16,15 @@ import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
   selectConnectionStatus,
-  setConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
 import useFirebase from '../hooks/useFirebase';
-import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 
 function CurentRoomControls() {
-  const dispatch = useAppDispatch();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { isConnecting, error, room } = useRoom();
+  const { room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
@@ -36,22 +34,8 @@ function CurentRoomControls() {
   );
 
   React.useEffect(() => {
-    // set connection state
-    if (error) {
-      dispatch(setConnectionStatus(ConnectionStatus.Error));
-    } else if (isConnecting) {
-      dispatch(setConnectionStatus(ConnectionStatus.Connecting));
-    } else if (room && room.state === 'connected') {
-      dispatch(setConnectionStatus(ConnectionStatus.Connected));
-    } else if (room && room.state === 'reconnecting') {
-      dispatch(setConnectionStatus(ConnectionStatus.Reconnecting));
-    } else {
-      dispatch(setConnectionStatus(ConnectionStatus.Disconnected));
-    }
-  }, [error, isConnecting, room, dispatch]);
-
-  React.useEffect(() => {
     // remove userRTRef on window unload event
+    // todo: move this to /Home ??
     window.addEventListener('beforeunload', () => {
       console.log('handling window unloaded event');
       remove(userRTRef);

@@ -8,11 +8,17 @@ import { getWorld } from '../redux/WorldSlice';
 import useFirebase from '../hooks/useFirebase';
 import { addParticipantRTListener } from '../redux/ArtySlice';
 import * as models from '../models/models';
+import useRoom from '../hooks/useRoom';
+import {
+  ConnectionStatus,
+  setConnectionStatus,
+} from '../redux/ConnectionStatusSlice';
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { database } = useFirebase();
+  const { isConnecting, error, room } = useRoom();
 
   React.useEffect(() => {
     console.log('useEffect -> dispatch getWorld');
@@ -34,11 +40,26 @@ const Home = () => {
         });
         return true;
       })
-      .catch((error) => {
-        console.log('dispatch getWorld -> error', error);
+      .catch((err) => {
+        console.log('dispatch getWorld -> error', err);
         return false;
       });
   }, [axiosPrivate, dispatch, database]);
+
+  React.useEffect(() => {
+    console.log('useEffect -> setConnectionStatus');
+    if (error) {
+      dispatch(setConnectionStatus(ConnectionStatus.Error));
+    } else if (isConnecting) {
+      dispatch(setConnectionStatus(ConnectionStatus.Connecting));
+    } else if (room && room.state === 'connected') {
+      dispatch(setConnectionStatus(ConnectionStatus.Connected));
+    } else if (room && room.state === 'reconnecting') {
+      dispatch(setConnectionStatus(ConnectionStatus.Reconnecting));
+    } else {
+      dispatch(setConnectionStatus(ConnectionStatus.Disconnected));
+    }
+  }, [dispatch, error, isConnecting, room]);
 
   return (
     <div>

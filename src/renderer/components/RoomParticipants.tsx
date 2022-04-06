@@ -3,13 +3,16 @@ import { Participant } from 'livekit-client';
 import * as models from '../models/models';
 import RoomParticipant from './RoomParticipant';
 import useRoom from '../hooks/useRoom';
-import { useAppSelector } from '../redux/hooks';
-import { selectRoomParticipants } from '../redux/ArtySlice';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { selectRoomParticipants, unknownParticipant } from '../redux/ArtySlice';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 function RoomParticipants(props: {
   roomInfo: models.RoomInfo;
   userMap: Map<string, models.GroupUserInfo>;
 }) {
+  const axiosPrivate = useAxiosPrivate();
+  const dispatch = useAppDispatch();
   const { roomInfo, userMap } = props;
   const { group_id: groupId, id: roomId } = roomInfo.room;
   const { participants } = useRoom();
@@ -18,20 +21,27 @@ function RoomParticipants(props: {
   );
 
   const participantItems = participants.map((participant: Participant) => {
-    const id = participant.identity;
+    const userId = participant.identity;
     let userInfo = {} as models.GroupUserInfo;
-    if (userMap.has(id)) {
-      userInfo = userMap.get(id) as models.GroupUserInfo;
+    if (userMap.has(userId)) {
+      userInfo = userMap.get(userId) as models.GroupUserInfo;
     } else {
       userInfo = {
         name: 'Unknown User',
-        user_id: +id,
+        user_id: +userId,
       } as models.GroupUserInfo;
+      dispatch(
+        unknownParticipant({
+          client: axiosPrivate,
+          groupId,
+          userId: +userId,
+        })
+      );
     }
 
     let participantRTInfo = {} as models.ParticipantRTInfo;
-    if (id in usersRTInfo) {
-      participantRTInfo = usersRTInfo[id];
+    if (userId in usersRTInfo) {
+      participantRTInfo = usersRTInfo[userId];
     } else {
       participantRTInfo.isMuted = false;
       participantRTInfo.isDeafened = false;

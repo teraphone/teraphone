@@ -1,6 +1,6 @@
 {
   "name": "teraphone",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Voice chat for remote teams.",
   "main": "./dist/main/main.js",
   "author": {

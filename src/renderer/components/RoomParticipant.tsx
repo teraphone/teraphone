@@ -40,19 +40,14 @@ function RoomParticipant(props: {
     }
   }
 
-  const handleClick = React.useCallback(() => {
-    console.log('clicked user', userinfo);
-    console.log('participantState', participantState);
-    console.log('participant', participant);
-  }, [participantState, userinfo, participant]);
+  // const handleClick = React.useCallback(() => {
+  //   console.log('clicked user', userinfo);
+  //   console.log('participantState', participantState);
+  //   console.log('participant', participant);
+  // }, [participantState, userinfo, participant]);
 
   return (
-    <ListItemButton
-      dense
-      onClick={handleClick}
-      component="li"
-      sx={{ pl: 4, py: 0.5 }}
-    >
+    <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>
       <ListItemIcon>
         <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>{name[0]}</Avatar>
       </ListItemIcon>

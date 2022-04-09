@@ -1,6 +1,5 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
-import * as React from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
@@ -32,15 +31,6 @@ function CurentRoomControls() {
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
   );
-
-  React.useEffect(() => {
-    // remove userRTRef on window unload event
-    // todo: move this to /Home ??
-    window.addEventListener('beforeunload', () => {
-      console.log('handling window unloaded event');
-      remove(userRTRef);
-    });
-  }, [userRTRef]);
 
   const StatusConnected = () => {
     return (

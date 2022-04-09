@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import Box from '@mui/material/Box';
 import * as React from 'react';
+import { ref, remove } from 'firebase/database';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import GroupTabs from './GroupTabs';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getWorld } from '../redux/WorldSlice';
 import useFirebase from '../hooks/useFirebase';
 import { addParticipantRTListener } from '../redux/ArtySlice';
@@ -11,14 +12,24 @@ import * as models from '../models/models';
 import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
+  selectConnectionStatus,
   setConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
+import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
+import { selectAppUser } from '../redux/AppUserSlice';
 
 const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { database } = useFirebase();
   const { isConnecting, error, room } = useRoom();
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
+  const { appUser } = useAppSelector(selectAppUser);
+  const userRTRef = ref(
+    database,
+    `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
+  );
 
   React.useEffect(() => {
     console.log('useEffect -> dispatch getWorld');
@@ -60,6 +71,16 @@ const Home = () => {
       dispatch(setConnectionStatus(ConnectionStatus.Disconnected));
     }
   }, [dispatch, error, isConnecting, room]);
+
+  React.useEffect(() => {
+    window.addEventListener('beforeunload', () => {
+      console.log('handling window unloaded event');
+      if (connectionStatus !== ConnectionStatus.Disconnected) {
+        room?.disconnect();
+        remove(userRTRef);
+      }
+    });
+  }, [connectionStatus, room, userRTRef]);
 
   return (
     <div>

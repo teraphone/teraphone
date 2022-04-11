@@ -27,8 +27,8 @@ const useAxiosPrivate = () => {
 
     if (isExpired) {
       // eslint-disable-next-line no-console
-      console.log('WARNING: AUTH TOKEN EXPIRED!!!');
-      navigate('/');
+      console.log('WARNING: AUTH TOKEN EXPIRED! REFRESHING...');
+      refreshAuth();
     }
     if (expiresSoon) {
       // eslint-disable-next-line no-console

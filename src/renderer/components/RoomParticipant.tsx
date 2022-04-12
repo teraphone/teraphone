@@ -4,7 +4,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
-import { LocalAudioTrack, Participant } from 'livekit-client';
+import {
+  LocalAudioTrack,
+  Participant,
+  RemoteTrackPublication,
+} from 'livekit-client';
 import { useParticipant, ParticipantState } from 'livekit-react';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
@@ -28,6 +32,7 @@ function RoomParticipant(props: {
   const deafen = useAppSelector(selectDeafen);
   const { isMuted, isDeafened } = participantRTInfo;
 
+  console.log('RoomParticipant');
   if (isLocal) {
     if (track) {
       const at = participantState.microphonePublication
@@ -38,6 +43,9 @@ function RoomParticipant(props: {
         at.unmute();
       }
     }
+  } else if (participantState.microphonePublication) {
+    const rt = participantState.microphonePublication as RemoteTrackPublication;
+    rt.setSubscribed(true);
   }
 
   return (
@@ -69,4 +77,4 @@ function RoomParticipant(props: {
   );
 }
 
-export default RoomParticipant;
+export default React.memo(RoomParticipant);

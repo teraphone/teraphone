@@ -39,7 +39,7 @@ function GroupRoom(props: {
   const groupId = roomInfo.room.group_id;
   const { id: roomId } = roomInfo.room;
   const connectConfig: Livekit.ConnectOptions = {
-    autoSubscribe: true,
+    autoSubscribe: false,
     adaptiveStream: true,
     autoManageVideo: true,
     dynacast: true,

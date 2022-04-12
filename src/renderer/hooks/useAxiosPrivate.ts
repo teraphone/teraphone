@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios, { axiosPrivate } from '../api/axios';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setAuth, selectAuth } from '../redux/AuthSlice';
@@ -7,7 +6,6 @@ import { setAuth, selectAuth } from '../redux/AuthSlice';
 const useAxiosPrivate = () => {
   const dispatch = useAppDispatch();
   const { auth } = useAppSelector(selectAuth);
-  const navigate = useNavigate();
 
   const updateAuthHeader = () => {
     const refreshAuth = async () => {
@@ -56,7 +54,7 @@ const useAxiosPrivate = () => {
     };
   };
 
-  React.useEffect(updateAuthHeader, [auth, dispatch, navigate]);
+  React.useEffect(updateAuthHeader, [auth, dispatch]);
 
   return axiosPrivate;
 };

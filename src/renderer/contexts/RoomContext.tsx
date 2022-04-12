@@ -4,14 +4,10 @@ import { useRoom, RoomState } from 'livekit-react';
 const RoomContext = React.createContext({} as RoomState);
 
 export const RoomProvider: React.FC = ({ children }) => {
-  const { connect, isConnecting, room, error, participants, audioTracks } =
-    useRoom();
+  const roomState = useRoom();
+  console.log('Rendering RoomProvider:', roomState);
   return (
-    <RoomContext.Provider
-      value={{ connect, isConnecting, room, error, participants, audioTracks }}
-    >
-      {children}
-    </RoomContext.Provider>
+    <RoomContext.Provider value={roomState}>{children}</RoomContext.Provider>
   );
 };
 

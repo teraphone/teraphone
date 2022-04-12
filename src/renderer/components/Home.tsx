@@ -61,7 +61,7 @@ const Home = () => {
   React.useEffect(() => {
     console.log('Home Mounted');
     return () => console.log('Home Unmounted');
-  });
+  }, []);
 
   React.useEffect(() => {
     console.log('useEffect -> setConnectionStatus');

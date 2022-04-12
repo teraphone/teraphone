@@ -19,6 +19,7 @@ import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 
 const Home = () => {
+  console.log('Rendering Home');
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { database } = useFirebase();
@@ -56,6 +57,11 @@ const Home = () => {
         return false;
       });
   }, [axiosPrivate, dispatch, database]);
+
+  React.useEffect(() => {
+    console.log('Home Mounted');
+    return () => console.log('Home Unmounted');
+  });
 
   React.useEffect(() => {
     console.log('useEffect -> setConnectionStatus');

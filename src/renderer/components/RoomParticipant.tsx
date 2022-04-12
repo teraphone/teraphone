@@ -32,7 +32,7 @@ function RoomParticipant(props: {
   const deafen = useAppSelector(selectDeafen);
   const { isMuted, isDeafened } = participantRTInfo;
 
-  console.log('RoomParticipant');
+  console.log('RoomParticipant', userinfo.name);
   if (isLocal) {
     if (track) {
       const at = participantState.microphonePublication
@@ -77,4 +77,4 @@ function RoomParticipant(props: {
   );
 }
 
-export default React.memo(RoomParticipant);
+export default RoomParticipant;

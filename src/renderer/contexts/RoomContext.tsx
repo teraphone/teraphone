@@ -5,7 +5,10 @@ const RoomContext = React.createContext({} as RoomState);
 
 export const RoomProvider: React.FC = ({ children }) => {
   const roomState = useRoom();
-  console.log('Rendering RoomProvider:', roomState);
+  React.useEffect(() => {
+    console.log('RoomProvider Mounted', roomState);
+    return () => console.log('RoomProvider Unmounted');
+  }, []);
   return (
     <RoomContext.Provider value={roomState}>{children}</RoomContext.Provider>
   );

@@ -28,14 +28,6 @@ function GroupRoom(props: {
   const { groupInfo, roomInfo, usersObj } = props;
   const groupId = roomInfo.room.group_id;
   const { id: roomId } = roomInfo.room;
-  const connectConfig: Livekit.ConnectOptions = {
-    autoSubscribe: false,
-    adaptiveStream: true,
-    autoManageVideo: true,
-    dynacast: true,
-    audio: true,
-    video: false,
-  };
   const url = 'wss://demo.dally.app';
   const { connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
@@ -47,51 +39,78 @@ function GroupRoom(props: {
   const deafen = useAppSelector(selectDeafen);
   const dispatch = useAppDispatch();
 
-  const pushUserRTInfo = (isMuted: boolean, isDeafened: boolean) => {
-    const nodeRef = child(roomRTRef, `${appUser.id}`);
-    console.log('pushing RT node:', nodeRef);
-    update(nodeRef, {
-      isMuted,
-      isDeafened,
-      isCameraShare: false,
-      isScreenShare: false,
-    });
-  };
+  React.useEffect(() => {
+    console.log('GroupRoom', roomInfo.room.name, 'Mounted');
+    return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
+  }, []);
 
-  const removeUserRTInfo = () => {
+  const pushUserRTInfo = React.useCallback(
+    (isMuted: boolean, isDeafened: boolean) => {
+      const nodeRef = child(roomRTRef, `${appUser.id}`);
+      console.log('pushing RT node:', nodeRef);
+      update(nodeRef, {
+        isMuted,
+        isDeafened,
+        isCameraShare: false,
+        isScreenShare: false,
+      });
+    },
+    [appUser.id, roomRTRef]
+  );
+
+  const removeUserRTInfo = React.useCallback(() => {
     const nodeRef = ref(
       database,
       `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
     );
     console.log('removing RT node:', nodeRef);
     remove(nodeRef);
-  };
+  }, [appUser.id, currentRoom.groupId, currentRoom.roomId, database]);
 
-  const handleClick = () => {
-    const connectRoom = () => {
-      // set current room to this room
-      dispatch(
-        setCurrentRoom({
-          roomId: roomInfo.room.id,
-          roomName: roomInfo.room.name,
-          groupId: roomInfo.room.group_id,
-          groupName: groupInfo.group.name,
-        })
-      );
-      // connect to room
-      connect(url, roomInfo.token, connectConfig)
-        .then((livekitRoom) => {
-          console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
-          if (livekitRoom) {
-            pushUserRTInfo(mute, deafen);
-          }
-          return true;
-        })
-        .catch(() => {
-          return false;
-        });
+  const connectRoom = React.useCallback(() => {
+    const connectConfig: Livekit.ConnectOptions = {
+      autoSubscribe: false,
+      adaptiveStream: true,
+      autoManageVideo: true,
+      dynacast: true,
+      audio: true,
+      video: false,
     };
+    // set current room to this room
+    dispatch(
+      setCurrentRoom({
+        roomId: roomInfo.room.id,
+        roomName: roomInfo.room.name,
+        groupId: roomInfo.room.group_id,
+        groupName: groupInfo.group.name,
+      })
+    );
+    // connect to room
+    connect(url, roomInfo.token, connectConfig)
+      .then((livekitRoom) => {
+        console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
+        if (livekitRoom) {
+          pushUserRTInfo(mute, deafen);
+        }
+        return true;
+      })
+      .catch(() => {
+        return false;
+      });
+  }, [
+    connect,
+    deafen,
+    dispatch,
+    groupInfo.group.name,
+    mute,
+    pushUserRTInfo,
+    roomInfo.room.group_id,
+    roomInfo.room.id,
+    roomInfo.room.name,
+    roomInfo.token,
+  ]);
 
+  const handleClick = React.useCallback(() => {
     console.log(`clicked room ${roomInfo.room.id}`, roomInfo);
 
     // if changing rooms: disconnect first, then connect
@@ -119,7 +138,14 @@ function GroupRoom(props: {
         connectRoom();
       }
     }
-  };
+  }, [
+    connectRoom,
+    connectionStatus,
+    currentRoom.roomId,
+    removeUserRTInfo,
+    room,
+    roomInfo,
+  ]);
 
   const thisRoom =
     currentRoom.roomId === roomInfo.room.id &&

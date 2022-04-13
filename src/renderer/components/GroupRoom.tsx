@@ -131,15 +131,9 @@ function GroupRoom(props: {
     }
   };
 
-  const showUsers = () => {
-    if (
-      currentRoom.roomId === roomInfo.room.id &&
-      connectionStatus === ConnectionStatus.Connected
-    ) {
-      return <RoomParticipants roomInfo={roomInfo} userMap={userMap} />;
-    }
-    return <PeekRoomParticipants roomInfo={roomInfo} userMap={userMap} />;
-  };
+  const thisRoom =
+    currentRoom.roomId === roomInfo.room.id &&
+    connectionStatus === ConnectionStatus.Connected;
 
   return (
     <>
@@ -154,7 +148,12 @@ function GroupRoom(props: {
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.name} />
       </ListItemButton>
-      {showUsers()}
+      <div hidden={!thisRoom}>
+        <RoomParticipants roomInfo={roomInfo} userMap={userMap} />
+      </div>
+      <div hidden={thisRoom}>
+        <PeekRoomParticipants roomInfo={roomInfo} userMap={userMap} />
+      </div>
     </>
   );
 }

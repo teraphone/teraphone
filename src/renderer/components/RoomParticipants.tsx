@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import List from '@mui/material/List';
 import { Participant } from 'livekit-client';
 import * as React from 'react';
@@ -25,6 +26,7 @@ function RoomParticipants(props: {
     console.log('RoomParticipants', roomInfo.room.name, 'Mounted');
     return () =>
       console.log('RoomParticipants', roomInfo.room.name, 'Unmounted');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const participantItems = participants.map((participant: Participant) => {

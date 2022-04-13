@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable consistent-return */
 import { Track } from 'livekit-client';
 import * as React from 'react';

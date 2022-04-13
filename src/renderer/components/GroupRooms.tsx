@@ -5,7 +5,14 @@ import GroupRoom from './GroupRoom';
 
 function GroupRooms(props: { groupInfo: models.GroupInfo }) {
   const { groupInfo } = props;
-  const { rooms } = groupInfo;
+  const { rooms, users } = groupInfo;
+
+  // construct users object
+  const usersObj = {} as { [id: number]: models.GroupUserInfo };
+  users.map((groupUserInfo) => {
+    usersObj[groupUserInfo.user_id] = groupUserInfo;
+    return true;
+  });
 
   const roomItems = rooms.map((roomInfo: models.RoomInfo) => {
     const groupId = roomInfo.room.group_id;
@@ -14,6 +21,7 @@ function GroupRooms(props: { groupInfo: models.GroupInfo }) {
       <GroupRoom
         groupInfo={groupInfo}
         roomInfo={roomInfo}
+        usersObj={usersObj}
         key={`${groupId}/${roomId}`}
       />
     );

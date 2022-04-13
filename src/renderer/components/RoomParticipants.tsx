@@ -10,11 +10,11 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 function RoomParticipants(props: {
   roomInfo: models.RoomInfo;
-  userMap: Map<string, models.GroupUserInfo>;
+  usersObj: { [id: number]: models.GroupUserInfo };
 }) {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
-  const { roomInfo, userMap } = props;
+  const { roomInfo, usersObj } = props;
   const { group_id: groupId, id: roomId } = roomInfo.room;
   const { participants } = useRoom();
   const usersRTInfo = useAppSelector((state) =>
@@ -24,8 +24,8 @@ function RoomParticipants(props: {
   const participantItems = participants.map((participant: Participant) => {
     const userId = participant.identity;
     let userInfo = {} as models.GroupUserInfo;
-    if (userMap.has(userId)) {
-      userInfo = userMap.get(userId) as models.GroupUserInfo;
+    if (usersObj[+userId]) {
+      userInfo = usersObj[+userId] as models.GroupUserInfo;
     } else {
       userInfo = {
         name: 'Unknown User',

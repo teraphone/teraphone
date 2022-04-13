@@ -20,24 +20,12 @@ import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 
-const useUserMap = (users: models.GroupUserInfo[]) => {
-  const userMap = new Map<string, models.GroupUserInfo>();
-  users.forEach((userinfo: models.GroupUserInfo) => {
-    const { user_id: id } = userinfo;
-    userMap.set(`${id}`, userinfo);
-  });
-
-  return userMap;
-};
-
 function GroupRoom(props: {
   groupInfo: models.GroupInfo;
   roomInfo: models.RoomInfo;
+  usersObj: { [id: number]: models.GroupUserInfo };
 }) {
-  const useUserMapMemo = React.useCallback(useUserMap, []);
-  const { groupInfo, roomInfo } = props;
-  const { users } = groupInfo;
-  const userMap = useUserMapMemo(users);
+  const { groupInfo, roomInfo, usersObj } = props;
   const groupId = roomInfo.room.group_id;
   const { id: roomId } = roomInfo.room;
   const connectConfig: Livekit.ConnectOptions = {
@@ -151,10 +139,10 @@ function GroupRoom(props: {
         <ListItemText primary={roomInfo.room.name} />
       </ListItemButton>
       <div hidden={!thisRoom}>
-        <RoomParticipants roomInfo={roomInfo} userMap={userMap} />
+        <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />
       </div>
       <div hidden={thisRoom}>
-        <PeekRoomParticipants roomInfo={roomInfo} userMap={userMap} />
+        <PeekRoomParticipants roomInfo={roomInfo} usersObj={usersObj} />
       </div>
     </>
   );

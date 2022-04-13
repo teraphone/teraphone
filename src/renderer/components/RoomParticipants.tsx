@@ -21,6 +21,12 @@ function RoomParticipants(props: {
     selectRoomParticipants(state, groupId.toString(), roomId.toString())
   );
 
+  React.useEffect(() => {
+    console.log('RoomParticipants', roomInfo.room.name, 'Mounted');
+    return () =>
+      console.log('RoomParticipants', roomInfo.room.name, 'Unmounted');
+  }, []);
+
   const participantItems = participants.map((participant: Participant) => {
     const userId = participant.identity;
     let userInfo = {} as models.GroupUserInfo;

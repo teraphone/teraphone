@@ -12,6 +12,11 @@ function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
   const audioEl = React.useRef<HTMLAudioElement>();
 
   React.useEffect(() => {
+    console.log('AudioRenderer Mounted');
+    return () => console.log('AudioRenderer Unmounted');
+  }, []);
+
+  React.useEffect(() => {
     console.log('AudioRenderer -> useEffect');
     if (isLocal) {
       // don't play own audio

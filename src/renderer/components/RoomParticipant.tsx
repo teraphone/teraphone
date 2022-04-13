@@ -30,14 +30,13 @@ function RoomParticipant(props: {
     return () => console.log('RoomParticipant', name, 'Unmounted');
   }, [name]);
 
-  const participantState: ParticipantState = useParticipant(participant);
-  const { isSpeaking, microphonePublication } = participantState;
+  const { isSpeaking, isLocal, microphonePublication } =
+    useParticipant(participant);
   const speech = isSpeaking ? ' 🗣' : '';
   const localAudioTrack = microphonePublication?.audioTrack as
     | LocalAudioTrack
     | undefined;
   const track = microphonePublication?.track;
-  const { isLocal } = participantState;
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
   const { isMuted, isDeafened } = participantRTInfo;
@@ -52,18 +51,10 @@ function RoomParticipant(props: {
         }
       }
     } else if (microphonePublication) {
-      const rt =
-        participantState.microphonePublication as RemoteTrackPublication;
+      const rt = microphonePublication as RemoteTrackPublication;
       rt.setSubscribed(true);
     }
-  }, [
-    isLocal,
-    localAudioTrack,
-    microphonePublication,
-    mute,
-    participantState.microphonePublication,
-    track,
-  ]);
+  }, [isLocal, localAudioTrack, microphonePublication, mute, track]);
 
   return (
     <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>

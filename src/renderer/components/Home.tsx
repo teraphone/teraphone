@@ -19,7 +19,10 @@ import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 
 const Home = () => {
-  console.log('Rendering Home');
+  React.useEffect(() => {
+    console.log('Home Mounted');
+    return () => console.log('Home Unmounted');
+  }, []);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { database } = useFirebase();

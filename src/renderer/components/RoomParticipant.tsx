@@ -24,29 +24,46 @@ function RoomParticipant(props: {
 }) {
   const { userinfo, participant, participantRTInfo } = props;
   const { name } = userinfo;
+
+  React.useEffect(() => {
+    console.log('RoomParticipant', name, 'Mounted');
+    return () => console.log('RoomParticipant', name, 'Unmounted');
+  }, [name]);
+
   const participantState: ParticipantState = useParticipant(participant);
-  const speech = participantState.isSpeaking ? ' 🗣' : '';
-  const track = participantState.microphonePublication?.track;
+  const { isSpeaking, microphonePublication } = participantState;
+  const speech = isSpeaking ? ' 🗣' : '';
+  const localAudioTrack = microphonePublication?.audioTrack as
+    | LocalAudioTrack
+    | undefined;
+  const track = microphonePublication?.track;
   const { isLocal } = participantState;
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
   const { isMuted, isDeafened } = participantRTInfo;
 
-  console.log('RoomParticipant', userinfo.name);
-  if (isLocal) {
-    if (track) {
-      const at = participantState.microphonePublication
-        ?.audioTrack as LocalAudioTrack;
-      if (mute) {
-        at.mute();
-      } else {
-        at.unmute();
+  React.useEffect(() => {
+    if (isLocal) {
+      if (localAudioTrack) {
+        if (mute) {
+          localAudioTrack.mute();
+        } else {
+          localAudioTrack.unmute();
+        }
       }
+    } else if (microphonePublication) {
+      const rt =
+        participantState.microphonePublication as RemoteTrackPublication;
+      rt.setSubscribed(true);
     }
-  } else if (participantState.microphonePublication) {
-    const rt = participantState.microphonePublication as RemoteTrackPublication;
-    rt.setSubscribed(true);
-  }
+  }, [
+    isLocal,
+    localAudioTrack,
+    microphonePublication,
+    mute,
+    participantState.microphonePublication,
+    track,
+  ]);
 
   return (
     <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>

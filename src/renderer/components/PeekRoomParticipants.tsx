@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import List from '@mui/material/List';
+import * as React from 'react';
 import * as models from '../models/models';
 import PeekRoomParticipant from './PeekRoomParticipant';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
@@ -47,4 +48,4 @@ function PeakRoomParticipants(props: {
   return <List disablePadding>{roomParticipants}</List>;
 }
 
-export default PeakRoomParticipants;
+export default React.memo(PeakRoomParticipants);

@@ -1,5 +1,6 @@
 import List from '@mui/material/List';
 import { Participant } from 'livekit-client';
+import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipant from './RoomParticipant';
 import useRoom from '../hooks/useRoom';
@@ -54,7 +55,7 @@ function RoomParticipants(props: {
         key={participant.sid}
         userinfo={userInfo}
         participant={participant}
-        participantRTInfo={participantRTInfo}
+        participantRTInfo={participantRTInfo} // TODO: spread elements for better memo.
       />
     );
   });
@@ -62,4 +63,4 @@ function RoomParticipants(props: {
   return <List disablePadding>{participantItems}</List>;
 }
 
-export default RoomParticipants;
+export default React.memo(RoomParticipants);

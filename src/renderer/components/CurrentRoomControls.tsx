@@ -11,6 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ref, remove } from 'firebase/database';
+import * as React from 'react';
 import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
@@ -173,4 +174,4 @@ function CurentRoomControls() {
   );
 }
 
-export default CurentRoomControls;
+export default React.memo(CurentRoomControls);

@@ -22,7 +22,7 @@ function a11yProps(index: number) {
   };
 }
 
-export default function GroupTabs() {
+function GroupTabs() {
   const [value, setValue] = React.useState(0);
 
   const groupsInfo = useAppSelector(selectGroups);
@@ -125,3 +125,5 @@ export default function GroupTabs() {
     </>
   );
 }
+
+export default React.memo(GroupTabs);

@@ -61,4 +61,4 @@ function GroupInviteDialog(props: GroupIniviteDialogProps) {
   );
 }
 
-export default GroupInviteDialog;
+export default React.memo(GroupInviteDialog);

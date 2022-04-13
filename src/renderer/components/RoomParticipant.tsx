@@ -94,4 +94,4 @@ function RoomParticipant(props: {
   );
 }
 
-export default RoomParticipant;
+export default React.memo(RoomParticipant);

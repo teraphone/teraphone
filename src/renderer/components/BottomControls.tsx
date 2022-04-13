@@ -10,6 +10,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import { update, ref } from 'firebase/database';
+import * as React from 'react';
 import useFirebase from '../hooks/useFirebase';
 import {
   ConnectionStatus,
@@ -171,4 +172,4 @@ function BottomControls() {
   );
 }
 
-export default BottomControls;
+export default React.memo(BottomControls);

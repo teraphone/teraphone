@@ -29,4 +29,4 @@ function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
   return null;
 }
 
-export default AudioRenderer;
+export default React.memo(AudioRenderer);

@@ -5,6 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
 import { remove, update, child, ref } from 'firebase/database';
+import * as React from 'react';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -19,7 +20,7 @@ import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 
-function useUserMap(users: models.GroupUserInfo[]) {
+const useUserMap = (users: models.GroupUserInfo[]) => {
   const userMap = new Map<string, models.GroupUserInfo>();
   users.forEach((userinfo: models.GroupUserInfo) => {
     const { user_id: id } = userinfo;
@@ -27,15 +28,16 @@ function useUserMap(users: models.GroupUserInfo[]) {
   });
 
   return userMap;
-}
+};
 
 function GroupRoom(props: {
   groupInfo: models.GroupInfo;
   roomInfo: models.RoomInfo;
 }) {
+  const useUserMapMemo = React.useCallback(useUserMap, []);
   const { groupInfo, roomInfo } = props;
   const { users } = groupInfo;
-  const userMap = useUserMap(users);
+  const userMap = useUserMapMemo(users);
   const groupId = roomInfo.room.group_id;
   const { id: roomId } = roomInfo.room;
   const connectConfig: Livekit.ConnectOptions = {
@@ -158,7 +160,7 @@ function GroupRoom(props: {
   );
 }
 
-export default GroupRoom;
+export default React.memo(GroupRoom);
 
 // todo: changing rooms rapidly can get you into a state where you're connected to multiple rooms.
 // need understand how this can happen and how to prevent it.

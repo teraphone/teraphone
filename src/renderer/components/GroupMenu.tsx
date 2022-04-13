@@ -124,4 +124,4 @@ function GroupMenu(props: { groupInfo: models.GroupInfo }) {
   );
 }
 
-export default GroupMenu;
+export default React.memo(GroupMenu);

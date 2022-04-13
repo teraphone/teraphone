@@ -42,4 +42,4 @@ function PeekRoomParticipant(props: {
   );
 }
 
-export default PeekRoomParticipant;
+export default React.memo(PeekRoomParticipant);

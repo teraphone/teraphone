@@ -18,7 +18,7 @@ function GroupTabPanel(props: GroupTabPanelProps) {
   React.useEffect(() => {
     console.log('GroupTabPanel', index, 'Rendered');
     return () => console.log('GroupTabPanel', index, 'Unmounted');
-  }, []);
+  }, [index]);
 
   return (
     <div
@@ -52,4 +52,4 @@ function GroupTabPanel(props: GroupTabPanelProps) {
   );
 }
 
-export default GroupTabPanel;
+export default React.memo(GroupTabPanel);

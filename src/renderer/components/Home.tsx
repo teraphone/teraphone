@@ -107,7 +107,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);
 // todo: how to refresh groupsInfo if...
 // - a new user joins the group?
 // - user joins a new group?

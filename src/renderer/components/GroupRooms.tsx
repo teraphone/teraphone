@@ -1,4 +1,5 @@
 import List from '@mui/material/List';
+import * as React from 'react';
 import * as models from '../models/models';
 import GroupRoom from './GroupRoom';
 
@@ -21,4 +22,4 @@ function GroupRooms(props: { groupInfo: models.GroupInfo }) {
   return <List disablePadding>{roomItems}</List>;
 }
 
-export default GroupRooms;
+export default React.memo(GroupRooms);

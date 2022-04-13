@@ -10,11 +10,11 @@ import * as models from '../models/models';
 
 function PeekRoomParticipant(props: {
   userinfo: models.GroupUserInfo;
-  participantRTInfo: models.ParticipantRTInfo;
+  isMuted: boolean;
+  isDeafened: boolean;
 }) {
-  const { userinfo, participantRTInfo } = props;
+  const { userinfo, isMuted, isDeafened } = props;
   const { name } = userinfo;
-  const { isMuted, isDeafened } = participantRTInfo;
 
   return (
     <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>

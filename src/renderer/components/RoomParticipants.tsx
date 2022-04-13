@@ -50,12 +50,15 @@ function RoomParticipants(props: {
       participantRTInfo.isScreenShare = false;
     }
 
+    const { isMuted, isDeafened } = participantRTInfo;
+
     return (
       <RoomParticipant
         key={participant.sid}
         userinfo={userInfo}
         participant={participant}
-        participantRTInfo={participantRTInfo} // TODO: spread elements for better memo.
+        isMuted={isMuted}
+        isDeafened={isDeafened}
       />
     );
   });

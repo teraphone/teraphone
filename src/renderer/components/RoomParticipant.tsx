@@ -20,9 +20,10 @@ import { selectMute, selectDeafen } from '../redux/MuteSlice';
 function RoomParticipant(props: {
   userinfo: models.GroupUserInfo;
   participant: Participant;
-  participantRTInfo: models.ParticipantRTInfo;
+  isMuted: boolean;
+  isDeafened: boolean;
 }) {
-  const { userinfo, participant, participantRTInfo } = props;
+  const { userinfo, participant, isMuted, isDeafened } = props;
   const { name } = userinfo;
 
   React.useEffect(() => {
@@ -39,7 +40,6 @@ function RoomParticipant(props: {
   const track = microphonePublication?.track;
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
-  const { isMuted, isDeafened } = participantRTInfo;
 
   React.useEffect(() => {
     if (isLocal) {

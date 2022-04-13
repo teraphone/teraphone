@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import * as React from 'react';
 import * as models from '../models/models';
 import GroupRooms from './GroupRooms';
 import GroupMenu from './GroupMenu';
@@ -13,6 +14,11 @@ interface GroupTabPanelProps {
 
 function GroupTabPanel(props: GroupTabPanelProps) {
   const { index, value, groupInfo } = props;
+
+  React.useEffect(() => {
+    console.log('GroupTabPanel', index, 'Rendered');
+    return () => console.log('GroupTabPanel', index, 'Unmounted');
+  }, []);
 
   return (
     <div

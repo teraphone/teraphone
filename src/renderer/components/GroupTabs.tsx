@@ -54,39 +54,28 @@ export default function GroupTabs() {
     );
   }
 
-  function handleTabs() {
-    const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
-      const { id, name } = groupInfo.group;
+  const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
+    const { id, name } = groupInfo.group;
 
-      return (
-        <Tooltip title={name} key={id} placement="right" arrow>
-          <Tab
-            icon={<Avatar>{name[0]}</Avatar>}
-            key={id}
-            {...a11yProps(index)}
-          />
-        </Tooltip>
-      );
-    });
+    return (
+      <Tooltip title={name} key={id} placement="right" arrow>
+        <Tab icon={<Avatar>{name[0]}</Avatar>} key={id} {...a11yProps(index)} />
+      </Tooltip>
+    );
+  });
+  tabs.push(addGroupTab());
 
-    tabs.push(addGroupTab());
-    return tabs;
-  }
-
-  function GroupTabPanels() {
-    const tabPanels = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
-      const { id } = groupInfo.group;
-      return (
-        <GroupTabPanel
-          key={id}
-          value={value}
-          index={index}
-          groupInfo={groupInfo}
-        />
-      );
-    });
-    return <>{tabPanels}</>;
-  }
+  const tabPanels = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
+    const { id } = groupInfo.group;
+    return (
+      <GroupTabPanel
+        key={id}
+        value={value}
+        index={index}
+        groupInfo={groupInfo}
+      />
+    );
+  });
 
   return (
     <>
@@ -129,10 +118,10 @@ export default function GroupTabs() {
             },
           }}
         >
-          {handleTabs()}
+          {tabs}
         </Tabs>
       </Stack>
-      <GroupTabPanels />
+      {tabPanels}
     </>
   );
 }

@@ -6,23 +6,19 @@ function GroupRooms(props: { groupInfo: models.GroupInfo }) {
   const { groupInfo } = props;
   const { rooms } = groupInfo;
 
-  function handleRooms() {
-    const roomItems = rooms.map((roomInfo: models.RoomInfo) => {
-      const groupId = roomInfo.room.group_id;
-      const roomId = roomInfo.room.id;
-      return (
-        <GroupRoom
-          groupInfo={groupInfo}
-          roomInfo={roomInfo}
-          key={`${groupId}/${roomId}`}
-        />
-      );
-    });
+  const roomItems = rooms.map((roomInfo: models.RoomInfo) => {
+    const groupId = roomInfo.room.group_id;
+    const roomId = roomInfo.room.id;
+    return (
+      <GroupRoom
+        groupInfo={groupInfo}
+        roomInfo={roomInfo}
+        key={`${groupId}/${roomId}`}
+      />
+    );
+  });
 
-    return roomItems;
-  }
-
-  return <List disablePadding>{handleRooms()}</List>;
+  return <List disablePadding>{roomItems}</List>;
 }
 
 export default GroupRooms;

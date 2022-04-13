@@ -42,6 +42,7 @@ function GroupRoom(props: {
   React.useEffect(() => {
     console.log('GroupRoom', roomInfo.room.name, 'Mounted');
     return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const pushUserRTInfo = React.useCallback(
@@ -164,12 +165,11 @@ function GroupRoom(props: {
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.name} />
       </ListItemButton>
-      <div hidden={!thisRoom}>
+      {thisRoom ? (
         <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />
-      </div>
-      <div hidden={thisRoom}>
+      ) : (
         <PeekRoomParticipants roomInfo={roomInfo} usersObj={usersObj} />
-      </div>
+      )}
     </>
   );
 }

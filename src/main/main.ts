@@ -9,7 +9,14 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, globalShortcut } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  globalShortcut,
+  desktopCapturer,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
@@ -25,10 +32,21 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.handle('ipc-example', async (event, arg) => {
+ipcMain.handle('ipc-example', async (_event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   return msgTemplate('pong');
+});
+
+// Handle screen capture
+ipcMain.handle('QUERY-SCREENS', async (_event, options) => {
+  const { types, thumbnailSize, fetchWindowIcons } = options;
+  const sources = desktopCapturer.getSources({
+    types,
+    thumbnailSize,
+    fetchWindowIcons,
+  });
+  return sources;
 });
 
 if (process.env.NODE_ENV === 'production') {

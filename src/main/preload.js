@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
@@ -13,6 +14,9 @@ contextBridge.exposeInMainWorld('electron', {
           console.log(error);
           return false;
         });
+    },
+    async queryScreens(options) {
+      return ipcRenderer.invoke('QUERY-SCREENS', options);
     },
     on(channel, func) {
       const validChannels = ['ipc-example'];

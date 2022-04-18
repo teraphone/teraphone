@@ -34,7 +34,7 @@ function BottomControls() {
   const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const debug = false;
+  const debug = true;
 
   const pushUserRTInfoIfConnected = (isMuted: boolean, isDeafened: boolean) => {
     const nodeRef = ref(
@@ -144,8 +144,12 @@ function BottomControls() {
   };
 
   const InfoButton = () => {
-    const handleClick = () => {
-      window.electron.ipcRenderer.myPing();
+    const handleClick = async () => {
+      // window.electron.ipcRenderer.myPing();
+      const sources = await window.electron.ipcRenderer.queryScreens({
+        types: ['screen', 'window'],
+      });
+      console.log('sources:', sources);
     };
 
     return (

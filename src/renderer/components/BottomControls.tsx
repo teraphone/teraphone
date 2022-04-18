@@ -26,6 +26,13 @@ import {
 } from '../redux/MuteSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 
+console.log('overriding getDisplayMedia');
+navigator.mediaDevices.getDisplayMedia = async (constraints) => {
+  console.log('override getDisplayMedia');
+  const stream = {} as MediaStream;
+  return new Promise(() => stream);
+};
+
 function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
@@ -150,6 +157,7 @@ function BottomControls() {
         types: ['screen', 'window'],
       });
       console.log('sources:', sources);
+      navigator.mediaDevices.getDisplayMedia();
     };
 
     return (

@@ -115,6 +115,7 @@ function CurentRoomControls() {
   };
 
   const ShareScreenButton = () => {
+    const enabled = room?.localParticipant.isScreenShareEnabled;
     return (
       <Tooltip title="Share Screen" placement="top" arrow>
         <span>
@@ -123,9 +124,12 @@ function CurentRoomControls() {
             aria-label="disconnect"
             component="span"
             onClick={() => {
-              alert('Not implemented yet.');
+              if (enabled) {
+                room?.localParticipant.setScreenShareEnabled(false);
+              } else {
+                room?.localParticipant.setScreenShareEnabled(true);
+              }
             }}
-            disabled
           >
             <ScreenShareIcon />
           </IconButton>

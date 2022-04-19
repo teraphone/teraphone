@@ -19,7 +19,7 @@ async function extendedSetTrackEnabled(
   id: string,
   enabled: boolean
 ) {
-  console.log('called extendedSetTrackEnabled');
+  console.log('called extendedSetTrackEnabled', this);
   return new Promise<void>(() => {
     // do nothing
   });
@@ -30,7 +30,7 @@ async function extendedCreateScreenTracks(
   id: string,
   options?: ScreenShareCaptureOptions
 ) {
-  console.log('called extendedCreateScreenTracks');
+  console.log('called extendedCreateScreenTracks', this);
   return new Promise<Array<LocalTrack>>(() => {
     // do nothing
   });

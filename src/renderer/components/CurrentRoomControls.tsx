@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ref, remove } from 'firebase/database';
@@ -21,6 +22,7 @@ import useFirebase from '../hooks/useFirebase';
 import { useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
+import '../lib/ExtendedLocalParticipant';
 
 function CurentRoomControls() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
@@ -32,6 +34,7 @@ function CurentRoomControls() {
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
   );
+  const debug = true;
 
   const StatusConnected = () => {
     return (
@@ -160,6 +163,29 @@ function CurentRoomControls() {
     );
   };
 
+  const InfoButton = () => {
+    const handleClick = () => {
+      const localParticipant = room?.localParticipant;
+      const id = '1';
+      const enabled = true;
+      localParticipant?.extendedSetTrackEnabled(id, enabled);
+    };
+    return (
+      <Tooltip title="Info" placement="top" arrow>
+        <span>
+          <IconButton
+            color="primary"
+            aria-label="info"
+            component="span"
+            onClick={handleClick}
+          >
+            <InfoIcon />
+          </IconButton>
+        </span>
+      </Tooltip>
+    );
+  };
+
   return (
     <>
       {connectionStatus !== ConnectionStatus.Disconnected && (
@@ -171,6 +197,7 @@ function CurentRoomControls() {
             <ShareCameraButton />
             <ShareScreenButton />
             <DisconnectButton />
+            {debug && <InfoButton />}
           </Box>
         </Box>
       )}

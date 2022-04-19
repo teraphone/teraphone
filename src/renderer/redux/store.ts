@@ -7,6 +7,7 @@ import currentRoomReducer from './CurrentRoomSlice';
 import connectionStatusReducer from './ConnectionStatusSlice';
 import worldReducer from './WorldSlice';
 import artyReducer, { addParticipantRTListener } from './ArtySlice';
+import screenShareReducer from './ScreenShareSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     connectionStatus: connectionStatusReducer,
     world: worldReducer,
     arty: artyReducer,
+    screenShare: screenShareReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -10,7 +10,6 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Stack, Tab, Typography } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
-import { NativeImage } from 'electron';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -163,9 +162,10 @@ function ScreenPickerDialog() {
         onClose={handleDialogClose}
         scroll="paper"
       >
-        <DialogTitle>Screen Share</DialogTitle>
-        <Typography variant="body1">
-          Select one or more screens to share with the room!
+        <DialogTitle sx={{ alignSelf: 'center' }}>Screen Share</DialogTitle>
+        <Typography variant="body1" align="center" sx={{ px: 2 }}>
+          Select the Applications and Screens that you would like to share with
+          the room!
         </Typography>
         <TabList value={tabId} variant="standard" onChange={handleTabChange}>
           <Tab value="tab1" label="Applications" />

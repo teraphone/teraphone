@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Tab } from '@mui/material';
+import { Tab, Typography } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { NativeImage } from 'electron';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -47,6 +50,11 @@ function ScreenPickerDialog() {
     dispatch(setPickerVisible(false));
   };
 
+  const handleSubmit = () => {
+    console.log('handleSubmit');
+    dispatch(setPickerVisible(false));
+  };
+
   const handleTabChange = (_event: React.SyntheticEvent, id: string) => {
     setTabId(id);
   };
@@ -58,8 +66,8 @@ function ScreenPickerDialog() {
 
   React.useEffect(() => {
     const asyncEffect = async () => {
-      const thumbWidth = 300;
-      const thumbHeight = 300;
+      const thumbWidth = 150;
+      const thumbHeight = 150;
       if (screenSources && pickerVisible) {
         const screens = await window.electron.ipcRenderer.queryScreens({
           thumbnailSize: {
@@ -117,13 +125,23 @@ function ScreenPickerDialog() {
   }
 
   return (
-    <Dialog fullScreen open={pickerVisible} onClose={handleDialogClose}>
-      <Box>
-        <TabContext value={tabId}>
-          <TabList value={tabId} variant="standard" onChange={handleTabChange}>
-            <Tab value="tab1" label="Applications" />
-            <Tab value="tab2" label="Screens" />
-          </TabList>
+    <TabContext value={tabId}>
+      <Dialog
+        fullScreen
+        open={pickerVisible}
+        onClose={handleDialogClose}
+        scroll="paper"
+      >
+        <DialogTitle>Screen Share</DialogTitle>
+        <Typography variant="body1">
+          Select one or more screens to share with the room!
+        </Typography>
+        <TabList value={tabId} variant="standard" onChange={handleTabChange}>
+          <Tab value="tab1" label="Applications" />
+          <Tab value="tab2" label="Screens" />
+        </TabList>
+
+        <DialogContent dividers>
           <ScreenPickerTabPanel value="tab1">
             <span>This is the Applications tab</span>
             {windowThumbs}
@@ -132,14 +150,17 @@ function ScreenPickerDialog() {
             <span>This is the Screens tab</span>
             {screenThumbs}
           </ScreenPickerTabPanel>
-        </TabContext>
-      </Box>
-      <Box>
-        <Button autoFocus color="inherit" onClick={handleDialogClose}>
-          close
-        </Button>
-      </Box>
-    </Dialog>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus color="inherit" onClick={handleDialogClose}>
+            Close
+          </Button>
+          <Button autoFocus color="inherit" onClick={handleSubmit}>
+            Share
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </TabContext>
   );
 }
 

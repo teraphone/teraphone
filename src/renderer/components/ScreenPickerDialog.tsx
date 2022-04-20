@@ -41,6 +41,7 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
       overflow="hidden"
       onClick={() => {
         setChecked(!checked);
+        console.log('clicked source:', id);
       }}
     >
       <Box>
@@ -153,12 +154,14 @@ function ScreenPickerDialog() {
 
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
-    windowThumbs = windowSources.map((source) => {
-      if (source.thumbnailDataURL) {
-        return <ScreenPickerItem source={source} key={source.id} />;
-      }
-      return null;
-    });
+    windowThumbs = windowSources
+      .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
+      .map((source) => {
+        if (source.thumbnailDataURL) {
+          return <ScreenPickerItem source={source} key={source.id} />;
+        }
+        return null;
+      });
   }
 
   let screenThumbs: React.ReactNode[] = [];

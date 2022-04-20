@@ -1,12 +1,14 @@
 /* eslint-disable no-console */
 import * as React from 'react';
+import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Tab, Typography } from '@mui/material';
+import { Stack, Tab, Typography } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { NativeImage } from 'electron';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -20,6 +22,43 @@ import {
 } from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
 import { SerializedDesktopCapturerSource } from '../global';
+
+function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
+  const { source } = props;
+  const {
+    id,
+    name,
+    thumbnailDataURL,
+    display_id: displayId,
+    appIconDataURL,
+  } = source;
+  const [checked, setChecked] = React.useState(false);
+  // displays the name, image, id, and checkbox
+  return (
+    <Box
+      display="flex"
+      flexDirection="row"
+      alignItems="center"
+      overflow="hidden"
+    >
+      <Box>
+        <Checkbox
+          checked={checked}
+          onChange={(event) => {
+            setChecked(event.target.checked);
+          }}
+        />
+      </Box>
+
+      <Box>
+        <img src={thumbnailDataURL} alt={name} />
+      </Box>
+      <Box ml={2}>
+        <Typography variant="caption">{name}</Typography>
+      </Box>
+    </Box>
+  );
+}
 
 function ScreenPickerTabPanel(props: {
   children: React.ReactNode;
@@ -99,28 +138,20 @@ function ScreenPickerDialog() {
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
     windowThumbs = windowSources.map((source) => {
-      return (
-        <div key={source.id}>
-          <div>
-            <img src={source.thumbnailDataURL} alt="" />
-          </div>
-          <br />
-        </div>
-      );
+      if (source.thumbnailDataURL) {
+        return <ScreenPickerItem source={source} key={source.id} />;
+      }
+      return null;
     });
   }
 
   let screenThumbs: React.ReactNode[] = [];
   if (screenSources.length > 0) {
     screenThumbs = screenSources.map((source) => {
-      return (
-        <div key={source.id}>
-          <div>
-            <img src={source.thumbnailDataURL} alt="" />
-          </div>
-          <br />
-        </div>
-      );
+      if (source.thumbnailDataURL) {
+        return <ScreenPickerItem source={source} key={source.id} />;
+      }
+      return null;
     });
   }
 
@@ -141,14 +172,16 @@ function ScreenPickerDialog() {
           <Tab value="tab2" label="Screens" />
         </TabList>
 
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ px: 0.5 }}>
           <ScreenPickerTabPanel value="tab1">
-            <span>This is the Applications tab</span>
-            {windowThumbs}
+            <Stack spacing={2} divider={<Divider />}>
+              {windowThumbs}
+            </Stack>
           </ScreenPickerTabPanel>
           <ScreenPickerTabPanel value="tab2">
-            <span>This is the Screens tab</span>
-            {screenThumbs}
+            <Stack spacing={2} divider={<Divider />}>
+              {screenThumbs}
+            </Stack>
           </ScreenPickerTabPanel>
         </DialogContent>
         <DialogActions>

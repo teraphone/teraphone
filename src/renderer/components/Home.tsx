@@ -17,6 +17,7 @@ import {
 } from '../redux/ConnectionStatusSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
+import ScreenPickerDialog from './ScreenPickerDialog';
 
 const Home = () => {
   React.useEffect(() => {
@@ -102,6 +103,7 @@ const Home = () => {
         }}
       >
         <GroupTabs />
+        <ScreenPickerDialog />
       </Box>
     </div>
   );

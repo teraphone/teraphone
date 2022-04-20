@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint global-require: off, no-console: off, promise/always-return: off */
 
 /**
@@ -41,12 +42,18 @@ ipcMain.handle('ipc-example', async (_event, arg) => {
 // Handle screen capture
 ipcMain.handle('QUERY-SCREENS', async (_event, options) => {
   const { types, thumbnailSize, fetchWindowIcons } = options;
-  const sources = desktopCapturer.getSources({
+  const sources = await desktopCapturer.getSources({
     types,
     thumbnailSize,
     fetchWindowIcons,
   });
-  return sources;
+  const serializedSources = sources.map((source) => {
+    const { id, name, thumbnail, display_id, appIcon } = source;
+    const thumbnailDataURL = thumbnail.toDataURL();
+    const appIconDataURL = appIcon ? appIcon.toDataURL() : null;
+    return { id, name, thumbnailDataURL, display_id, appIconDataURL };
+  });
+  return Promise.all(serializedSources);
 });
 
 if (process.env.NODE_ENV === 'production') {

@@ -5,6 +5,14 @@ import { DesktopCapturerSource } from "electron";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare let window: Window;
 
+export type SerializedDesktopCapturerSource = {
+  id: string;
+  name: string;
+  thumbnailDataURL: string;
+  display_id: string;
+  appIconDataURL: string | null;
+}
+
 export interface IElectron {
   ipcRenderer: {
     myPing(): void;
@@ -15,7 +23,7 @@ export interface IElectron {
         height: number;
       },
       fetchWindowIcons?: boolean;
-    }): Promise<DesktopCapturerSource[]>;
+    }): Promise<SerializedDesktopCapturerSource[]>;
     on(channel: any, func: any): void;
     once(channel: any, func: any): void;
   };

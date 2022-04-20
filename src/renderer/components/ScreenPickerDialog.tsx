@@ -16,6 +16,7 @@ import {
   selectPickerVisible,
 } from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
+import { SerializedDesktopCapturerSource } from '../global';
 
 function ScreenPickerTabPanel(props: {
   children: React.ReactNode;
@@ -34,10 +35,10 @@ function ScreenPickerDialog() {
   const dispatch = useAppDispatch();
   const { room } = useRoom();
   const [screenSources, setScreenSources] = React.useState<
-    Electron.DesktopCapturerSource[]
+    SerializedDesktopCapturerSource[]
   >([]);
   const [windowSources, setwindowSources] = React.useState<
-    Electron.DesktopCapturerSource[]
+    SerializedDesktopCapturerSource[]
   >([]);
   const pickerVisible = useAppSelector(selectPickerVisible);
   const [tabId, setTabId] = React.useState('tab1');
@@ -79,17 +80,15 @@ function ScreenPickerDialog() {
 
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
-    windowThumbs = windowSources.map((source, index) => {
-      console.log('windowSources.map:', source);
-      return <img src={} alt="" key={source.id} />;
+    windowThumbs = windowSources.map((source) => {
+      return <img src={source.thumbnailDataURL} alt="" key={source.id} />;
     });
   }
 
   let screenThumbs: React.ReactNode[] = [];
   if (screenSources.length > 0) {
-    screenThumbs = screenSources.map((source, index) => {
-      console.log('screenSources.map:', source);
-      return <img src={} alt="" key={source.id} />;
+    screenThumbs = screenSources.map((source) => {
+      return <img src={source.thumbnailDataURL} alt="" key={source.id} />;
     });
   }
 

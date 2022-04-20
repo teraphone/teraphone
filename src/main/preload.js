@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-console */
-const { contextBridge, ipcRenderer, nativeImage } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {
@@ -21,17 +20,6 @@ contextBridge.exposeInMainWorld('electron', {
         'QUERY-SCREENS',
         options
       );
-      // const sources = serializedSources.map((source) => {
-      //   const { id, name, thumbnailDataURL, display_id, appIconDataURL } =
-      //     source;
-      //   console.log('id', id, 'thumbnailDataURL', thumbnailDataURL);
-      //   const thumbnail = nativeImage.createFromDataURL(thumbnailDataURL);
-      //   const appIcon = appIconDataURL
-      //     ? nativeImage.createFromDataURL(appIconDataURL)
-      //     : null;
-      //   return { id, name, thumbnail, display_id, appIcon };
-      // });
-      // return Promise.all(sources);
       return serializedSources;
     },
     on(channel, func) {

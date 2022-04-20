@@ -81,14 +81,22 @@ function ScreenPickerDialog() {
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
     windowThumbs = windowSources.map((source) => {
-      return <img src={source.thumbnailDataURL} alt="" key={source.id} />;
+      return (
+        <div key={source.id}>
+          <img src={source.thumbnailDataURL} alt="" />
+        </div>
+      );
     });
   }
 
   let screenThumbs: React.ReactNode[] = [];
   if (screenSources.length > 0) {
     screenThumbs = screenSources.map((source) => {
-      return <img src={source.thumbnailDataURL} alt="" key={source.id} />;
+      return (
+        <div key={source.id}>
+          <img src={source.thumbnailDataURL} alt="" />
+        </div>
+      );
     });
   }
 

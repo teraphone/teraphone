@@ -1,7 +1,3 @@
-/* eslint-disable prettier/prettier */
-
-import { DesktopCapturerSource } from "electron";
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare let window: Window;
 
@@ -11,7 +7,7 @@ export type SerializedDesktopCapturerSource = {
   thumbnailDataURL: string;
   display_id: string;
   appIconDataURL: string | null;
-}
+};
 
 export interface IElectron {
   ipcRenderer: {
@@ -21,7 +17,7 @@ export interface IElectron {
       thumbnailSize?: {
         width: number;
         height: number;
-      },
+      };
       fetchWindowIcons?: boolean;
     }): Promise<SerializedDesktopCapturerSource[]>;
     on(channel: any, func: any): void;
@@ -36,4 +32,3 @@ declare global {
     require: any;
   }
 }
-export { };

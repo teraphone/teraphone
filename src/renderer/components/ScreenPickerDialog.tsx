@@ -39,6 +39,9 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
       flexDirection="row"
       alignItems="center"
       overflow="hidden"
+      onClick={() => {
+        setChecked(!checked);
+      }}
     >
       <Box>
         <Checkbox
@@ -49,11 +52,24 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
         />
       </Box>
 
-      <Box>
-        <img src={thumbnailDataURL} alt={name} />
+      <Box
+        sx={{
+          boxShadow: 2,
+          border: 1,
+          borderColor: '#ccc',
+        }}
+      >
+        <img src={thumbnailDataURL} alt={name} width="150px" />
       </Box>
-      <Box ml={2}>
-        <Typography variant="caption">{name}</Typography>
+      <Box display="flex" flexDirection="row" alignItems="center">
+        {appIconDataURL && (
+          <Box ml={1}>
+            <img src={appIconDataURL} alt="app-icon" height="32" width="32" />
+          </Box>
+        )}
+        <Typography ml={1} variant="caption">
+          {name}
+        </Typography>
       </Box>
     </Box>
   );
@@ -104,8 +120,8 @@ function ScreenPickerDialog() {
 
   React.useEffect(() => {
     const asyncEffect = async () => {
-      const thumbWidth = 150;
-      const thumbHeight = 150;
+      const thumbWidth = 300;
+      const thumbHeight = 300;
       if (screenSources && pickerVisible) {
         const screens = await window.electron.ipcRenderer.queryScreens({
           thumbnailSize: {
@@ -124,6 +140,7 @@ function ScreenPickerDialog() {
             height: thumbHeight,
           },
           types: ['window'],
+          fetchWindowIcons: true,
         });
         setwindowSources(windows);
         console.log('windowSources:', windows);

@@ -22,6 +22,13 @@ import {
 import useRoom from '../hooks/useRoom';
 import { SerializedDesktopCapturerSource } from '../global';
 
+function validDataURL(dataURL: string | null) {
+  if (dataURL === null) {
+    return false;
+  }
+  return dataURL.split(',')[1].length > 0;
+}
+
 function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
   const { source } = props;
   const {
@@ -41,7 +48,7 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
       overflow="hidden"
       onClick={() => {
         setChecked(!checked);
-        console.log('clicked source:', id);
+        console.log('clicked source:', source);
       }}
     >
       <Box>
@@ -63,9 +70,9 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
         <img src={thumbnailDataURL} alt={name} width="150px" />
       </Box>
       <Box display="flex" flexDirection="row" alignItems="center">
-        {appIconDataURL && (
+        {appIconDataURL && validDataURL(appIconDataURL) && (
           <Box ml={1}>
-            <img src={appIconDataURL} alt="app-icon" height="32" width="32" />
+            <img src={appIconDataURL} alt="" height="32" width="32" />
           </Box>
         )}
         <Typography ml={1} variant="caption">
@@ -132,7 +139,6 @@ function ScreenPickerDialog() {
           types: ['screen'],
         });
         setScreenSources(screens);
-        console.log('screenSources:', screens);
       }
       if (windowSources && pickerVisible) {
         const windows = await window.electron.ipcRenderer.queryScreens({
@@ -144,7 +150,6 @@ function ScreenPickerDialog() {
           fetchWindowIcons: true,
         });
         setwindowSources(windows);
-        console.log('windowSources:', windows);
       }
     };
     asyncEffect();
@@ -157,7 +162,7 @@ function ScreenPickerDialog() {
     windowThumbs = windowSources
       .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
       .map((source) => {
-        if (source.thumbnailDataURL) {
+        if (validDataURL(source.thumbnailDataURL)) {
           return <ScreenPickerItem source={source} key={source.id} />;
         }
         return null;
@@ -169,7 +174,7 @@ function ScreenPickerDialog() {
     screenThumbs = screenSources
       .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
       .map((source) => {
-        if (source.thumbnailDataURL) {
+        if (validDataURL(source.thumbnailDataURL)) {
           return <ScreenPickerItem source={source} key={source.id} />;
         }
         return null;

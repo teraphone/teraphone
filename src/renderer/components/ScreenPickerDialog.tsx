@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Tab } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
+import { NativeImage } from 'electron';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -76,6 +77,22 @@ function ScreenPickerDialog() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickerVisible]);
 
+  let windowThumbs: React.ReactNode[] = [];
+  if (windowSources.length > 0) {
+    windowThumbs = windowSources.map((source, index) => {
+      console.log('windowSources.map:', source);
+      return <img src={} alt="" key={source.id} />;
+    });
+  }
+
+  let screenThumbs: React.ReactNode[] = [];
+  if (screenSources.length > 0) {
+    screenThumbs = screenSources.map((source, index) => {
+      console.log('screenSources.map:', source);
+      return <img src={} alt="" key={source.id} />;
+    });
+  }
+
   return (
     <Dialog fullScreen open={pickerVisible} onClose={handleDialogClose}>
       <Box>
@@ -86,9 +103,11 @@ function ScreenPickerDialog() {
           </TabList>
           <ScreenPickerTabPanel value="tab1">
             <span>This is the Applications tab</span>
+            {windowThumbs}
           </ScreenPickerTabPanel>
           <ScreenPickerTabPanel value="tab2">
             <span>This is the Screens tab</span>
+            {screenThumbs}
           </ScreenPickerTabPanel>
         </TabContext>
       </Box>

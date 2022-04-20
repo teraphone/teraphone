@@ -166,12 +166,14 @@ function ScreenPickerDialog() {
 
   let screenThumbs: React.ReactNode[] = [];
   if (screenSources.length > 0) {
-    screenThumbs = screenSources.map((source) => {
-      if (source.thumbnailDataURL) {
-        return <ScreenPickerItem source={source} key={source.id} />;
-      }
-      return null;
-    });
+    screenThumbs = screenSources
+      .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
+      .map((source) => {
+        if (source.thumbnailDataURL) {
+          return <ScreenPickerItem source={source} key={source.id} />;
+        }
+        return null;
+      });
   }
 
   return (

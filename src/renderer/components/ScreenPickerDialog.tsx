@@ -58,8 +58,14 @@ function ScreenPickerDialog() {
 
   React.useEffect(() => {
     const asyncEffect = async () => {
+      const thumbWidth = 300;
+      const thumbHeight = 300;
       if (screenSources && pickerVisible) {
         const screens = await window.electron.ipcRenderer.queryScreens({
+          thumbnailSize: {
+            width: thumbWidth,
+            height: thumbHeight,
+          },
           types: ['screen'],
         });
         setScreenSources(screens);
@@ -67,6 +73,10 @@ function ScreenPickerDialog() {
       }
       if (windowSources && pickerVisible) {
         const windows = await window.electron.ipcRenderer.queryScreens({
+          thumbnailSize: {
+            width: thumbWidth,
+            height: thumbHeight,
+          },
           types: ['window'],
         });
         setwindowSources(windows);
@@ -83,7 +93,10 @@ function ScreenPickerDialog() {
     windowThumbs = windowSources.map((source) => {
       return (
         <div key={source.id}>
-          <img src={source.thumbnailDataURL} alt="" />
+          <div>
+            <img src={source.thumbnailDataURL} alt="" />
+          </div>
+          <br />
         </div>
       );
     });
@@ -94,7 +107,10 @@ function ScreenPickerDialog() {
     screenThumbs = screenSources.map((source) => {
       return (
         <div key={source.id}>
-          <img src={source.thumbnailDataURL} alt="" />
+          <div>
+            <img src={source.thumbnailDataURL} alt="" />
+          </div>
+          <br />
         </div>
       );
     });

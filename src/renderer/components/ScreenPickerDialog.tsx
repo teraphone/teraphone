@@ -130,8 +130,8 @@ function ScreenPickerDialog() {
 
   const handleSubmit = () => {
     console.log('handleSubmit');
-    console.log('selectedScreenSources:', selectedScreenSources);
-    console.log('selectedWindowSources:', selectedWindowSources);
+    console.log('selectedScreenSources', selectedScreenSources);
+    console.log('selectedWindowSources', selectedWindowSources);
     dispatch(setScreens(selectedScreenSources));
     dispatch(setWindows(selectedWindowSources));
     dispatch(setPickerVisible(false));

@@ -11,6 +11,9 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { Stack, Tab, Typography } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -45,48 +48,50 @@ function ScreenPickerItem(props: {
     appIconDataURL,
   } = source;
   const [checked, setChecked] = React.useState(startChecked);
-  return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      alignItems="center"
-      overflow="hidden"
-      onClick={() => {
-        changeCallback(!checked);
-        setChecked(!checked);
-        console.log('clicked source:', source);
-      }}
-    >
-      <Box>
-        <Checkbox
-          checked={checked}
-          onChange={(event) => {
-            changeCallback(event.target.checked);
-            setChecked(event.target.checked);
-          }}
-        />
-      </Box>
 
+  return (
+    <ImageListItem key={id}>
       <Box
         sx={{
-          boxShadow: 2,
-          border: 1,
-          borderColor: '#ccc',
+          p: 0,
+          m: 0,
+          border: 3,
+          borderColor: checked ? 'primary.main' : 'transparent',
+          backgroundColor: '#EEE',
+          alignSelf: 'center',
+          boxShadow: 0,
         }}
       >
-        <img src={thumbnailDataURL} alt={name} width="150px" />
+        <Box
+          sx={{
+            height: '100px',
+            width: '170px',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+          onClick={() => {
+            changeCallback(!checked);
+            setChecked(!checked);
+          }}
+        >
+          <img
+            src={thumbnailDataURL}
+            alt={name}
+            style={{ maxWidth: '100%', maxHeight: '100%' }}
+          />
+        </Box>
       </Box>
-      <Box display="flex" flexDirection="row" alignItems="center">
-        {appIconDataURL && validDataURL(appIconDataURL) && (
-          <Box ml={1}>
-            <img src={appIconDataURL} alt="" height="32" width="32" />
-          </Box>
-        )}
-        <Typography ml={1} variant="caption">
-          {name}
-        </Typography>
-      </Box>
-    </Box>
+      <ImageListItemBar
+        title={name}
+        position="below"
+        sx={{
+          width: '150px',
+          overflow: 'hidden',
+          alignSelf: 'center',
+          textAlign: 'center',
+        }}
+      />
+    </ImageListItem>
   );
 }
 
@@ -255,14 +260,14 @@ function ScreenPickerDialog() {
 
         <DialogContent dividers sx={{ px: 0.5 }}>
           <ScreenPickerTabPanel value="tab1">
-            <Stack spacing={2} divider={<Divider />}>
+            <ImageList gap={1} sx={{ p: 0, m: 0 }}>
               {windowThumbs}
-            </Stack>
+            </ImageList>
           </ScreenPickerTabPanel>
           <ScreenPickerTabPanel value="tab2">
-            <Stack spacing={2} divider={<Divider />}>
+            <ImageList gap={1} sx={{ p: 0, m: 0 }}>
               {screenThumbs}
-            </Stack>
+            </ImageList>
           </ScreenPickerTabPanel>
         </DialogContent>
         <DialogActions>

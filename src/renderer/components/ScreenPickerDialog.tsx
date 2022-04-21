@@ -129,6 +129,8 @@ function ScreenPickerDialog() {
 
   const [tabId, setTabId] = React.useState('tab1');
 
+  const [intervalId, setIntervalId] = React.useState<number | null>(null);
+
   const handleDialogClose = () => {
     dispatch(setPickerVisible(false));
   };
@@ -146,38 +148,47 @@ function ScreenPickerDialog() {
     setTabId(id);
   };
 
+  const getDisplaySources = async () => {
+    console.log('getDisplaySources');
+    const thumbWidth = 150;
+    const thumbHeight = 150;
+    if (screenSources) {
+      const screens = await window.electron.ipcRenderer.queryScreens({
+        thumbnailSize: {
+          width: thumbWidth,
+          height: thumbHeight,
+        },
+        types: ['screen'],
+      });
+      setScreenSources(screens);
+    }
+    if (windowSources) {
+      const windows = await window.electron.ipcRenderer.queryScreens({
+        thumbnailSize: {
+          width: thumbWidth,
+          height: thumbHeight,
+        },
+        types: ['window'],
+        fetchWindowIcons: true,
+      });
+      setwindowSources(windows);
+    }
+  };
+
   React.useEffect(() => {
     console.log('ScreenPickerDialog Mounted');
     return () => console.log('ScreenPickerDialog Unmounted');
   }, []);
 
   React.useEffect(() => {
-    const asyncEffect = async () => {
-      const thumbWidth = 150;
-      const thumbHeight = 150;
-      if (screenSources && pickerVisible) {
-        const screens = await window.electron.ipcRenderer.queryScreens({
-          thumbnailSize: {
-            width: thumbWidth,
-            height: thumbHeight,
-          },
-          types: ['screen'],
-        });
-        setScreenSources(screens);
-      }
-      if (windowSources && pickerVisible) {
-        const windows = await window.electron.ipcRenderer.queryScreens({
-          thumbnailSize: {
-            width: thumbWidth,
-            height: thumbHeight,
-          },
-          types: ['window'],
-          fetchWindowIcons: true,
-        });
-        setwindowSources(windows);
-      }
-    };
-    asyncEffect();
+    if (pickerVisible) {
+      console.log('ScreenPickerDialog asyncEffect');
+      getDisplaySources();
+      setIntervalId(window.setInterval(getDisplaySources, 2000));
+    } else if (intervalId) {
+      window.clearInterval(intervalId);
+    }
+
     // array-valued dependencies cause infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickerVisible]);

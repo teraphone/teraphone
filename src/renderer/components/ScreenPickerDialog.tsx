@@ -57,7 +57,7 @@ function ScreenPickerItem(props: {
           m: 0,
           border: 3,
           borderColor: checked ? 'primary.main' : 'transparent',
-          backgroundColor: '#EEE',
+          backgroundColor: '#F4F4F4',
           alignSelf: 'center',
           boxShadow: 0,
         }}
@@ -153,8 +153,8 @@ function ScreenPickerDialog() {
 
   React.useEffect(() => {
     const asyncEffect = async () => {
-      const thumbWidth = 300;
-      const thumbHeight = 300;
+      const thumbWidth = 150;
+      const thumbHeight = 150;
       if (screenSources && pickerVisible) {
         const screens = await window.electron.ipcRenderer.queryScreens({
           thumbnailSize: {

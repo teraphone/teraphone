@@ -36,10 +36,10 @@ function validDataURL(dataURL: string | null) {
 
 function ScreenPickerItem(props: {
   source: SerializedDesktopCapturerSource;
-  startChecked: boolean;
+  selectedSources: ScreenSource;
   changeCallback: (checked: boolean) => void;
 }) {
-  const { source, startChecked, changeCallback } = props;
+  const { source, selectedSources, changeCallback } = props;
   const {
     id,
     name,
@@ -47,7 +47,7 @@ function ScreenPickerItem(props: {
     display_id: displayId,
     appIconDataURL,
   } = source;
-  const [checked, setChecked] = React.useState(startChecked);
+  const checked = !!selectedSources[id];
 
   return (
     <ImageListItem key={id}>
@@ -71,7 +71,6 @@ function ScreenPickerItem(props: {
           }}
           onClick={() => {
             changeCallback(!checked);
-            setChecked(!checked);
           }}
         >
           <img
@@ -133,15 +132,22 @@ function ScreenPickerDialog() {
 
   const handleDialogClose = () => {
     dispatch(setPickerVisible(false));
+    setSelectedScreenSources(activeScreens);
+    setSelectedWindowSources(activeWindows);
+  };
+
+  const handleClearAll = () => {
+    setSelectedScreenSources({});
+    setSelectedWindowSources({});
   };
 
   const handleSubmit = () => {
     console.log('handleSubmit');
     console.log('selectedScreenSources', selectedScreenSources);
     console.log('selectedWindowSources', selectedWindowSources);
+    dispatch(setPickerVisible(false));
     dispatch(setScreens(selectedScreenSources));
     dispatch(setWindows(selectedWindowSources));
-    dispatch(setPickerVisible(false));
   };
 
   const handleTabChange = (_event: React.SyntheticEvent, id: string) => {
@@ -188,6 +194,11 @@ function ScreenPickerDialog() {
     } else if (intervalId) {
       window.clearInterval(intervalId);
     }
+    return () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+    };
 
     // array-valued dependencies cause infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -223,7 +234,7 @@ function ScreenPickerDialog() {
             <ScreenPickerItem
               source={source}
               key={source.id}
-              startChecked={!!activeWindows[source.id]}
+              selectedSources={selectedWindowSources}
               changeCallback={setSelectedWindowsCallback(source.id)}
             />
           );
@@ -242,7 +253,7 @@ function ScreenPickerDialog() {
             <ScreenPickerItem
               source={source}
               key={source.id}
-              startChecked={!!activeScreens[source.id]}
+              selectedSources={selectedScreenSources}
               changeCallback={setSelectedScreensCallback(source.id)}
             />
           );
@@ -285,7 +296,10 @@ function ScreenPickerDialog() {
           <Button autoFocus color="inherit" onClick={handleDialogClose}>
             Cancel
           </Button>
-          <Button autoFocus color="inherit" onClick={handleSubmit}>
+          <Button color="inherit" onClick={handleClearAll}>
+            Clear All
+          </Button>
+          <Button color="inherit" onClick={handleSubmit}>
             Save
           </Button>
         </DialogActions>

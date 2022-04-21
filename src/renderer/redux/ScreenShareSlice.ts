@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 
-type ScreenSource = {
-  [id: string]: string;
+export type ScreenSource = {
+  [id: string]: true;
 };
 
 type ScreenShareState = {

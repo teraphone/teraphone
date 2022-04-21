@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-console */
 import * as React from 'react';
 import Checkbox from '@mui/material/Checkbox';
@@ -18,6 +19,7 @@ import {
   selectScreens,
   selectWindows,
   selectPickerVisible,
+  ScreenSource,
 } from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
 import { SerializedDesktopCapturerSource } from '../global';
@@ -29,8 +31,11 @@ function validDataURL(dataURL: string | null) {
   return dataURL.split(',')[1].length > 0;
 }
 
-function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
-  const { source } = props;
+function ScreenPickerItem(props: {
+  source: SerializedDesktopCapturerSource;
+  changeCallback: (checked: boolean) => void;
+}) {
+  const { source, changeCallback } = props;
   const {
     id,
     name,
@@ -47,6 +52,7 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
       alignItems="center"
       overflow="hidden"
       onClick={() => {
+        changeCallback(!checked);
         setChecked(!checked);
         console.log('clicked source:', source);
       }}
@@ -55,6 +61,7 @@ function ScreenPickerItem(props: { source: SerializedDesktopCapturerSource }) {
         <Checkbox
           checked={checked}
           onChange={(event) => {
+            changeCallback(event.target.checked);
             setChecked(event.target.checked);
           }}
         />
@@ -105,6 +112,10 @@ function ScreenPickerDialog() {
   const [windowSources, setwindowSources] = React.useState<
     SerializedDesktopCapturerSource[]
   >([]);
+  const [selectedScreenSources, setSelectedScreenSources] =
+    React.useState<ScreenSource>({});
+  const [selectedWindowSources, setSelectedWindowSources] =
+    React.useState<ScreenSource>({});
   const pickerVisible = useAppSelector(selectPickerVisible);
   const [tabId, setTabId] = React.useState('tab1');
 
@@ -114,6 +125,10 @@ function ScreenPickerDialog() {
 
   const handleSubmit = () => {
     console.log('handleSubmit');
+    console.log('selectedScreenSources:', selectedScreenSources);
+    console.log('selectedWindowSources:', selectedWindowSources);
+    dispatch(setScreens(selectedScreenSources));
+    dispatch(setWindows(selectedWindowSources));
     dispatch(setPickerVisible(false));
   };
 
@@ -157,13 +172,39 @@ function ScreenPickerDialog() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickerVisible]);
 
+  const setSelectedWindowsCallback = (id: string) => (checked: boolean) => {
+    console.log('setSelectedWindowsCallback', id, checked);
+    if (checked) {
+      setSelectedWindowSources({ ...selectedWindowSources, [id]: true });
+    } else {
+      const { [id]: _, ...remaining } = selectedWindowSources;
+      setSelectedWindowSources(remaining);
+    }
+  };
+
+  const setSelectedScreensCallback = (id: string) => (checked: boolean) => {
+    console.log('setSelectedScreensCallback', id, checked);
+    if (checked) {
+      setSelectedScreenSources({ ...selectedScreenSources, [id]: true });
+    } else {
+      const { [id]: _, ...remaining } = selectedScreenSources;
+      setSelectedScreenSources(remaining);
+    }
+  };
+
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
     windowThumbs = windowSources
       .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
       .map((source) => {
         if (validDataURL(source.thumbnailDataURL)) {
-          return <ScreenPickerItem source={source} key={source.id} />;
+          return (
+            <ScreenPickerItem
+              source={source}
+              key={source.id}
+              changeCallback={setSelectedWindowsCallback(source.id)}
+            />
+          );
         }
         return null;
       });
@@ -175,7 +216,13 @@ function ScreenPickerDialog() {
       .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
       .map((source) => {
         if (validDataURL(source.thumbnailDataURL)) {
-          return <ScreenPickerItem source={source} key={source.id} />;
+          return (
+            <ScreenPickerItem
+              source={source}
+              key={source.id}
+              changeCallback={setSelectedScreensCallback(source.id)}
+            />
+          );
         }
         return null;
       });

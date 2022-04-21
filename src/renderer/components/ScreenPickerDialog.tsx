@@ -205,7 +205,7 @@ function ScreenPickerDialog() {
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
     windowThumbs = windowSources
-      .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
+      .sort((a, b) => (a.id > b.id ? 1 : -1))
       .map((source) => {
         if (validDataURL(source.thumbnailDataURL)) {
           return (
@@ -224,7 +224,7 @@ function ScreenPickerDialog() {
   let screenThumbs: React.ReactNode[] = [];
   if (screenSources.length > 0) {
     screenThumbs = screenSources
-      .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1))
+      .sort((a, b) => (a.id > b.id ? 1 : -1))
       .map((source) => {
         if (validDataURL(source.thumbnailDataURL)) {
           return (

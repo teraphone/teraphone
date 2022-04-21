@@ -33,9 +33,10 @@ function validDataURL(dataURL: string | null) {
 
 function ScreenPickerItem(props: {
   source: SerializedDesktopCapturerSource;
+  startChecked: boolean;
   changeCallback: (checked: boolean) => void;
 }) {
-  const { source, changeCallback } = props;
+  const { source, startChecked, changeCallback } = props;
   const {
     id,
     name,
@@ -43,8 +44,7 @@ function ScreenPickerItem(props: {
     display_id: displayId,
     appIconDataURL,
   } = source;
-  const [checked, setChecked] = React.useState(false);
-  // displays the name, image, id, and checkbox
+  const [checked, setChecked] = React.useState(startChecked);
   return (
     <Box
       display="flex"
@@ -112,11 +112,16 @@ function ScreenPickerDialog() {
   const [windowSources, setwindowSources] = React.useState<
     SerializedDesktopCapturerSource[]
   >([]);
+  const activeScreens = useAppSelector(selectScreens);
+  const activeWindows = useAppSelector(selectWindows);
+
+  // initialize the selected screens/windows from global state
   const [selectedScreenSources, setSelectedScreenSources] =
-    React.useState<ScreenSource>({});
+    React.useState<ScreenSource>(activeScreens);
   const [selectedWindowSources, setSelectedWindowSources] =
-    React.useState<ScreenSource>({});
+    React.useState<ScreenSource>(activeWindows);
   const pickerVisible = useAppSelector(selectPickerVisible);
+
   const [tabId, setTabId] = React.useState('tab1');
 
   const handleDialogClose = () => {
@@ -202,6 +207,7 @@ function ScreenPickerDialog() {
             <ScreenPickerItem
               source={source}
               key={source.id}
+              startChecked={!!activeWindows[source.id]}
               changeCallback={setSelectedWindowsCallback(source.id)}
             />
           );
@@ -220,6 +226,7 @@ function ScreenPickerDialog() {
             <ScreenPickerItem
               source={source}
               key={source.id}
+              startChecked={!!activeScreens[source.id]}
               changeCallback={setSelectedScreensCallback(source.id)}
             />
           );
@@ -260,10 +267,10 @@ function ScreenPickerDialog() {
         </DialogContent>
         <DialogActions>
           <Button autoFocus color="inherit" onClick={handleDialogClose}>
-            Close
+            Cancel
           </Button>
           <Button autoFocus color="inherit" onClick={handleSubmit}>
-            Share
+            Save
           </Button>
         </DialogActions>
       </Dialog>

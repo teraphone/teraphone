@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -16,6 +15,7 @@ function LocalVideoView() {
   const { room } = useRoom();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
+
   return (
     <div>
       <div>Screens: {JSON.stringify(screens)}</div>

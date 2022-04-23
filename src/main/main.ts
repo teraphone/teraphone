@@ -104,6 +104,7 @@ const createWindow = async () => {
     useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nativeWindowOpen: true,
     },
   });
 
@@ -129,6 +130,17 @@ const createWindow = async () => {
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
+    console.log('edata:', edata);
+    if (edata.url === 'about:blank') {
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+          },
+        },
+      };
+    }
     shell.openExternal(edata.url);
     return { action: 'deny' };
   });

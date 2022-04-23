@@ -18,6 +18,8 @@ import {
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
+import WindowPortal from './WindowPortal';
+import LocalVideoView from './LocalVideoView';
 
 const Home = () => {
   React.useEffect(() => {
@@ -104,6 +106,14 @@ const Home = () => {
       >
         <GroupTabs />
         <ScreenPickerDialog />
+        <WindowPortal // Todo: don't render unconditionally
+          title="Local Video"
+          width={320}
+          height={240}
+          onClose={() => {}}
+        >
+          <LocalVideoView />
+        </WindowPortal>
       </Box>
     </div>
   );

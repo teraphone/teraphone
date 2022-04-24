@@ -19,12 +19,14 @@ import {
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
 import useFirebase from '../hooks/useFirebase';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
+import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
 
 function CurentRoomControls() {
+  const dispatch = useAppDispatch();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
@@ -127,12 +129,9 @@ function CurentRoomControls() {
             aria-label="disconnect"
             component="span"
             onClick={() => {
-              if (enabled) {
-                room?.localParticipant.setScreenShareEnabled(false);
-              } else {
-                room?.localParticipant.setScreenShareEnabled(true);
-              }
+              dispatch(setPickerVisible(true));
             }}
+            disabled={connectionStatus !== ConnectionStatus.Connected}
           >
             <ScreenShareIcon />
           </IconButton>
@@ -178,6 +177,7 @@ function CurentRoomControls() {
             aria-label="info"
             component="span"
             onClick={handleClick}
+            disabled={connectionStatus !== ConnectionStatus.Connected}
           >
             <InfoIcon />
           </IconButton>

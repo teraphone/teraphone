@@ -25,7 +25,6 @@ import {
   toggleDeafen,
 } from '../redux/MuteSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import { setPickerVisible } from '../redux/ScreenShareSlice';
 
 function BottomControls() {
   const dispatch = useAppDispatch();
@@ -146,14 +145,7 @@ function BottomControls() {
 
   const InfoButton = () => {
     const handleClick = async () => {
-      // window.electron.ipcRenderer.myPing();
-
-      // const sources = await window.electron.ipcRenderer.queryScreens({
-      //   types: ['screen', 'window'],
-      // });
-      // console.log('sources:', sources);
-
-      dispatch(setPickerVisible(true));
+      window.electron.ipcRenderer.myPing();
     };
 
     return (

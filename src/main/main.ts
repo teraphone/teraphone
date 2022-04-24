@@ -135,6 +135,7 @@ const createWindow = async () => {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
+          title: edata.frameName,
           webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
           },

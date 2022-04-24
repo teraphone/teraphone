@@ -36,4 +36,4 @@ function WindowPortal(props: {
   return ReactDom.createPortal(children, containerEl);
 }
 
-export default WindowPortal;
+export default React.memo(WindowPortal);

@@ -96,6 +96,10 @@ const Home = () => {
     });
   }, [connectionStatus, room, userRTRef]);
 
+  const handleCloseVideoView = React.useCallback(() => {
+    dispatch(setWindowOpen(false));
+  }, [dispatch]);
+
   return (
     <div>
       <Box
@@ -110,12 +114,10 @@ const Home = () => {
         <ScreenPickerDialog />
         {videoViewWindowOpen && (
           <WindowPortal // Todo: remount causing problems
-            title="Local Video - T E R A P H O N E"
+            title="Video - T E R A P H O N E"
             width={320}
             height={240}
-            onClose={() => {
-              dispatch(setWindowOpen(false));
-            }}
+            onClose={handleCloseVideoView}
           >
             <VideoView />
           </WindowPortal>

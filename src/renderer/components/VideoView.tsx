@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -16,6 +17,13 @@ function VideoView() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
 
+  React.useEffect(() => {
+    console.log('VideoView Mounted');
+    return () => {
+      console.log('VideoView Unmounted');
+    };
+  }, []);
+
   return (
     <div>
       <div>Screens: {JSON.stringify(screens)}</div>
@@ -24,4 +32,4 @@ function VideoView() {
   );
 }
 
-export default VideoView;
+export default React.memo(VideoView);

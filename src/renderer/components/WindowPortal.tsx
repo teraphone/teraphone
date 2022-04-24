@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 
@@ -11,6 +12,11 @@ function WindowPortal(props: {
   const { title, width, height, children, onClose } = props;
   const containerEl = document.createElement('div');
   const windowRef = React.useRef<Window | null>(null);
+
+  React.useEffect(() => {
+    console.log('WindowPortal Mounted');
+    return () => console.log('WindowPortal Unmounted');
+  }, []);
 
   React.useEffect(() => {
     windowRef.current = window.open(

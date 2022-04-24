@@ -10,9 +10,9 @@ import {
 } from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
 
-function LocalVideoView() {
+function VideoView() {
   const dispatch = useAppDispatch();
-  const { room } = useRoom();
+  // const { room } = useRoom();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
 
@@ -24,4 +24,4 @@ function LocalVideoView() {
   );
 }
 
-export default LocalVideoView;
+export default VideoView;

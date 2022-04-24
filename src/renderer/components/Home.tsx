@@ -19,7 +19,8 @@ import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
 import WindowPortal from './WindowPortal';
-import LocalVideoView from './LocalVideoView';
+import VideoView from './VideoView';
+import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
 
 const Home = () => {
   React.useEffect(() => {
@@ -33,6 +34,7 @@ const Home = () => {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { appUser } = useAppSelector(selectAppUser);
+  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
   const userRTRef = ref(
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
@@ -106,14 +108,18 @@ const Home = () => {
       >
         <GroupTabs />
         <ScreenPickerDialog />
-        <WindowPortal // Todo: don't render unconditionally
-          title="Local Video"
-          width={320}
-          height={240}
-          onClose={() => {}}
-        >
-          <LocalVideoView />
-        </WindowPortal>
+        {videoViewWindowOpen && (
+          <WindowPortal // Todo: remount causing problems
+            title="Local Video - T E R A P H O N E"
+            width={320}
+            height={240}
+            onClose={() => {
+              dispatch(setWindowOpen(false));
+            }}
+          >
+            <VideoView />
+          </WindowPortal>
+        )}
       </Box>
     </div>
   );

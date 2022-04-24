@@ -10,7 +10,7 @@ function WindowPortal(props: {
   onClose: () => void;
 }) {
   const { title, width, height, children, onClose } = props;
-  const containerEl = document.createElement('div');
+  const containerRef = React.useRef(document.createElement('div'));
   const windowRef = React.useRef<Window | null>(null);
 
   React.useEffect(() => {
@@ -26,14 +26,14 @@ function WindowPortal(props: {
     );
 
     if (windowRef.current) {
-      windowRef.current.document.body.appendChild(containerEl);
+      windowRef.current.document.body.appendChild(containerRef.current);
       windowRef.current.onunload = () => {
         onClose();
       };
     }
-  }, [containerEl, height, onClose, title, width]);
+  }, [containerRef, height, onClose, title, width]);
 
-  return ReactDom.createPortal(children, containerEl);
+  return ReactDom.createPortal(children, containerRef.current, title);
 }
 
 export default React.memo(WindowPortal);

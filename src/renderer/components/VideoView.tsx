@@ -13,7 +13,7 @@ import useRoom from '../hooks/useRoom';
 
 function VideoView() {
   const dispatch = useAppDispatch();
-  // const { room } = useRoom();
+  const { room } = useRoom();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
 

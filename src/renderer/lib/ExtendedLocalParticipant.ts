@@ -6,36 +6,36 @@ import {
 
 declare module 'livekit-client' {
   interface LocalParticipant {
-    extendedSetTrackEnabled(id: string, enabled: boolean): Promise<void>;
-    extendedCreateScreenTracks(
+    setScreenShareTrackEnabled(id: string, enabled: boolean): Promise<void>;
+    createScreenShareTracks(
       id: string,
       options?: ScreenShareCaptureOptions
     ): Promise<Array<LocalTrack>>;
   }
 }
 
-async function extendedSetTrackEnabled(
+async function setScreenShareTrackEnabled(
   this: LocalParticipant,
   id: string,
   enabled: boolean
 ) {
-  console.log('called extendedSetTrackEnabled', this);
+  console.log('called setScreenShareTrackEnabled', this);
   return new Promise<void>(() => {
     // do nothing
   });
 }
 
-async function extendedCreateScreenTracks(
+async function createScreenShareTracks(
   this: LocalParticipant,
   id: string,
   options?: ScreenShareCaptureOptions
 ) {
-  console.log('called extendedCreateScreenTracks', this);
+  console.log('called createScreenShareTracks', this);
   return new Promise<Array<LocalTrack>>(() => {
     // do nothing
   });
 }
 
-LocalParticipant.prototype.extendedSetTrackEnabled = extendedSetTrackEnabled; // Todo: implement this
-LocalParticipant.prototype.extendedCreateScreenTracks =
-  extendedCreateScreenTracks; // Todo: implement this
+LocalParticipant.prototype.setScreenShareTrackEnabled =
+  setScreenShareTrackEnabled; // Todo: implement this
+LocalParticipant.prototype.createScreenShareTracks = createScreenShareTracks; // Todo: implement this

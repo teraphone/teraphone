@@ -21,8 +21,8 @@ function VideoView() {
 
   const startStream = (localParticipant: LocalParticipant, id: string) => {
     console.log('starting stream', id);
-    localParticipant.extendedCreateScreenTracks(id);
-    localParticipant.extendedSetTrackEnabled(id, true);
+    localParticipant.createScreenShareTracks(id);
+    localParticipant.setScreenShareTrackEnabled(id, true);
   };
 
   React.useEffect(() => {

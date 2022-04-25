@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
+import { Room, LocalParticipant } from 'livekit-client';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -18,12 +19,27 @@ function VideoView() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
 
+  const startStream = (localParticipant: LocalParticipant, id: string) => {
+    console.log('starting stream', id);
+    localParticipant.extendedCreateScreenTracks(id);
+    localParticipant.extendedSetTrackEnabled(id, true);
+  };
+
   React.useEffect(() => {
     if (room) {
-      room.localParticipant.extendedCreateScreenTracks('');
-      room.localParticipant.extendedSetTrackEnabled('', true);
+      if (Object.keys(screens).length > 0) {
+        Object.entries(screens).forEach(([id, _]) => {
+          startStream(room.localParticipant, id);
+        });
+      }
+
+      if (Object.keys(windows).length > 0) {
+        Object.entries(windows).forEach(([id, _]) => {
+          startStream(room.localParticipant, id);
+        });
+      }
     }
-  }, [room]);
+  }, [room, screens, windows]);
 
   React.useEffect(() => {
     console.log('VideoView Mounted');

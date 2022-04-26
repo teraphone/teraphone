@@ -34,7 +34,7 @@ function VideoView() {
     console.log('starting stream', sourceId);
     const options: ScreenShareCaptureOptions = {
       audio: false,
-      resolution: ScreenSharePresets.h1080fps15.resolution,
+      resolution: ScreenSharePresets.h1080fps15,
     };
     localParticipant.setScreenShareTrackEnabled(
       userId,
@@ -58,6 +58,7 @@ function VideoView() {
         });
       }
     }
+    console.log('localParticipant', room?.localParticipant);
   }, [appUser.id, room, screens, windows]);
 
   React.useEffect(() => {

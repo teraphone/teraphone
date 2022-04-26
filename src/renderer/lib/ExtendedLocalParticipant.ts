@@ -35,7 +35,6 @@ async function setScreenShareTrackEnabled(
   enabled: boolean,
   options?: ScreenShareCaptureOptions
 ) {
-  console.log('called setScreenShareTrackEnabled', this);
   const screenShareOptions = options || { audio: false };
 
   const trackName = `${userId}/${sourceId}`;
@@ -80,20 +79,35 @@ async function createScreenShareTracks(
   sourceId: string,
   options?: ScreenShareCaptureOptions
 ) {
-  console.log('called createScreenShareTracks', this);
   const screenShareOptions = options || { audio: false };
 
   if (screenShareOptions.resolution === undefined) {
     screenShareOptions.resolution = ScreenSharePresets.h1080fps15.resolution;
   }
 
-  const constraints: MediaStreamConstraints = {
+  // const constraints: MediaStreamConstraints = {
+  //   audio: options?.audio || false,
+  //   video: {
+  //     deviceId: sourceId,
+  //     width: { ideal: screenShareOptions.resolution.width },
+  //     height: { ideal: screenShareOptions.resolution.height },
+  //     frameRate: { ideal: screenShareOptions.resolution.frameRate },
+  //   },
+  // };
+
+  const constraints = {
     audio: options?.audio || false,
     video: {
-      deviceId: sourceId,
-      width: { ideal: screenShareOptions.resolution.width },
-      height: { ideal: screenShareOptions.resolution.height },
-      frameRate: { ideal: screenShareOptions.resolution.frameRate },
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: sourceId,
+        minWidth: 1280,
+        maxWidth: 3840,
+        minHeight: 720,
+        maxHeight: 2160,
+        minFrameRate: 5,
+        maxFrameRate: 30,
+      },
     },
   };
 

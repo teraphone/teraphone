@@ -16,7 +16,8 @@ declare module 'livekit-client' {
     setScreenShareTrackEnabled(
       userId: string,
       sourceId: string,
-      enabled: boolean
+      enabled: boolean,
+      options?: ScreenShareCaptureOptions
     ): Promise<void>;
     createScreenShareTracks(
       userId: string,

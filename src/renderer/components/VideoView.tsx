@@ -1,6 +1,11 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { Room, LocalParticipant } from 'livekit-client';
+import {
+  Room,
+  LocalParticipant,
+  ScreenShareCaptureOptions,
+  ScreenSharePresets,
+} from 'livekit-client';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -27,8 +32,16 @@ function VideoView() {
     sourceId: string
   ) => {
     console.log('starting stream', sourceId);
-    localParticipant.createScreenShareTracks(userId, sourceId);
-    localParticipant.setScreenShareTrackEnabled(userId, sourceId, true);
+    const options: ScreenShareCaptureOptions = {
+      audio: false,
+      resolution: ScreenSharePresets.h1080fps15.resolution,
+    };
+    localParticipant.setScreenShareTrackEnabled(
+      userId,
+      sourceId,
+      true,
+      options
+    );
   };
 
   React.useEffect(() => {

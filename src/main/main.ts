@@ -130,7 +130,6 @@ const createWindow = async () => {
 
   // Open urls in the user's browser
   mainWindow.webContents.setWindowOpenHandler((edata) => {
-    console.log('edata:', edata);
     if (edata.url === 'about:blank') {
       return {
         action: 'allow',

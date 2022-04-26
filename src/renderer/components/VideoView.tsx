@@ -12,34 +12,40 @@ import {
   ScreenSource,
 } from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
+import { selectAppUser } from '../redux/AppUserSlice';
 
 function VideoView() {
   const dispatch = useAppDispatch();
   const { room } = useRoom();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
+  const { appUser } = useAppSelector(selectAppUser);
 
-  const startStream = (localParticipant: LocalParticipant, id: string) => {
-    console.log('starting stream', id);
-    localParticipant.createScreenShareTracks(id);
-    localParticipant.setScreenShareTrackEnabled(id, true);
+  const startStream = (
+    localParticipant: LocalParticipant,
+    userId: string,
+    sourceId: string
+  ) => {
+    console.log('starting stream', sourceId);
+    localParticipant.createScreenShareTracks(userId, sourceId);
+    localParticipant.setScreenShareTrackEnabled(userId, sourceId, true);
   };
 
   React.useEffect(() => {
     if (room) {
       if (Object.keys(screens).length > 0) {
-        Object.entries(screens).forEach(([id, _]) => {
-          startStream(room.localParticipant, id);
+        Object.entries(screens).forEach(([sourceId, _]) => {
+          startStream(room.localParticipant, appUser.id.toString(), sourceId);
         });
       }
 
       if (Object.keys(windows).length > 0) {
-        Object.entries(windows).forEach(([id, _]) => {
-          startStream(room.localParticipant, id);
+        Object.entries(windows).forEach(([sourceId, _]) => {
+          startStream(room.localParticipant, appUser.id.toString(), sourceId);
         });
       }
     }
-  }, [room, screens, windows]);
+  }, [appUser.id, room, screens, windows]);
 
   React.useEffect(() => {
     console.log('VideoView Mounted');

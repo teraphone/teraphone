@@ -6,9 +6,14 @@ import {
 
 declare module 'livekit-client' {
   interface LocalParticipant {
-    setScreenShareTrackEnabled(id: string, enabled: boolean): Promise<void>;
+    setScreenShareTrackEnabled(
+      userId: string,
+      sourceId: string,
+      enabled: boolean
+    ): Promise<void>;
     createScreenShareTracks(
-      id: string,
+      userId: string,
+      sourceId: string,
       options?: ScreenShareCaptureOptions
     ): Promise<Array<LocalTrack>>;
   }
@@ -16,7 +21,8 @@ declare module 'livekit-client' {
 
 async function setScreenShareTrackEnabled(
   this: LocalParticipant,
-  id: string,
+  userId: string,
+  sourceId: string,
   enabled: boolean
 ) {
   console.log('called setScreenShareTrackEnabled', this);
@@ -27,7 +33,8 @@ async function setScreenShareTrackEnabled(
 
 async function createScreenShareTracks(
   this: LocalParticipant,
-  id: string,
+  userId: string,
+  sourceId: string,
   options?: ScreenShareCaptureOptions
 ) {
   console.log('called createScreenShareTracks', this);

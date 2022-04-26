@@ -5,6 +5,10 @@ import {
   ScreenShareCaptureOptions,
   TrackInvalidError,
   ParticipantEvent,
+  ScreenSharePresets,
+  LocalVideoTrack,
+  LocalAudioTrack,
+  Track,
 } from 'livekit-client';
 
 declare module 'livekit-client' {
@@ -54,7 +58,7 @@ async function setScreenShareTrackEnabled(
           sourceId,
           screenShareOptions
         );
-        await this.publishTrack(localTrack);
+        await this.publishTrack(localTrack, { name: trackName });
       } catch (e) {
         if (e instanceof Error && !(e instanceof TrackInvalidError)) {
           this.emit(ParticipantEvent.MediaDevicesError, e);
@@ -76,9 +80,39 @@ async function createScreenShareTracks(
   options?: ScreenShareCaptureOptions
 ) {
   console.log('called createScreenShareTracks', this);
-  return new Promise<Array<LocalTrack>>(() => {
-    // do nothing
-  });
+  const screenShareOptions = options || { audio: false };
+
+  if (screenShareOptions.resolution === undefined) {
+    screenShareOptions.resolution = ScreenSharePresets.h1080fps15.resolution;
+  }
+
+  const constraints: MediaStreamConstraints = {
+    audio: options?.audio || false,
+    video: {
+      deviceId: sourceId,
+      width: { ideal: screenShareOptions.resolution.width },
+      height: { ideal: screenShareOptions.resolution.height },
+      frameRate: { ideal: screenShareOptions.resolution.frameRate },
+    },
+  };
+
+  const stream: MediaStream = await navigator.mediaDevices.getUserMedia(
+    constraints
+  );
+
+  const tracks = stream.getVideoTracks();
+  if (tracks.length === 0) {
+    throw new TrackInvalidError('no video track found');
+  }
+  const screenVideo = new LocalVideoTrack(tracks[0]);
+  screenVideo.source = Track.Source.ScreenShare;
+  const localTracks: Array<LocalTrack> = [screenVideo];
+  if (stream.getAudioTracks().length > 0) {
+    const screenAudio = new LocalAudioTrack(stream.getAudioTracks()[0]);
+    screenAudio.source = Track.Source.ScreenShareAudio;
+    localTracks.push(screenAudio);
+  }
+  return localTracks;
 }
 
 LocalParticipant.prototype.setScreenShareTrackEnabled =

@@ -27,9 +27,12 @@ async function setScreenShareTrackEnabled(
   this: LocalParticipant,
   userId: string,
   sourceId: string,
-  enabled: boolean
+  enabled: boolean,
+  options?: ScreenShareCaptureOptions
 ) {
   console.log('called setScreenShareTrackEnabled', this);
+  const screenShareOptions = options || { audio: false };
+
   const trackName = `${userId}/${sourceId}`;
   const track = this.getTrackByName(trackName);
   if (enabled) {
@@ -46,9 +49,11 @@ async function setScreenShareTrackEnabled(
       }
       this.screensPendingPublishing.add(trackName);
       try {
-        [localTrack] = await this.createScreenShareTracks(userId, sourceId, {
-          audio: false,
-        });
+        [localTrack] = await this.createScreenShareTracks(
+          userId,
+          sourceId,
+          screenShareOptions
+        );
         await this.publishTrack(localTrack);
       } catch (e) {
         if (e instanceof Error && !(e instanceof TrackInvalidError)) {

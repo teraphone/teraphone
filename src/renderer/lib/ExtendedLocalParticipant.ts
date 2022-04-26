@@ -1,7 +1,10 @@
+/* eslint-disable no-console */
 import {
   LocalParticipant,
   LocalTrack,
   ScreenShareCaptureOptions,
+  TrackInvalidError,
+  ParticipantEvent,
 } from 'livekit-client';
 
 declare module 'livekit-client' {
@@ -16,6 +19,7 @@ declare module 'livekit-client' {
       sourceId: string,
       options?: ScreenShareCaptureOptions
     ): Promise<Array<LocalTrack>>;
+    screensPendingPublishing: Set<string>;
   }
 }
 
@@ -26,9 +30,38 @@ async function setScreenShareTrackEnabled(
   enabled: boolean
 ) {
   console.log('called setScreenShareTrackEnabled', this);
-  return new Promise<void>(() => {
-    // do nothing
-  });
+  const trackName = `${userId}/${sourceId}`;
+  const track = this.getTrackByName(trackName);
+  if (enabled) {
+    if (track) {
+      await track.unmute();
+    } else {
+      let localTrack: LocalTrack | undefined;
+      if (!this.screensPendingPublishing) {
+        this.screensPendingPublishing = new Set<string>();
+      }
+      if (this.screensPendingPublishing.has(trackName)) {
+        console.log('skipping duplicate published source', trackName);
+        return;
+      }
+      this.screensPendingPublishing.add(trackName);
+      try {
+        [localTrack] = await this.createScreenShareTracks(userId, sourceId, {
+          audio: false,
+        });
+        await this.publishTrack(localTrack);
+      } catch (e) {
+        if (e instanceof Error && !(e instanceof TrackInvalidError)) {
+          this.emit(ParticipantEvent.MediaDevicesError, e);
+        }
+        throw e;
+      } finally {
+        this.screensPendingPublishing.delete(trackName);
+      }
+    }
+  } else if (track && track.track) {
+    this.unpublishTrack(track.track);
+  }
 }
 
 async function createScreenShareTracks(

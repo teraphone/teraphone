@@ -5,7 +5,7 @@ import {
   ScreenShareCaptureOptions,
   TrackInvalidError,
   ParticipantEvent,
-  ScreenSharePresets,
+  VideoPresets,
   LocalVideoTrack,
   LocalAudioTrack,
   Track,
@@ -79,21 +79,11 @@ async function createScreenShareTracks(
   sourceId: string,
   options?: ScreenShareCaptureOptions
 ) {
-  const screenShareOptions = options || { audio: false };
+  // const screenShareOptions = options || { audio: false };
 
-  if (screenShareOptions.resolution === undefined) {
-    screenShareOptions.resolution = ScreenSharePresets.h1080fps15.resolution;
-  }
-
-  // const constraints: MediaStreamConstraints = {
-  //   audio: options?.audio || false,
-  //   video: {
-  //     deviceId: sourceId,
-  //     width: { ideal: screenShareOptions.resolution.width },
-  //     height: { ideal: screenShareOptions.resolution.height },
-  //     frameRate: { ideal: screenShareOptions.resolution.frameRate },
-  //   },
-  // };
+  // if (screenShareOptions.resolution === undefined) {
+  //   screenShareOptions.resolution = VideoPresets.h1080.resolution;
+  // }
 
   const constraints = {
     audio: options?.audio || false,
@@ -101,17 +91,18 @@ async function createScreenShareTracks(
       mandatory: {
         chromeMediaSource: 'desktop',
         chromeMediaSourceId: sourceId,
-        minWidth: 1280,
-        maxWidth: 3840,
-        minHeight: 720,
-        maxHeight: 2160,
+        minWidth: VideoPresets.h1080.width,
+        maxWidth: VideoPresets.h2160.width,
+        minHeight: VideoPresets.h1080.height,
+        maxHeight: VideoPresets.h2160.height,
         minFrameRate: 5,
         maxFrameRate: 30,
       },
     },
   };
 
-  const stream: MediaStream = await navigator.mediaDevices.getUserMedia(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const stream: MediaStream = await (<any>navigator.mediaDevices).getUserMedia(
     constraints
   );
 

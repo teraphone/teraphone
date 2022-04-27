@@ -5,7 +5,13 @@ import {
   LocalParticipant,
   ScreenShareCaptureOptions,
   ScreenSharePresets,
+  LocalTrackPublication,
+  LocalTrack,
+  VideoPresets,
 } from 'livekit-client';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import { VideoRenderer } from './VideoRenderer';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -25,6 +31,7 @@ function VideoView() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
   const { appUser } = useAppSelector(selectAppUser);
+  const localVideoTracks = room?.localParticipant?.videoTracks;
 
   const startStream = (
     localParticipant: LocalParticipant,
@@ -68,12 +75,32 @@ function VideoView() {
     };
   }, []);
 
+  const localVideoRenderers: JSX.Element[] = [];
+  if (localVideoTracks) {
+    localVideoTracks.forEach((value: LocalTrackPublication, key: string) => {
+      localVideoRenderers.push(
+        <Box>
+          <VideoRenderer
+            // eslint-disable-next-line react/no-array-index-key
+            key={key}
+            track={value.track as LocalTrack}
+            isLocal
+            objectFit="scale-down"
+            height={VideoPresets.h1080.height.toString()}
+            width={VideoPresets.h1080.width.toString()}
+          />
+        </Box>
+      );
+    });
+  }
+
   return (
-    <div>
-      <div>Screens: {JSON.stringify(screens)}</div>
-      <div>Windows: {JSON.stringify(windows)}</div>
-      <div>localParticipant: {JSON.stringify(room?.localParticipant)}</div>
-    </div>
+    <Box sx={{ width: 500, height: 500, backgroundColor: 'primary.dark' }}>
+      <Button variant="contained">asdf</Button>
+      <Box>Screens: {JSON.stringify(screens)}</Box>
+      <Box>Windows: {JSON.stringify(windows)}</Box>
+      <Box>{localVideoRenderers}</Box>
+    </Box>
   );
 }
 

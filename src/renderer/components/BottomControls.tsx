@@ -146,6 +146,8 @@ function BottomControls() {
   const InfoButton = () => {
     const handleClick = async () => {
       window.electron.ipcRenderer.myPing();
+      const constraints = navigator.mediaDevices.getSupportedConstraints();
+      console.log('constraints:', constraints);
       navigator.mediaDevices
         .enumerateDevices()
         .then((devices) => {

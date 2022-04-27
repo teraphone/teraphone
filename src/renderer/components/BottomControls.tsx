@@ -146,6 +146,16 @@ function BottomControls() {
   const InfoButton = () => {
     const handleClick = async () => {
       window.electron.ipcRenderer.myPing();
+      navigator.mediaDevices
+        .enumerateDevices()
+        .then((devices) => {
+          console.log('devices:', devices);
+          return devices;
+        })
+        .catch((err) => {
+          console.error('error:', err);
+          return [];
+        });
     };
 
     return (

@@ -113,7 +113,7 @@ const Home = () => {
         <GroupTabs />
         <ScreenPickerDialog />
         {videoViewWindowOpen && (
-          <WindowPortal // Todo: remount causing problems
+          <WindowPortal
             title="Video - T E R A P H O N E"
             width={320}
             height={240}

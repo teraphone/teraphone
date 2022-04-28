@@ -79,15 +79,13 @@ function VideoView() {
   if (localVideoTracks) {
     localVideoTracks.forEach((value: LocalTrackPublication, key: string) => {
       localVideoRenderers.push(
-        <Box>
+        <Box sx={{}}>
           <VideoRenderer
             // eslint-disable-next-line react/no-array-index-key
             key={key}
             track={value.track as LocalTrack}
             isLocal
-            objectFit="scale-down"
-            height={VideoPresets.h1080.height.toString()}
-            width={VideoPresets.h1080.width.toString()}
+            objectFit="contain"
           />
         </Box>
       );
@@ -95,8 +93,7 @@ function VideoView() {
   }
 
   return (
-    <Box sx={{ width: 500, height: 500, backgroundColor: 'primary.dark' }}>
-      <Button variant="contained">asdf</Button>
+    <Box sx={{ backgroundColor: 'primary.dark' }}>
       <Box>Screens: {JSON.stringify(screens)}</Box>
       <Box>Windows: {JSON.stringify(windows)}</Box>
       <Box>{localVideoRenderers}</Box>

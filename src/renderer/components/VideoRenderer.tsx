@@ -28,8 +28,9 @@ export const VideoRenderer = ({
     track.source === 'camera';
   const style: React.CSSProperties = {
     transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
-    width,
-    height,
+    width: width || 'auto',
+    height: height || 'auto',
+    position: 'relative',
   };
   if (objectFit) {
     style.objectFit = objectFit;
@@ -71,7 +72,7 @@ export const VideoRenderer = ({
 
   return (
     // eslint-disable-next-line jsx-a11y/media-has-caption
-    <video ref={videoRef} className={className} style={style} playsInline />
+    <video ref={videoRef} className={className} style={style} />
   );
 };
 

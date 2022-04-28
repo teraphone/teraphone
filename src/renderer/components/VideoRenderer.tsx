@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/require-default-props */
 import { Property } from 'csstype';
 import { Track } from 'livekit-client';
@@ -63,11 +64,12 @@ export const VideoRenderer = ({
 
   const handleLoadedMetadata = React.useCallback((event: Event) => {
     console.log('VideoRenderer.handleLoadedMetadata', event);
-    if (event.target instanceof HTMLVideoElement) {
-      const vwidth = event.target.videoWidth;
-      const vheight = event.target.videoHeight;
-      console.log('Video loaded metadata', vwidth, vheight);
-    }
+    const target = event.target as HTMLVideoElement;
+    console.log(
+      'Video loaded metadata h w:',
+      target.videoHeight,
+      target.videoWidth
+    );
   }, []);
 
   React.useEffect(() => {

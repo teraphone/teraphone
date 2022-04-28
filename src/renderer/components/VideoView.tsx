@@ -8,6 +8,7 @@ import {
   LocalTrackPublication,
   LocalTrack,
   VideoPresets,
+  Track,
 } from 'livekit-client';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -79,11 +80,19 @@ function VideoView() {
   if (localVideoTracks) {
     localVideoTracks.forEach((value: LocalTrackPublication, key: string) => {
       localVideoRenderers.push(
-        <Box sx={{}}>
+        <Box
+          sx={{
+            background: 'black',
+            boxSizing: 'border-box',
+            overvlow: 'auto',
+            maxWidth: '100%',
+            height: 'auto',
+          }}
+        >
           <VideoRenderer
             // eslint-disable-next-line react/no-array-index-key
             key={key}
-            track={value.track as LocalTrack}
+            track={value.track as Track}
             isLocal
             objectFit="contain"
           />

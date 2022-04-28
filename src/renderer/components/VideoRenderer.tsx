@@ -28,9 +28,11 @@ export const VideoRenderer = ({
     track.source === 'camera';
   const style: React.CSSProperties = {
     transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
-    width: width || 'auto',
-    height: height || 'auto',
-    position: 'relative',
+    display: 'inline-block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    width: '100%',
+    verticalAlign: 'middle',
   };
   if (objectFit) {
     style.objectFit = objectFit;

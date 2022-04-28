@@ -115,8 +115,8 @@ const Home = () => {
         {videoViewWindowOpen && (
           <WindowPortal
             title="Video - T E R A P H O N E"
-            width={320}
-            height={240}
+            width={800}
+            height={600}
             onClose={handleCloseVideoView}
           >
             <VideoView />

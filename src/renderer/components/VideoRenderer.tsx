@@ -61,16 +61,27 @@ export const VideoRenderer = ({
     [onSizeChanged]
   );
 
+  const handleLoadedMetadata = React.useCallback((event: Event) => {
+    console.log('VideoRenderer.handleLoadedMetadata', event);
+    if (event.target instanceof HTMLVideoElement) {
+      const vwidth = event.target.videoWidth;
+      const vheight = event.target.videoHeight;
+      console.log('Video loaded metadata', vwidth, vheight);
+    }
+  }, []);
+
   React.useEffect(() => {
     const videoEl = videoRef.current;
     if (videoEl) {
       videoEl.addEventListener('resize', handleResize);
+      videoEl.addEventListener('loadedmetadata', handleLoadedMetadata);
       return () => {
         videoEl.removeEventListener('resize', handleResize);
+        videoEl.removeEventListener('loadedmetadata', handleLoadedMetadata);
       };
     }
     return () => {};
-  }, [handleResize]);
+  }, [handleLoadedMetadata, handleResize]);
 
   return (
     // eslint-disable-next-line jsx-a11y/media-has-caption

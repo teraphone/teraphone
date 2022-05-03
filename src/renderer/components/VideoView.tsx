@@ -84,9 +84,11 @@ function VideoView() {
           sx={{
             background: 'black',
             boxSizing: 'border-box',
-            overvlow: 'auto',
+            overflow: 'hidden',
             maxWidth: '100%',
-            height: 'auto',
+            maxHeight: '100%',
+            height: '100%',
+            width: '100%',
           }}
         >
           <VideoRenderer
@@ -94,7 +96,7 @@ function VideoView() {
             key={key}
             track={value.track as Track}
             isLocal
-            objectFit="contain"
+            objectFit="scale-down"
           />
         </Box>
       );
@@ -103,8 +105,8 @@ function VideoView() {
 
   return (
     <Box sx={{ backgroundColor: 'primary.dark' }}>
-      <Box>Screens: {JSON.stringify(screens)}</Box>
-      <Box>Windows: {JSON.stringify(windows)}</Box>
+      {/* <Box>Screens: {JSON.stringify(screens)}</Box>
+      <Box>Windows: {JSON.stringify(windows)}</Box> */}
       <Box>{localVideoRenderers}</Box>
     </Box>
   );

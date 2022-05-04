@@ -164,10 +164,7 @@ function CurentRoomControls() {
 
   const InfoButton = () => {
     const handleClick = () => {
-      const localParticipant = room?.localParticipant;
-      const id = '1';
-      const enabled = true;
-      localParticipant?.extendedSetTrackEnabled(id, enabled);
+      console.log('room', room);
     };
     return (
       <Tooltip title="Info" placement="top" arrow>

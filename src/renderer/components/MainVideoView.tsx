@@ -57,8 +57,12 @@ function MainVideoView() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { groupId } = currentRoom;
   const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
-  // const localVideoTracks = room?.localParticipant?.videoTracks;
   const videoItems = new Map<string, VideoItem>();
+  const [focus, setFocus] = React.useState('');
+
+  const setFocusCallback = React.useCallback((sid: string) => {
+    setFocus(sid);
+  }, []);
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
@@ -84,6 +88,18 @@ function MainVideoView() {
     console.log('localParticipant', room?.localParticipant);
   }, [appUser.id, room, screens, windows]);
 
+  // subscribe to remote video tracks
+  if (room?.participants) {
+    room.participants.forEach((participant) => {
+      participant.videoTracks.forEach((videoTrack) => {
+        if (!videoTrack.isSubscribed) {
+          videoTrack.setSubscribed(true);
+        }
+      });
+    });
+  }
+
+  // add local video tracks to videoItems
   if (room?.localParticipant?.videoTracks) {
     room.localParticipant.videoTracks.forEach((videoTrack, sid) => {
       const userId = room.localParticipant.identity;
@@ -98,6 +114,7 @@ function MainVideoView() {
     });
   }
 
+  // add remote video tracks to videoItems
   if (room?.participants) {
     room.participants.forEach((participant) => {
       const userId = participant.identity;
@@ -107,7 +124,6 @@ function MainVideoView() {
       const userName = user?.name || 'Unknown';
       if (participant.videoTracks) {
         participant.videoTracks.forEach((videoTrack, sid) => {
-          videoTrack.setSubscribed(true);
           const isPopout = false;
           const isLocal = false;
           const track = videoTrack.videoTrack as Track;

@@ -96,7 +96,6 @@ function VideoView() {
             key={key}
             track={value.track as Track}
             isLocal
-            objectFit="scale-down"
           />
         </Box>
       );

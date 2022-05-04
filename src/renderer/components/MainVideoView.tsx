@@ -44,6 +44,7 @@ const startStream = (
 export type VideoItem = {
   userName: string;
   isPopout: boolean;
+  isLocal: boolean;
   track: Track;
 };
 
@@ -91,8 +92,28 @@ function MainVideoView() {
       );
       const userName = user?.name || 'Unknown';
       const isPopout = false;
+      const isLocal = true;
       const track = videoTrack.track as Track;
-      videoItems.set(sid, { userName, isPopout, track });
+      videoItems.set(sid, { userName, isPopout, isLocal, track });
+    });
+  }
+
+  if (room?.participants) {
+    room.participants.forEach((participant) => {
+      const userId = participant.identity;
+      const user = groupInfo?.users.find(
+        (groupUser) => groupUser.user_id === +userId
+      );
+      const userName = user?.name || 'Unknown';
+      if (participant.videoTracks) {
+        participant.videoTracks.forEach((videoTrack, sid) => {
+          videoTrack.setSubscribed(true);
+          const isPopout = false;
+          const isLocal = false;
+          const track = videoTrack.videoTrack as Track;
+          videoItems.set(sid, { userName, isPopout, isLocal, track });
+        });
+      }
     });
   }
 

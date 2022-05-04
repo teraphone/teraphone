@@ -21,6 +21,7 @@ import ScreenPickerDialog from './ScreenPickerDialog';
 import WindowPortal from './WindowPortal';
 import VideoView from './VideoView';
 import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
+import MainVideoView from './MainVideoView';
 
 const Home = () => {
   React.useEffect(() => {
@@ -119,7 +120,10 @@ const Home = () => {
             height={600}
             onClose={handleCloseVideoView}
           >
-            <VideoView />
+            <>
+              <VideoView />
+              <MainVideoView />
+            </>
           </WindowPortal>
         )}
       </Box>

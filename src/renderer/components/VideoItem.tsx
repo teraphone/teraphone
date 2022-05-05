@@ -38,12 +38,22 @@ export const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
     if (videoEl) {
       videoEl.muted = true;
       videoTrack.videoTrack?.attach(videoEl);
+      const capabilities =
+        videoTrack.videoTrack?.mediaStreamTrack.getCapabilities();
+      const constraints =
+        videoTrack.videoTrack?.mediaStreamTrack.getConstraints();
+      const settings = videoTrack.videoTrack?.mediaStreamTrack.getSettings();
+      console.log('videoTrack', videoTrack);
+      console.log('capabilities', capabilities);
+      console.log('constraints', constraints);
+      console.log('settings', settings);
+
       return () => {
         videoTrack.videoTrack?.detach(videoEl);
       };
     }
     return () => {};
-  }, [videoTrack.videoTrack]);
+  }, [videoTrack, videoTrack.videoTrack]);
 
   const handleLoadedMetadata = React.useCallback((event: Event) => {
     console.log('VideoRenderer.handleLoadedMetadata', event);

@@ -9,10 +9,13 @@ import {
   LocalTrack,
   VideoPresets,
   Track,
+  RemoteTrackPublication,
 } from 'livekit-client';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import { VideoRenderer } from './VideoRenderer';
+import { VideoItem } from './VideoItem';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -41,11 +44,11 @@ const startStream = (
   localParticipant.setScreenShareTrackEnabled(userId, sourceId, true, options);
 };
 
-export type VideoItem = {
+export type VideoItemValue = {
   userName: string;
   isPopout: boolean;
   isLocal: boolean;
-  track: Track;
+  videoTrack: LocalTrackPublication | RemoteTrackPublication;
 };
 
 function MainVideoView() {
@@ -57,8 +60,9 @@ function MainVideoView() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { groupId } = currentRoom;
   const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
-  const videoItems = new Map<string, VideoItem>();
+  const videoItems = new Map<string, VideoItemValue>();
   const [focus, setFocus] = React.useState('');
+  const [isFocusView, setIsFocusView] = React.useState(false);
 
   const setFocusCallback = React.useCallback((sid: string) => {
     setFocus(sid);
@@ -109,8 +113,7 @@ function MainVideoView() {
       const userName = user?.name || 'Unknown';
       const isPopout = false;
       const isLocal = true;
-      const track = videoTrack.track as Track;
-      videoItems.set(sid, { userName, isPopout, isLocal, track });
+      videoItems.set(sid, { userName, isPopout, isLocal, videoTrack });
     });
   }
 
@@ -126,8 +129,7 @@ function MainVideoView() {
         participant.videoTracks.forEach((videoTrack, sid) => {
           const isPopout = false;
           const isLocal = false;
-          const track = videoTrack.videoTrack as Track;
-          videoItems.set(sid, { userName, isPopout, isLocal, track });
+          videoItems.set(sid, { userName, isPopout, isLocal, videoTrack });
         });
       }
     });
@@ -135,8 +137,21 @@ function MainVideoView() {
 
   // Todo: finish this
   console.log('videoItems', videoItems);
+  const gridItems = [] as JSX.Element[];
+  videoItems.forEach((videoItem) => {
+    const { userName, isPopout, isLocal, videoTrack } = videoItem;
+    gridItems.push(
+      <Grid item key={videoTrack.trackSid}>
+        <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+      </Grid>
+    );
+  });
 
-  return <></>;
+  return (
+    <Grid container hidden={!isFocusView}>
+      {gridItems}
+    </Grid>
+  );
 }
 
 export default MainVideoView;

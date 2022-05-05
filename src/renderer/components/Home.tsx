@@ -121,7 +121,7 @@ const Home = () => {
             onClose={handleCloseVideoView}
           >
             <>
-              <VideoView />
+              {/* <VideoView /> */}
               <MainVideoView />
             </>
           </WindowPortal>

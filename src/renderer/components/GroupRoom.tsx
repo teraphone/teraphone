@@ -71,9 +71,9 @@ function GroupRoom(props: {
   const connectRoom = React.useCallback(() => {
     const connectConfig: Livekit.ConnectOptions = {
       autoSubscribe: false,
-      adaptiveStream: true,
+      adaptiveStream: { pixelDensity: 'screen' },
       autoManageVideo: true,
-      dynacast: true,
+      dynacast: false,
       audio: true,
       video: false,
     };

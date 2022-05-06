@@ -33,12 +33,12 @@ export async function createScreenShareTracks(
       mandatory: {
         chromeMediaSource: 'desktop',
         chromeMediaSourceId: sourceId,
-        minWidth: VideoPresets.h1080.width,
+        // minWidth: VideoPresets.h1080.width,
         // maxWidth: VideoPresets.h2160.width,
         // minHeight: VideoPresets.h1080.height,
         // maxHeight: VideoPresets.h2160.height,
-        // minFrameRate: 5,
-        // maxFrameRate: 30,
+        minFrameRate: 15,
+        maxFrameRate: 30,
       },
     },
   };

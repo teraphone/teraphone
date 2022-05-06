@@ -30,6 +30,7 @@ import useRoom from '../hooks/useRoom';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectGroup } from '../redux/WorldSlice';
+import { setScreenShareTrackEnabled } from '../lib/ExtendedLocalParticipant';
 
 const startStream = (
   localParticipant: LocalParticipant,
@@ -41,7 +42,7 @@ const startStream = (
     audio: false,
     resolution: ScreenSharePresets.h1080fps15,
   };
-  localParticipant.setScreenShareTrackEnabled(userId, sourceId, true, options);
+  setScreenShareTrackEnabled(localParticipant, userId, sourceId, true, options);
 };
 
 export type VideoItemValue = {
@@ -136,7 +137,6 @@ function MainVideoView() {
   }
 
   // Todo: finish this
-  console.log('videoItems', videoItems);
   const gridItems = [] as JSX.Element[];
   videoItems.forEach((videoItem) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;

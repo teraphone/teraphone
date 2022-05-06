@@ -16,8 +16,8 @@ export interface VideoItemProps {
 export const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const isFrontFacing =
-    videoTrack.videoTrack?.mediaStreamTrack.getSettings().facingMode !==
-      'environment' && videoTrack.videoTrack?.source === 'camera';
+    videoTrack.track?.mediaStreamTrack.getSettings().facingMode !==
+      'environment' && videoTrack.track?.source === 'camera';
   const style: React.CSSProperties = {
     transform:
       isLocal && isFrontFacing
@@ -37,23 +37,21 @@ export const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
     const videoEl = videoRef.current;
     if (videoEl) {
       videoEl.muted = true;
-      videoTrack.videoTrack?.attach(videoEl);
-      const capabilities =
-        videoTrack.videoTrack?.mediaStreamTrack.getCapabilities();
-      const constraints =
-        videoTrack.videoTrack?.mediaStreamTrack.getConstraints();
-      const settings = videoTrack.videoTrack?.mediaStreamTrack.getSettings();
+      videoTrack.track?.attach(videoEl);
+      const capabilities = videoTrack.track?.mediaStreamTrack.getCapabilities();
+      const constraints = videoTrack.track?.mediaStreamTrack.getConstraints();
+      const settings = videoTrack.track?.mediaStreamTrack.getSettings();
       console.log('videoTrack', videoTrack);
       console.log('capabilities', capabilities);
       console.log('constraints', constraints);
       console.log('settings', settings);
 
       return () => {
-        videoTrack.videoTrack?.detach(videoEl);
+        videoTrack.track?.detach(videoEl);
       };
     }
     return () => {};
-  }, [videoTrack, videoTrack.videoTrack]);
+  }, [videoTrack, videoTrack.track]);
 
   const handleLoadedMetadata = React.useCallback((event: Event) => {
     console.log('VideoRenderer.handleLoadedMetadata', event);

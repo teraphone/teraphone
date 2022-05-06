@@ -25,6 +25,7 @@ import {
 } from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
 import { selectAppUser } from '../redux/AppUserSlice';
+import { setScreenShareTrackEnabled } from '../lib/ExtendedLocalParticipant';
 
 function VideoView() {
   const dispatch = useAppDispatch();
@@ -44,7 +45,8 @@ function VideoView() {
       audio: false,
       resolution: ScreenSharePresets.h1080fps15,
     };
-    localParticipant.setScreenShareTrackEnabled(
+    setScreenShareTrackEnabled(
+      localParticipant,
       userId,
       sourceId,
       true,

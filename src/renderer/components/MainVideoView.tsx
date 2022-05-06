@@ -74,8 +74,8 @@ function MainVideoView() {
 
   const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      setFocus('');
       setIsFocusView(false);
+      setFocus('');
     }
   }, []);
   window.addEventListener('keydown', escKeydownHandler);

@@ -137,12 +137,22 @@ function MainVideoView() {
   }
 
   // Todo: finish this
+  const style: React.CSSProperties = {
+    background: 'black',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+    height: '50vh',
+    width: 'auto',
+    maxHeight: '100%',
+  };
   const gridItems = [] as JSX.Element[];
   videoItems.forEach((videoItem) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
     gridItems.push(
       <Grid item xs={6} key={videoTrack.trackSid}>
-        <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+        <Box style={style}>
+          <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+        </Box>
       </Grid>
     );
   });

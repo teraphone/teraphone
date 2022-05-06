@@ -139,17 +139,19 @@ function MainVideoView() {
   // Todo: finish this
   const style: React.CSSProperties = {
     background: 'black',
-    boxSizing: 'border-box',
-    overflow: 'hidden',
-    height: '50vh',
-    width: 'auto',
-    maxHeight: '100%',
+    // boxSizing: 'border-box',
+    // overflow: 'hidden',
+    height: '400px',
+    width: '500px',
+    minWidth: '400px',
+    // maxHeight: '100%',
+    // maxWidth: '40vw',
   };
   const gridItems = [] as JSX.Element[];
   videoItems.forEach((videoItem) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
     gridItems.push(
-      <Grid item xs={6} key={videoTrack.trackSid}>
+      <Grid item key={videoTrack.trackSid}>
         <Box style={style}>
           <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
         </Box>
@@ -158,9 +160,23 @@ function MainVideoView() {
   });
 
   return (
-    <Grid container spacing={2} hidden={!isFocusView}>
-      {gridItems}
-    </Grid>
+    <Box
+      sx={{
+        // why wont this center the grid?
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <Grid
+        container
+        spacing={1}
+        hidden={!isFocusView}
+        margin="auto"
+        // gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+      >
+        {gridItems}
+      </Grid>
+    </Box>
   );
 }
 

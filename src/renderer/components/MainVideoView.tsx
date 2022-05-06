@@ -188,6 +188,34 @@ function MainVideoView() {
     );
   });
 
+  let focusItem;
+  const videoItem = videoItems.get(focus);
+  if (videoItem) {
+    focusItem = (
+      <Box
+        sx={{
+          background: 'black',
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          maxWidth: '100%',
+          maxHeight: '100%',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        <VideoItem
+          // eslint-disable-next-line react/no-array-index-key
+          videoTrack={videoItem.videoTrack}
+          isLocal={videoItem.isLocal}
+        />
+      </Box>
+    );
+  }
+
+  if (isFocusView && focusItem) {
+    return focusItem;
+  }
+
   return (
     <Grid
       container

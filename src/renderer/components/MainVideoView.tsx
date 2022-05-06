@@ -141,14 +141,14 @@ function MainVideoView() {
   videoItems.forEach((videoItem) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
     gridItems.push(
-      <Grid item key={videoTrack.trackSid}>
+      <Grid item xs={6} key={videoTrack.trackSid}>
         <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
       </Grid>
     );
   });
 
   return (
-    <Grid container hidden={!isFocusView}>
+    <Grid container spacing={2} hidden={!isFocusView}>
       {gridItems}
     </Grid>
   );

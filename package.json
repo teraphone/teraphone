@@ -201,7 +201,7 @@
     "electron-updater": "^4.6.5",
     "firebase": "^9.6.9",
     "history": "^5.2.0",
-    "livekit-client": "^0.18.4-RC8",
+    "livekit-client": "^0.18.4",
     "livekit-react": "^0.9.0",
     "material-ui-popup-state": "^2.0.0",
     "react": "^17.0.2",

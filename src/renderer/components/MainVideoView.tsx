@@ -136,7 +136,6 @@ function MainVideoView() {
     });
   }
 
-  // Todo: finish this
   const style: React.CSSProperties = {
     background: 'black',
     // boxSizing: 'border-box',
@@ -160,23 +159,15 @@ function MainVideoView() {
   });
 
   return (
-    <Box
-      sx={{
-        // why wont this center the grid?
-        display: 'flex',
-        justifyContent: 'center',
-      }}
+    <Grid
+      container
+      spacing={1}
+      hidden={!isFocusView}
+      justifyContent="center"
+      // gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
     >
-      <Grid
-        container
-        spacing={1}
-        hidden={!isFocusView}
-        margin="auto"
-        // gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
-      >
-        {gridItems}
-      </Grid>
-    </Box>
+      {gridItems}
+    </Grid>
   );
 }
 

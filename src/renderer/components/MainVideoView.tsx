@@ -66,8 +66,23 @@ function MainVideoView() {
   const [isFocusView, setIsFocusView] = React.useState(false);
 
   const setFocusCallback = React.useCallback((sid: string) => {
-    setFocus(sid);
+    return () => {
+      setFocus(sid);
+      setIsFocusView(true);
+    };
   }, []);
+
+  const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setFocus('');
+      setIsFocusView(false);
+    }
+  }, []);
+  window.addEventListener('keydown', escKeydownHandler);
+
+  React.useEffect(() => {
+    console.log('focus', focus, 'isFocusView', isFocusView);
+  }, [focus, isFocusView]);
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
@@ -151,7 +166,7 @@ function MainVideoView() {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
     gridItems.push(
       <Grid item key={videoTrack.trackSid}>
-        <Box style={style}>
+        <Box style={style} onClick={setFocusCallback(videoTrack.trackSid)}>
           <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
         </Box>
       </Grid>

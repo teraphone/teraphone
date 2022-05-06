@@ -4,6 +4,10 @@ import * as ReactDom from 'react-dom';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 
+export const ChildWindowContext = React.createContext<
+  React.MutableRefObject<Window | null>
+>({ current: null });
+
 function WindowPortal(props: {
   title: string;
   width: number;
@@ -40,7 +44,9 @@ function WindowPortal(props: {
   }, [containerRef, height, onClose, title, width]);
 
   return ReactDom.createPortal(
-    <CacheProvider value={cacheRef.current}>{children}</CacheProvider>,
+    <ChildWindowContext.Provider value={windowRef}>
+      <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
+    </ChildWindowContext.Provider>,
     containerRef.current,
     title
   );

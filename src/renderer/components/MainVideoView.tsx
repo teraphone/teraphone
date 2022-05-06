@@ -31,6 +31,7 @@ import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectGroup } from '../redux/WorldSlice';
 import { setScreenShareTrackEnabled } from '../lib/ExtendedLocalParticipant';
+import { ChildWindowContext } from './WindowPortal';
 
 const startStream = (
   localParticipant: LocalParticipant,
@@ -64,6 +65,8 @@ function MainVideoView() {
   const videoItems = new Map<string, VideoItemValue>();
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
+  const windowRef = React.useContext(ChildWindowContext);
+  const thisWindow = windowRef.current;
 
   const setFocusCallback = React.useCallback((sid: string) => {
     return () => {
@@ -79,18 +82,29 @@ function MainVideoView() {
       setFocus('');
     }
   }, []);
-  window.addEventListener('keydown', escKeydownHandler);
 
   React.useEffect(() => {
     console.log('focus', focus, 'isFocusView', isFocusView);
   }, [focus, isFocusView]);
 
   React.useEffect(() => {
+    if (thisWindow) {
+      console.log('thisWindow', thisWindow);
+      thisWindow.addEventListener('keydown', escKeydownHandler);
+    }
+    return () => {
+      if (thisWindow) {
+        thisWindow.removeEventListener('keydown', escKeydownHandler);
+      }
+    };
+  }, [escKeydownHandler, thisWindow]);
+
+  React.useEffect(() => {
     console.log('MainVideoView Mounted');
     return () => {
       console.log('MainVideoView Unmounted');
     };
-  }, []);
+  }, [escKeydownHandler, windowRef]);
 
   React.useEffect(() => {
     if (room) {

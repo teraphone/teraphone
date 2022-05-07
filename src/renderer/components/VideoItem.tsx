@@ -28,9 +28,9 @@ export const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
     left: '50%',
     maxWidth: '100%',
     maxHeight: '100%',
-    width: '100%',
-    height: '100%',
-    objectFit: 'scale-down',
+    width: 'auto',
+    height: 'auto',
+    objectFit: 'cover',
   };
 
   React.useEffect(() => {

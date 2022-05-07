@@ -196,11 +196,8 @@ function MainVideoView() {
         sx={{
           background: 'black',
           boxSizing: 'border-box',
-          overflow: 'hidden',
-          maxWidth: '100%',
           maxHeight: '100%',
-          height: '100%',
-          width: '100%',
+          maxWidth: '100%',
         }}
       >
         <VideoItem

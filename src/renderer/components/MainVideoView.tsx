@@ -166,60 +166,63 @@ function MainVideoView() {
     });
   }
 
-  const style: React.CSSProperties = {
+  const gridBoxStyle: React.CSSProperties = {
     background: 'black',
-    // boxSizing: 'border-box',
-    // overflow: 'hidden',
     height: '400px',
     width: '500px',
     minWidth: '400px',
-    // maxHeight: '100%',
-    // maxWidth: '40vw',
   };
+
+  const gridBoxFocusStyle: React.CSSProperties = {
+    background: 'black',
+    boxSizing: 'border-box',
+    maxHeight: '100%',
+    maxWidth: '100%',
+    padding: '0px',
+  };
+
+  const gridItemFocusStyle: React.CSSProperties = {
+    padding: '0px',
+  };
+
+  const gridStyle: React.CSSProperties = {
+    justifyContent: 'center',
+  };
+
+  const gridFocusStyle: React.CSSProperties = {
+    justifyContent: 'center',
+    backgroundColor: 'black',
+    height: '100%',
+    width: '100%',
+    margin: '0px',
+  };
+
   const gridItems = [] as JSX.Element[];
   videoItems.forEach((videoItem) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
+    const isFocusItem = focus === videoTrack.trackSid;
     gridItems.push(
-      <Grid item key={videoTrack.trackSid}>
-        <Box style={style} onClick={setFocusCallback(videoTrack.trackSid)}>
+      <Grid
+        item
+        key={videoTrack.trackSid}
+        hidden={isFocusView && !isFocusItem}
+        style={isFocusItem ? gridItemFocusStyle : {}}
+      >
+        <Box
+          style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
+          onClick={setFocusCallback(videoTrack.trackSid)}
+        >
           <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
         </Box>
       </Grid>
     );
   });
 
-  let focusItem;
-  const videoItem = videoItems.get(focus);
-  if (videoItem) {
-    focusItem = (
-      <Box
-        sx={{
-          background: 'black',
-          boxSizing: 'border-box',
-          maxHeight: '100%',
-          maxWidth: '100%',
-        }}
-      >
-        <VideoItem
-          // eslint-disable-next-line react/no-array-index-key
-          videoTrack={videoItem.videoTrack}
-          isLocal={videoItem.isLocal}
-        />
-      </Box>
-    );
-  }
-
-  if (isFocusView && focusItem) {
-    return focusItem;
-  }
-
   return (
     <Grid
       container
       spacing={1}
-      hidden={!isFocusView}
-      justifyContent="center"
-      // gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+      style={isFocusView ? gridFocusStyle : gridStyle}
     >
       {gridItems}
     </Grid>

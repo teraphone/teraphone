@@ -93,6 +93,7 @@ function GroupRoom(props: {
         if (livekitRoom) {
           pushUserRTInfo(mute, deafen);
         }
+        livekitRoom?.localParticipant.setMicrophoneEnabled(true);
         return true;
       })
       .catch(() => {

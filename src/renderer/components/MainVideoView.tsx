@@ -11,6 +11,7 @@ import {
   Track,
   RemoteTrackPublication,
 } from 'livekit-client';
+import { useParticipant } from 'livekit-react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
@@ -53,20 +54,28 @@ export type VideoItemValue = {
   videoTrack: LocalTrackPublication | RemoteTrackPublication;
 };
 
+type VideoItemsObject = {
+  [sid: string]: VideoItemValue;
+};
+
 function MainVideoView() {
   const dispatch = useAppDispatch();
-  const { room } = useRoom();
+  const { room, participants: participants2 } = useRoom();
+  const localParticipant = room?.localParticipant;
+  const participants = room?.participants;
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
   const { appUser } = useAppSelector(selectAppUser);
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { groupId } = currentRoom;
   const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
-  const videoItems = new Map<string, VideoItemValue>();
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
+  const videoItems: VideoItemsObject = {};
+
+  console.log('participants2', participants2);
 
   const setFocusCallback = React.useCallback((sid: string) => {
     return () => {
@@ -123,34 +132,40 @@ function MainVideoView() {
     console.log('localParticipant', room?.localParticipant);
   }, [appUser.id, room, screens, windows]);
 
-  // subscribe to remote video tracks
-  if (room?.participants) {
-    room.participants.forEach((participant) => {
-      participant.videoTracks.forEach((videoTrack) => {
-        if (!videoTrack.isSubscribed) {
-          videoTrack.setSubscribed(true);
-        }
+  React.useEffect(() => {
+    // subscribe to remote video tracks
+    if (participants) {
+      participants.forEach((participant) => {
+        participant.videoTracks.forEach((videoTrack) => {
+          if (!videoTrack.isSubscribed) {
+            videoTrack.setSubscribed(true);
+          }
+        });
       });
-    });
-  }
+    }
+  }, [participants]);
 
   // add local video tracks to videoItems
-  if (room?.localParticipant?.videoTracks) {
-    room.localParticipant.videoTracks.forEach((videoTrack, sid) => {
-      const userId = room.localParticipant.identity;
-      const user = groupInfo?.users.find(
-        (groupUser) => groupUser.user_id === +userId
-      );
-      const userName = user?.name || 'Unknown';
-      const isPopout = false;
-      const isLocal = true;
-      videoItems.set(sid, { userName, isPopout, isLocal, videoTrack });
-    });
+  if (localParticipant) {
+    console.log('localParticipant tracks', localParticipant?.videoTracks);
+    if (localParticipant?.videoTracks) {
+      localParticipant.videoTracks.forEach((videoTrack, sid) => {
+        console.log('adding local participant track', sid, videoTrack);
+        const userId = localParticipant.identity;
+        const user = groupInfo?.users.find(
+          (groupUser) => groupUser.user_id === +userId
+        );
+        const userName = user?.name || 'Unknown';
+        const isPopout = false;
+        const isLocal = true;
+        videoItems[sid] = { userName, isPopout, isLocal, videoTrack };
+      });
+    }
   }
 
   // add remote video tracks to videoItems
-  if (room?.participants) {
-    room.participants.forEach((participant) => {
+  if (participants) {
+    participants.forEach((participant) => {
       const userId = participant.identity;
       const user = groupInfo?.users.find(
         (groupUser) => groupUser.user_id === +userId
@@ -158,9 +173,10 @@ function MainVideoView() {
       const userName = user?.name || 'Unknown';
       if (participant.videoTracks) {
         participant.videoTracks.forEach((videoTrack, sid) => {
+          console.log('adding remote participant track', sid, videoTrack);
           const isPopout = false;
           const isLocal = false;
-          videoItems.set(sid, { userName, isPopout, isLocal, videoTrack });
+          videoItems[sid] = { userName, isPopout, isLocal, videoTrack };
         });
       }
     });
@@ -197,20 +213,19 @@ function MainVideoView() {
     margin: '0px',
   };
 
-  const gridItems = [] as JSX.Element[];
-  videoItems.forEach((videoItem) => {
+  const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
-    const isFocusItem = focus === videoTrack.trackSid;
-    gridItems.push(
+    const isFocusItem = focus === sid;
+    return (
       <Grid
         item
-        key={videoTrack.trackSid}
+        key={sid}
         hidden={isFocusView && !isFocusItem}
         style={isFocusItem ? gridItemFocusStyle : {}}
       >
         <Box
           style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
-          onClick={setFocusCallback(videoTrack.trackSid)}
+          onClick={setFocusCallback(sid)}
         >
           <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
         </Box>

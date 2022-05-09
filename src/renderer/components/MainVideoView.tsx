@@ -2,6 +2,7 @@
 import * as React from 'react';
 import {
   Room,
+  RoomEvent,
   LocalParticipant,
   ScreenShareCaptureOptions,
   ScreenSharePresets,
@@ -144,8 +145,22 @@ function MainVideoView() {
     [groupInfo?.users, localParticipant?.sid]
   );
 
+  const takeDownScreenTrack = React.useCallback(
+    (
+      videoTrack: RemoteTrackPublication | LocalTrackPublication,
+      participant: RemoteParticipant | LocalParticipant
+    ) => {
+      const sid = videoTrack.trackSid;
+      console.log('takeDownScreenTrack', sid);
+      const { [sid]: item, ...rest } = videoItems;
+      setVideoItems(rest); // Todo: race condition if user disconnects with multiple streams???
+    },
+    [videoItems]
+  );
+
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
+      console.log(RoomEvent.TrackPublished, track, participant);
       if (track.kind === 'video') {
         setUpScreenTrack(track, participant);
       }
@@ -153,15 +168,48 @@ function MainVideoView() {
     [setUpScreenTrack]
   );
 
+  const handleTrackUnpublished = React.useCallback(
+    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
+      console.log(RoomEvent.TrackUnpublished, track, participant);
+      if (track.kind === 'video') {
+        takeDownScreenTrack(track, participant);
+      }
+    },
+    [takeDownScreenTrack]
+  );
+
+  const handleTrackUnsubscribed = React.useCallback(
+    (
+      _: Track,
+      track: RemoteTrackPublication,
+      participant: RemoteParticipant
+    ) => {
+      console.log(RoomEvent.TrackUnsubscribed, _, track, participant);
+      if (track.kind === 'video') {
+        takeDownScreenTrack(track, participant);
+      }
+    },
+    [takeDownScreenTrack]
+  );
+
   React.useEffect(() => {
     if (room) {
-      room.on('trackPublished', handleTrackPublished);
+      room.on(RoomEvent.TrackPublished, handleTrackPublished);
+      room.on(RoomEvent.TrackUnpublished, handleTrackUnpublished);
+      room.on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
       return () => {
-        room.off('trackPublished', handleTrackPublished);
+        room.off(RoomEvent.TrackPublished, handleTrackPublished);
+        room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);
+        room.off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
       };
     }
     return () => {};
-  }, [handleTrackPublished, room]);
+  }, [
+    handleTrackPublished,
+    handleTrackUnpublished,
+    handleTrackUnsubscribed,
+    room,
+  ]);
 
   React.useEffect(() => {
     const p: Array<Promise<void>> = [];

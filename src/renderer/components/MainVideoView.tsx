@@ -120,6 +120,30 @@ function MainVideoView() {
     };
   }, [escKeydownHandler, windowRef]);
 
+  const setUpScreenTrack = React.useCallback(
+    (
+      videoTrack: RemoteTrackPublication | LocalTrackPublication,
+      participant: RemoteParticipant | LocalParticipant
+    ) => {
+      const userId = participant.identity;
+      const user = groupInfo?.users.find(
+        (groupUser) => groupUser.user_id === +userId
+      );
+      const userName = user?.name || 'Unknown';
+      const sid = videoTrack.trackSid;
+      const isPopout = false;
+      const isLocal = participant.sid === localParticipant?.sid;
+      if (!isLocal && !videoTrack.isSubscribed) {
+        (videoTrack as RemoteTrackPublication).setSubscribed(true);
+      }
+      setVideoItems((prev) => ({
+        ...prev,
+        [sid]: { userName, isPopout, isLocal, videoTrack },
+      }));
+    },
+    [groupInfo?.users, localParticipant?.sid]
+  );
+
   React.useEffect(() => {
     const p: Array<Promise<void>> = [];
     if (room) {
@@ -145,18 +169,8 @@ function MainVideoView() {
         // add local video tracks to videoItems
         if (localParticipant) {
           if (localParticipant?.videoTracks) {
-            localParticipant.videoTracks.forEach((videoTrack, sid) => {
-              const userId = localParticipant.identity;
-              const user = groupInfo?.users.find(
-                (groupUser) => groupUser.user_id === +userId
-              );
-              const userName = user?.name || 'Unknown';
-              const isPopout = false;
-              const isLocal = true;
-              setVideoItems((prev) => ({
-                ...prev,
-                [sid]: { userName, isPopout, isLocal, videoTrack },
-              }));
+            localParticipant.videoTracks.forEach((videoTrack, _sid) => {
+              setUpScreenTrack(videoTrack, localParticipant);
             });
           }
         }
@@ -166,40 +180,28 @@ function MainVideoView() {
         console.error(err);
         return false;
       });
-  }, [appUser.id, groupInfo?.users, localParticipant, room, screens, windows]);
-
-  const setUpScreenTrack = React.useCallback(
-    (videoTrack: RemoteTrackPublication, participant: RemoteParticipant) => {},
-    []
-  );
-
-  React.useEffect(() => {}, [groupInfo?.users, localParticipant]);
+  }, [
+    appUser.id,
+    groupInfo?.users,
+    localParticipant,
+    room,
+    screens,
+    setUpScreenTrack,
+    windows,
+  ]);
 
   React.useEffect(() => {
     // add remote video tracks to videoItems
     if (participants) {
       participants.forEach((participant) => {
-        const userId = participant.identity;
-        const user = groupInfo?.users.find(
-          (groupUser) => groupUser.user_id === +userId
-        );
-        const userName = user?.name || 'Unknown';
         if (participant.videoTracks) {
-          participant.videoTracks.forEach((videoTrack, sid) => {
-            const isPopout = false;
-            const isLocal = false;
-            if (!videoTrack.isSubscribed) {
-              videoTrack.setSubscribed(true);
-            }
-            setVideoItems((prev) => ({
-              ...prev,
-              [sid]: { userName, isPopout, isLocal, videoTrack },
-            }));
+          participant.videoTracks.forEach((videoTrack, _sid) => {
+            setUpScreenTrack(videoTrack, participant);
           });
         }
       });
     }
-  }, [groupInfo?.users, participants]);
+  }, [groupInfo?.users, participants, setUpScreenTrack]);
 
   const gridBoxStyle: React.CSSProperties = {
     background: 'black',

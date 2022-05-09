@@ -86,7 +86,6 @@ function MainVideoView() {
 
   const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      console.log('esc keydown');
       setIsFocusView(false);
       setFocus('');
     }
@@ -129,28 +128,12 @@ function MainVideoView() {
         });
       }
     }
-    console.log('localParticipant', room?.localParticipant);
   }, [appUser.id, room, screens, windows]);
-
-  React.useEffect(() => {
-    // subscribe to remote video tracks
-    if (participants) {
-      participants.forEach((participant) => {
-        participant.videoTracks.forEach((videoTrack) => {
-          if (!videoTrack.isSubscribed) {
-            videoTrack.setSubscribed(true);
-          }
-        });
-      });
-    }
-  }, [participants]);
 
   // add local video tracks to videoItems
   if (localParticipant) {
-    console.log('localParticipant tracks', localParticipant?.videoTracks);
     if (localParticipant?.videoTracks) {
       localParticipant.videoTracks.forEach((videoTrack, sid) => {
-        console.log('adding local participant track', sid, videoTrack);
         const userId = localParticipant.identity;
         const user = groupInfo?.users.find(
           (groupUser) => groupUser.user_id === +userId
@@ -173,9 +156,11 @@ function MainVideoView() {
       const userName = user?.name || 'Unknown';
       if (participant.videoTracks) {
         participant.videoTracks.forEach((videoTrack, sid) => {
-          console.log('adding remote participant track', sid, videoTrack);
           const isPopout = false;
           const isLocal = false;
+          if (!videoTrack.isSubscribed) {
+            videoTrack.setSubscribed(true);
+          }
           videoItems[sid] = { userName, isPopout, isLocal, videoTrack };
         });
       }

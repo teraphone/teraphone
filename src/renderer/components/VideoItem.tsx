@@ -30,13 +30,13 @@ export const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
     if (videoEl) {
       videoEl.muted = true;
       videoTrack.track?.attach(videoEl);
-      const capabilities = videoTrack.track?.mediaStreamTrack.getCapabilities();
-      const constraints = videoTrack.track?.mediaStreamTrack.getConstraints();
-      const settings = videoTrack.track?.mediaStreamTrack.getSettings();
-      console.log('videoTrack', videoTrack);
-      console.log('capabilities', capabilities);
-      console.log('constraints', constraints);
-      console.log('settings', settings);
+      // const capabilities = videoTrack.track?.mediaStreamTrack.getCapabilities();
+      // const constraints = videoTrack.track?.mediaStreamTrack.getConstraints();
+      // const settings = videoTrack.track?.mediaStreamTrack.getSettings();
+      // console.log('videoTrack', videoTrack);
+      // console.log('capabilities', capabilities);
+      // console.log('constraints', constraints);
+      // console.log('settings', settings);
 
       return () => {
         videoTrack.track?.detach(videoEl);

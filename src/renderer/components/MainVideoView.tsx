@@ -144,6 +144,25 @@ function MainVideoView() {
     [groupInfo?.users, localParticipant?.sid]
   );
 
+  const handleTrackPublished = React.useCallback(
+    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
+      if (track.kind === 'video') {
+        setUpScreenTrack(track, participant);
+      }
+    },
+    [setUpScreenTrack]
+  );
+
+  React.useEffect(() => {
+    if (room) {
+      room.on('trackPublished', handleTrackPublished);
+      return () => {
+        room.off('trackPublished', handleTrackPublished);
+      };
+    }
+    return () => {};
+  }, [handleTrackPublished, room]);
+
   React.useEffect(() => {
     const p: Array<Promise<void>> = [];
     if (room) {

@@ -151,16 +151,14 @@ function MainVideoView() {
       participant: RemoteParticipant | LocalParticipant
     ) => {
       const sid = videoTrack.trackSid;
-      console.log('takeDownScreenTrack', sid);
-      const { [sid]: item, ...rest } = videoItems;
-      setVideoItems(rest); // Todo: race condition if user disconnects with multiple streams???
+      delete videoItems[sid];
+      setVideoItems(videoItems);
     },
     [videoItems]
   );
 
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
-      console.log(RoomEvent.TrackPublished, track, participant);
       if (track.kind === 'video') {
         setUpScreenTrack(track, participant);
       }
@@ -170,7 +168,6 @@ function MainVideoView() {
 
   const handleTrackUnpublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
-      console.log(RoomEvent.TrackUnpublished, track, participant);
       if (track.kind === 'video') {
         takeDownScreenTrack(track, participant);
       }

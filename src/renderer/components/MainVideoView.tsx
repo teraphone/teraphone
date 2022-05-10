@@ -35,6 +35,7 @@ import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectGroup } from '../redux/WorldSlice';
 import { setScreenShareTrackEnabled } from '../lib/ExtendedLocalParticipant';
 import { ChildWindowContext } from './WindowPortal';
+import VideoOverlay from './VideoOverlay';
 
 const startStream = (
   localParticipant: LocalParticipant,
@@ -272,6 +273,7 @@ function MainVideoView() {
     height: '400px',
     width: '500px',
     minWidth: '400px',
+    position: 'relative',
   };
 
   const gridBoxFocusStyle: React.CSSProperties = {
@@ -280,6 +282,7 @@ function MainVideoView() {
     maxHeight: '100%',
     maxWidth: '100%',
     padding: '0px',
+    position: 'relative',
   };
 
   const gridItemFocusStyle: React.CSSProperties = {
@@ -301,6 +304,7 @@ function MainVideoView() {
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
     const isFocusItem = focus === sid;
+    const sourceType = videoTrack.source;
     return (
       <Grid
         item
@@ -313,6 +317,13 @@ function MainVideoView() {
           onClick={setFocusCallback(sid)}
         >
           <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+          <VideoOverlay
+            isFocusItem={isFocusItem}
+            userName={userName}
+            isPopout={isPopout}
+            isLocal={isLocal}
+            sourceType={sourceType}
+          />
         </Box>
       </Grid>
     );

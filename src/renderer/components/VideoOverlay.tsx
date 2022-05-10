@@ -21,11 +21,15 @@ function VideoOverlay(props: VideoOverlayProps) {
   return (
     <Box
       sx={{
+        boxSizing: 'border-box',
         position: 'absolute',
         top: 0,
         left: 0,
         zIndex: 1,
-        color: '#0F0',
+        color: '#F00',
+        width: '100%',
+        background: '#888',
+        padding: '5px',
       }}
     >
       <Typography variant="body1">{description}</Typography>

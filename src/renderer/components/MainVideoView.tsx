@@ -291,6 +291,7 @@ function MainVideoView() {
 
   const gridStyle: React.CSSProperties = {
     justifyContent: 'center',
+    position: 'relative',
   };
 
   const gridFocusStyle: React.CSSProperties = {
@@ -299,7 +300,10 @@ function MainVideoView() {
     height: '100%',
     width: '100%',
     margin: '0px',
+    position: 'relative',
   };
+
+  const focusVideoItem = videoItems[focus];
 
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
@@ -323,6 +327,7 @@ function MainVideoView() {
             isPopout={isPopout}
             isLocal={isLocal}
             sourceType={sourceType}
+            hidden={isFocusView}
           />
         </Box>
       </Grid>
@@ -335,6 +340,14 @@ function MainVideoView() {
       spacing={1}
       style={isFocusView ? gridFocusStyle : gridStyle}
     >
+      <VideoOverlay // attach to grid container (if focus view)
+        isFocusItem
+        userName={focusVideoItem?.userName}
+        isPopout={focusVideoItem?.isPopout}
+        isLocal={focusVideoItem?.isLocal}
+        sourceType={focusVideoItem?.videoTrack.source}
+        hidden={!isFocusView}
+      />
       {gridItems}
     </Grid>
   );

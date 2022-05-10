@@ -9,10 +9,12 @@ interface VideoOverlayProps {
   isPopout: boolean;
   isLocal: boolean;
   sourceType: Track.Source;
+  hidden?: boolean;
 }
 
 function VideoOverlay(props: VideoOverlayProps) {
-  const { isFocusItem, userName, isPopout, isLocal, sourceType } = props;
+  const { isFocusItem, userName, isPopout, isLocal, sourceType, hidden } =
+    props;
   const isScreen = sourceType === Track.Source.ScreenShare;
   const descriptionLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
   const descriptionRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
@@ -20,15 +22,18 @@ function VideoOverlay(props: VideoOverlayProps) {
 
   return (
     <Box
+      hidden={hidden}
       sx={{
         boxSizing: 'border-box',
         position: 'absolute',
         top: 0,
         left: 0,
         zIndex: 1,
-        color: '#F00',
+        color: 'white',
         width: '100%',
-        background: '#888',
+        height: '20%',
+        background:
+          'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
         padding: '5px',
       }}
     >
@@ -36,5 +41,9 @@ function VideoOverlay(props: VideoOverlayProps) {
     </Box>
   );
 }
+
+VideoOverlay.defaultProps = {
+  hidden: false,
+};
 
 export default VideoOverlay;

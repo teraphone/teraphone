@@ -21,24 +21,89 @@ function VideoOverlay(props: VideoOverlayProps) {
   const description = isLocal ? descriptionLocal : descriptionRemote;
 
   return (
-    <Box
-      hidden={hidden}
-      sx={{
-        boxSizing: 'border-box',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        zIndex: 1,
-        color: 'white',
-        width: '100%',
-        height: '20%',
-        background:
-          'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
-        padding: '5px',
-      }}
-    >
-      <Typography variant="body1">{description}</Typography>
-    </Box>
+    <>
+      <Box // top overlay
+        hidden={hidden}
+        sx={{
+          boxSizing: 'border-box',
+          position: 'absolute',
+          top: 0,
+          zIndex: 1,
+          width: '100%',
+          height: '20%',
+          background:
+            'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
+        }}
+      >
+        <Box // top left
+          sx={{
+            boxSizing: 'border-box',
+            padding: '5px',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        >
+          <Typography variant="body1" color="white">
+            {description}
+          </Typography>
+        </Box>
+        <Box // top right
+          sx={{
+            boxSizing: 'border-box',
+            padding: '5px',
+            position: 'absolute',
+            top: 0,
+            right: 0,
+          }}
+        >
+          <Typography variant="body1" color="white">
+            top-right
+          </Typography>
+        </Box>
+      </Box>
+
+      <Box // bottom
+        hidden={hidden}
+        sx={{
+          boxSizing: 'border-box',
+          position: 'absolute',
+          bottom: 0,
+          zIndex: 1,
+          width: '100%',
+          height: '20%',
+          background:
+            'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
+        }}
+      >
+        <Box // bottom left
+          sx={{
+            boxSizing: 'border-box',
+            padding: '5px',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+          }}
+        >
+          <Typography variant="body1" color="white">
+            bottom-left
+          </Typography>
+        </Box>
+        <Box // bottom right
+          sx={{
+            boxSizing: 'border-box',
+            padding: '5px',
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+          }}
+        >
+          <Typography variant="body1" color="white">
+            bottom-right
+          </Typography>
+        </Box>
+      </Box>
+    </>
   );
 }
 

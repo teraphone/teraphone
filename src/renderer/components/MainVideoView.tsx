@@ -190,15 +190,27 @@ function MainVideoView() {
     [takeDownScreenTrack]
   );
 
+  const handleLocalTrackUnpublished = React.useCallback(
+    (track: LocalTrackPublication, participant: LocalParticipant) => {
+      console.log(RoomEvent.LocalTrackUnpublished, track, participant);
+      if (track.kind === 'video') {
+        takeDownScreenTrack(track, participant);
+      }
+    },
+    [takeDownScreenTrack]
+  );
+
   React.useEffect(() => {
     if (room) {
       room.on(RoomEvent.TrackPublished, handleTrackPublished);
       room.on(RoomEvent.TrackUnpublished, handleTrackUnpublished);
       room.on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
+      room.on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
       return () => {
         room.off(RoomEvent.TrackPublished, handleTrackPublished);
         room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);
         room.off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
+        room.off(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
       };
     }
     return () => {};
@@ -206,6 +218,7 @@ function MainVideoView() {
     handleTrackPublished,
     handleTrackUnpublished,
     handleTrackUnsubscribed,
+    handleLocalTrackUnpublished,
     room,
   ]);
 

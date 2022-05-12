@@ -158,19 +158,6 @@ function VideoOverlay(props: VideoOverlayProps) {
             'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
         }}
       >
-        <Box // bottom left
-          sx={{
-            boxSizing: 'border-box',
-            padding: '5px',
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-          }}
-        >
-          <Typography variant="body1" color="white">
-            bottom-left
-          </Typography>
-        </Box>
         <Box // bottom right
           sx={{
             boxSizing: 'border-box',
@@ -179,7 +166,7 @@ function VideoOverlay(props: VideoOverlayProps) {
             right: 0,
           }}
         >
-          <PopoutButton />
+          {!isPopout && <PopoutButton />}
         </Box>
       </Box>
     </>

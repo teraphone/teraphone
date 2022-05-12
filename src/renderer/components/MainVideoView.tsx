@@ -85,12 +85,27 @@ function MainVideoView() {
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const isMounted = false;
 
-  const setFocusCallback = React.useCallback((sid: string) => {
-    return () => {
+  const createSetFocusViewCallback = React.useCallback(
+    (sid: string) => () => {
+      console.log('got focus callback', sid);
       setFocus(sid);
       setIsFocusView(true);
-    };
-  }, []);
+    },
+    [setFocus, setIsFocusView]
+  );
+
+  const handleVideoClickEvent = React.useCallback(
+    (sid: string) =>
+      (event: React.MouseEvent<HTMLVideoElement | HTMLElement>) => {
+        console.log('handleClickEvent', event);
+        const target = event.target as HTMLVideoElement | HTMLElement;
+        if (target.localName === 'video') {
+          setFocus(sid);
+          setIsFocusView(true);
+        }
+      },
+    []
+  );
 
   const setGridViewCallback = React.useCallback(() => {
     setIsFocusView(false);
@@ -338,7 +353,7 @@ function MainVideoView() {
       >
         <Box
           style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
-          onClick={setFocusCallback(sid)}
+          onClick={handleVideoClickEvent(sid)}
         >
           <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
           <VideoOverlay
@@ -348,7 +363,7 @@ function MainVideoView() {
             isLocal={isLocal}
             sourceType={sourceType}
             hidden={isFocusView}
-            setGridViewCallback={setGridViewCallback}
+            setFocusViewCallback={createSetFocusViewCallback(sid)}
           />
         </Box>
       </Grid>

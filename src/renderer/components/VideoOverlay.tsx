@@ -16,7 +16,8 @@ interface VideoOverlayProps {
   isLocal: boolean;
   sourceType: Track.Source;
   hidden?: boolean;
-  setGridViewCallback: () => void;
+  setFocusViewCallback?: () => void;
+  setGridViewCallback?: () => void;
 }
 
 const theme = createTheme({
@@ -35,6 +36,7 @@ function VideoOverlay(props: VideoOverlayProps) {
     isLocal,
     sourceType,
     hidden,
+    setFocusViewCallback,
     setGridViewCallback,
   } = props;
   const isScreen = sourceType === Track.Source.ScreenShare;
@@ -51,7 +53,9 @@ function VideoOverlay(props: VideoOverlayProps) {
             aria-label="focus"
             component="span"
             onClick={() => {
-              console.log('clicked focus button');
+              if (setFocusViewCallback) {
+                setFocusViewCallback();
+              }
             }}
           >
             <OpenInFullIcon fontSize="small" />
@@ -70,10 +74,31 @@ function VideoOverlay(props: VideoOverlayProps) {
             aria-label="focus"
             component="span"
             onClick={() => {
-              setGridViewCallback();
+              if (setGridViewCallback) {
+                setGridViewCallback();
+              }
             }}
           >
             <GridViewIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </ThemeProvider>
+    );
+  };
+
+  const PopoutButton = () => {
+    return (
+      <ThemeProvider theme={theme}>
+        <Tooltip title="Pop Out" placement="left">
+          <IconButton
+            color="primary"
+            aria-label="focus"
+            component="span"
+            onClick={() => {
+              console.log('clicked popout button');
+            }}
+          >
+            <OpenInNewIcon fontSize="small" />
           </IconButton>
         </Tooltip>
       </ThemeProvider>
@@ -149,15 +174,12 @@ function VideoOverlay(props: VideoOverlayProps) {
         <Box // bottom right
           sx={{
             boxSizing: 'border-box',
-            padding: '5px',
             position: 'absolute',
             bottom: 0,
             right: 0,
           }}
         >
-          <Typography variant="body1" color="white">
-            bottom-right
-          </Typography>
+          <PopoutButton />
         </Box>
       </Box>
     </>
@@ -166,6 +188,8 @@ function VideoOverlay(props: VideoOverlayProps) {
 
 VideoOverlay.defaultProps = {
   hidden: false,
+  setGridViewCallback: () => {},
+  setFocusViewCallback: () => {},
 };
 
 export default VideoOverlay;

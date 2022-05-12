@@ -92,10 +92,14 @@ function MainVideoView() {
     };
   }, []);
 
+  const setGridViewCallback = React.useCallback(() => {
+    setIsFocusView(false);
+    setFocus('');
+  }, []);
+
   const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      setIsFocusView(false);
-      setFocus('');
+      setGridViewCallback();
     }
   }, []);
 

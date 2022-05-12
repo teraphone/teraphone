@@ -2,6 +2,11 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Track } from 'livekit-client';
+import OpenInFullIcon from '@mui/icons-material/OpenInFull'; // focus
+import GridViewIcon from '@mui/icons-material/GridView'; // grid
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'; // popout
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 
 interface VideoOverlayProps {
   isFocusItem: boolean;
@@ -19,6 +24,40 @@ function VideoOverlay(props: VideoOverlayProps) {
   const descriptionLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
   const descriptionRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
   const description = isLocal ? descriptionLocal : descriptionRemote;
+
+  const FocusButton = () => {
+    return (
+      <Tooltip title="Focus View (click)">
+        <IconButton
+          color="primary"
+          aria-label="focus"
+          component="span"
+          onClick={() => {
+            console.log('clicked focus button');
+          }}
+        >
+          <OpenInFullIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  };
+
+  const GridButton = () => {
+    return (
+      <Tooltip title="Grid View (esc)">
+        <IconButton
+          color="primary"
+          aria-label="focus"
+          component="span"
+          onClick={() => {
+            console.log('clicked grid button');
+          }}
+        >
+          <GridViewIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  };
 
   return (
     <>
@@ -57,9 +96,7 @@ function VideoOverlay(props: VideoOverlayProps) {
             right: 0,
           }}
         >
-          <Typography variant="body1" color="white">
-            top-right
-          </Typography>
+          {!isFocusItem ? <FocusButton /> : <GridButton />}
         </Box>
       </Box>
 

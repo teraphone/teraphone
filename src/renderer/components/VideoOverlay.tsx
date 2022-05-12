@@ -7,6 +7,7 @@ import GridViewIcon from '@mui/icons-material/GridView'; // grid
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'; // popout
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 interface VideoOverlayProps {
   isFocusItem: boolean;
@@ -15,11 +16,27 @@ interface VideoOverlayProps {
   isLocal: boolean;
   sourceType: Track.Source;
   hidden?: boolean;
+  setGridViewCallback: () => void;
 }
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#fff',
+    },
+  },
+});
+
 function VideoOverlay(props: VideoOverlayProps) {
-  const { isFocusItem, userName, isPopout, isLocal, sourceType, hidden } =
-    props;
+  const {
+    isFocusItem,
+    userName,
+    isPopout,
+    isLocal,
+    sourceType,
+    hidden,
+    setGridViewCallback,
+  } = props;
   const isScreen = sourceType === Track.Source.ScreenShare;
   const descriptionLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
   const descriptionRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
@@ -27,35 +44,39 @@ function VideoOverlay(props: VideoOverlayProps) {
 
   const FocusButton = () => {
     return (
-      <Tooltip title="Focus View (click)">
-        <IconButton
-          color="primary"
-          aria-label="focus"
-          component="span"
-          onClick={() => {
-            console.log('clicked focus button');
-          }}
-        >
-          <OpenInFullIcon />
-        </IconButton>
-      </Tooltip>
+      <ThemeProvider theme={theme}>
+        <Tooltip title="Focus View (click)" placement="left">
+          <IconButton
+            color="primary"
+            aria-label="focus"
+            component="span"
+            onClick={() => {
+              console.log('clicked focus button');
+            }}
+          >
+            <OpenInFullIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </ThemeProvider>
     );
   };
 
   const GridButton = () => {
     return (
-      <Tooltip title="Grid View (esc)">
-        <IconButton
-          color="primary"
-          aria-label="focus"
-          component="span"
-          onClick={() => {
-            console.log('clicked grid button');
-          }}
-        >
-          <GridViewIcon />
-        </IconButton>
-      </Tooltip>
+      <ThemeProvider theme={theme}>
+        <Tooltip title="Grid View (esc)" placement="left">
+          <IconButton
+            color="primary"
+            aria-label="focus"
+            component="span"
+            onClick={() => {
+              setGridViewCallback();
+            }}
+          >
+            <GridViewIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </ThemeProvider>
     );
   };
 
@@ -90,7 +111,6 @@ function VideoOverlay(props: VideoOverlayProps) {
         <Box // top right
           sx={{
             boxSizing: 'border-box',
-            padding: '5px',
             position: 'absolute',
             top: 0,
             right: 0,

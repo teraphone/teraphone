@@ -97,11 +97,14 @@ function MainVideoView() {
     setFocus('');
   }, []);
 
-  const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      setGridViewCallback();
-    }
-  }, []);
+  const escKeydownHandler = React.useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setGridViewCallback();
+      }
+    },
+    [setGridViewCallback]
+  );
 
   React.useEffect(() => {
     console.log('focus', focus, 'isFocusView', isFocusView);
@@ -345,6 +348,7 @@ function MainVideoView() {
             isLocal={isLocal}
             sourceType={sourceType}
             hidden={isFocusView}
+            setGridViewCallback={setGridViewCallback}
           />
         </Box>
       </Grid>
@@ -364,6 +368,7 @@ function MainVideoView() {
         isLocal={focusVideoItem?.isLocal}
         sourceType={focusVideoItem?.videoTrack.source}
         hidden={!isFocusView}
+        setGridViewCallback={setGridViewCallback}
       />
       {gridItems}
     </Grid>

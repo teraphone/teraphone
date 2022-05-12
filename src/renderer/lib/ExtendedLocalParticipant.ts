@@ -37,8 +37,8 @@ export async function createScreenShareTracks(
         // maxWidth: VideoPresets.h2160.width,
         // minHeight: VideoPresets.h1080.height,
         // maxHeight: VideoPresets.h2160.height,
-        minFrameRate: 15,
-        maxFrameRate: 30,
+        minFrameRate: 30,
+        maxFrameRate: 60,
       },
     },
   };

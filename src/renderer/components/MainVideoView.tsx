@@ -80,6 +80,8 @@ function MainVideoView() {
   const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
+  const [isFocusVideoOverlayHidden, setIsFocusVideoOverlayHidden] =
+    React.useState(true);
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
@@ -120,6 +122,19 @@ function MainVideoView() {
     },
     [setGridViewCallback]
   );
+
+  const handleMouseEvent = React.useCallback((event: React.MouseEvent) => {
+    switch (event.type) {
+      case 'mouseleave':
+        setIsFocusVideoOverlayHidden(true);
+        break;
+      case 'mouseenter':
+        setIsFocusVideoOverlayHidden(false);
+        break;
+      default:
+        break;
+    }
+  }, []);
 
   React.useEffect(() => {
     console.log('focus', focus, 'isFocusView', isFocusView);
@@ -375,6 +390,8 @@ function MainVideoView() {
       container
       spacing={1}
       style={isFocusView ? gridFocusStyle : gridStyle}
+      onMouseLeave={isFocusView ? handleMouseEvent : undefined}
+      onMouseEnter={isFocusView ? handleMouseEvent : undefined}
     >
       <VideoOverlay // attach to grid container (if focus view)
         isFocusItem
@@ -382,7 +399,7 @@ function MainVideoView() {
         isPopout={focusVideoItem?.isPopout}
         isLocal={focusVideoItem?.isLocal}
         sourceType={focusVideoItem?.videoTrack.source}
-        hidden={!isFocusView}
+        hidden={!isFocusView || isFocusVideoOverlayHidden}
         setGridViewCallback={setGridViewCallback}
       />
       {gridItems}

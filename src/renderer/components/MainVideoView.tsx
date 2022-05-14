@@ -81,7 +81,7 @@ function MainVideoView() {
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
   const [isFocusVideoOverlayHidden, setIsFocusVideoOverlayHidden] =
-    React.useState(true);
+    React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});

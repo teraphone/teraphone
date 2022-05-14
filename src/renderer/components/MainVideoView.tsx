@@ -36,6 +36,7 @@ import { selectGroup } from '../redux/WorldSlice';
 import { setScreenShareTrackEnabled } from '../lib/ExtendedLocalParticipant';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
+import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
 
 const startStream = (
   localParticipant: LocalParticipant,
@@ -80,12 +81,21 @@ function MainVideoView() {
   const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
-  const [isFocusVideoOverlayHidden, setIsFocusVideoOverlayHidden] =
-    React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const isMounted = false;
+  const [
+    hideOverlay,
+    onOverlayMouseEnter,
+    onOverlayMouseLeave,
+    onOverlayMouseMove,
+  ] = useHideOnMouseStop({
+    delay: 3000,
+    hideCursor: true,
+    initialHide: false,
+    showOnlyOnContainerHover: true,
+  });
 
   const createSetFocusViewCallback = React.useCallback(
     (sid: string) => () => {
@@ -122,19 +132,6 @@ function MainVideoView() {
     },
     [setGridViewCallback]
   );
-
-  const handleMouseEvent = React.useCallback((event: React.MouseEvent) => {
-    switch (event.type) {
-      case 'mouseleave':
-        setIsFocusVideoOverlayHidden(true);
-        break;
-      case 'mouseenter':
-        setIsFocusVideoOverlayHidden(false);
-        break;
-      default:
-        break;
-    }
-  }, []);
 
   React.useEffect(() => {
     console.log('focus', focus, 'isFocusView', isFocusView);
@@ -390,8 +387,7 @@ function MainVideoView() {
       container
       spacing={1}
       style={isFocusView ? gridFocusStyle : gridStyle}
-      onMouseLeave={isFocusView ? handleMouseEvent : undefined}
-      onMouseEnter={isFocusView ? handleMouseEvent : undefined}
+      onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
     >
       <VideoOverlay // attach to grid container (if focus view)
         isFocusItem
@@ -399,7 +395,7 @@ function MainVideoView() {
         isPopout={focusVideoItem?.isPopout}
         isLocal={focusVideoItem?.isLocal}
         sourceType={focusVideoItem?.videoTrack.source}
-        hidden={!isFocusView || isFocusVideoOverlayHidden}
+        hidden={!isFocusView || hideOverlay}
         setGridViewCallback={setGridViewCallback}
       />
       {gridItems}

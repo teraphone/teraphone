@@ -36,7 +36,17 @@ import { startStream } from '../lib/ExtendedLocalParticipant';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
-import { VideoItemsObject } from './VideoViews';
+
+export type VideoItemValue = {
+  userName: string;
+  isPopout: boolean;
+  isLocal: boolean;
+  videoTrack: LocalTrackPublication | RemoteTrackPublication;
+};
+
+export type VideoItemsObject = {
+  [sid: string]: VideoItemValue;
+};
 
 function MainVideoView() {
   const dispatch = useAppDispatch();

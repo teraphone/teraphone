@@ -18,10 +18,7 @@ import {
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
-import WindowPortal from './WindowPortal';
-import VideoView from './VideoView';
-import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
-import MainVideoView from './MainVideoView';
+import VideoViews from './VideoViews';
 
 const Home = () => {
   React.useEffect(() => {
@@ -35,7 +32,6 @@ const Home = () => {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { appUser } = useAppSelector(selectAppUser);
-  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
   const userRTRef = ref(
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
@@ -97,10 +93,6 @@ const Home = () => {
     });
   }, [connectionStatus, room, userRTRef]);
 
-  const handleCloseVideoView = React.useCallback(() => {
-    dispatch(setWindowOpen(false));
-  }, [dispatch]);
-
   return (
     <div>
       <Box
@@ -113,19 +105,7 @@ const Home = () => {
       >
         <GroupTabs />
         <ScreenPickerDialog />
-        {videoViewWindowOpen && (
-          <WindowPortal
-            title="Video - T E R A P H O N E"
-            width={800}
-            height={600}
-            onClose={handleCloseVideoView}
-          >
-            <>
-              {/* <VideoView /> */}
-              <MainVideoView />
-            </>
-          </WindowPortal>
-        )}
+        <VideoViews />
       </Box>
     </div>
   );

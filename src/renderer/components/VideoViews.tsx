@@ -12,20 +12,36 @@ import {
   RemoteTrackPublication,
   RemoteParticipant,
 } from 'livekit-client';
-
-export type VideoItemValue = {
-  userName: string;
-  isPopout: boolean;
-  isLocal: boolean;
-  videoTrack: LocalTrackPublication | RemoteTrackPublication;
-};
-
-export type VideoItemsObject = {
-  [sid: string]: VideoItemValue;
-};
+import WindowPortal from './WindowPortal';
+import MainVideoView, { VideoItemsObject } from './MainVideoView';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
 
 function VideoViews() {
-  return null;
+  const dispatch = useAppDispatch();
+  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
+
+  const handleCloseVideoView = React.useCallback(() => {
+    dispatch(setWindowOpen(false));
+  }, [dispatch]);
+
+  return (
+    <>
+      {videoViewWindowOpen && (
+        <WindowPortal
+          title="Video - T E R A P H O N E"
+          width={800}
+          height={600}
+          onClose={handleCloseVideoView}
+        >
+          <>
+            {/* <VideoView /> */}
+            <MainVideoView />
+          </>
+        </WindowPortal>
+      )}
+    </>
+  );
 }
 
 export default VideoViews;

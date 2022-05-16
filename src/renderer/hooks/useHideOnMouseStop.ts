@@ -8,6 +8,7 @@ interface UseHideOnMouseStopProps {
   hideCursor?: boolean;
   initialHide?: boolean;
   showOnlyOnContainerHover?: boolean;
+  targetDoc?: Document;
 }
 
 type UseHideOnMouseStopReturn = [
@@ -22,6 +23,7 @@ const useHideOnMouseStop = ({
   hideCursor = false,
   initialHide = false,
   showOnlyOnContainerHover = false,
+  targetDoc = document,
 }: UseHideOnMouseStopProps): UseHideOnMouseStopReturn => {
   const [hide, setHide] = React.useState(initialHide);
   const setVisibility = React.useCallback(
@@ -36,19 +38,19 @@ const useHideOnMouseStop = ({
 
   const onMouseEnter = React.useCallback(
     (event: React.MouseEvent) => {
-      if (event.type === 'mouseenter') {
+      if (event.type === 'mouseenter' && targetDoc.hasFocus()) {
         console.log('onMouseEnter', 'hide', hide);
         if (hide) {
           setVisibility(true, 'default');
         }
       }
     },
-    [hide, setVisibility]
+    [hide, setVisibility, targetDoc]
   );
 
   const onMouseLeave = React.useCallback(
     (event: React.MouseEvent) => {
-      if (event.type === 'mouseleave') {
+      if (event.type === 'mouseleave' && targetDoc.hasFocus()) {
         console.log('onMouseLeave', 'hide', hide);
         clearTimeout(timer);
 
@@ -57,12 +59,12 @@ const useHideOnMouseStop = ({
         }, delay / 6);
       }
     },
-    [delay, hide, setVisibility]
+    [delay, hide, setVisibility, targetDoc]
   );
 
   const onMouseMove = React.useCallback(
     (event: React.MouseEvent) => {
-      if (event.type === 'mousemove') {
+      if (event.type === 'mousemove' && targetDoc.hasFocus()) {
         console.log('onMouseMove', 'hide', hide);
         clearTimeout(timer);
 
@@ -75,7 +77,7 @@ const useHideOnMouseStop = ({
         }, delay);
       }
     },
-    [delay, hide, setVisibility]
+    [delay, hide, setVisibility, targetDoc]
   );
 
   return [hide, onMouseEnter, onMouseLeave, onMouseMove];

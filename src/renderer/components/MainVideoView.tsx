@@ -95,6 +95,7 @@ function MainVideoView() {
     hideCursor: true,
     initialHide: false,
     showOnlyOnContainerHover: true,
+    targetDoc: thisWindow?.document,
   });
 
   const createSetFocusViewCallback = React.useCallback(
@@ -387,6 +388,8 @@ function MainVideoView() {
       container
       spacing={1}
       style={isFocusView ? gridFocusStyle : gridStyle}
+      onMouseEnter={isFocusView ? onOverlayMouseEnter : () => {}}
+      onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
     >
       <VideoOverlay // attach to grid container (if focus view)

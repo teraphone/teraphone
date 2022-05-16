@@ -5,7 +5,6 @@ import {
   RoomEvent,
   LocalParticipant,
   ScreenShareCaptureOptions,
-  ScreenSharePresets,
   LocalTrackPublication,
   LocalTrack,
   VideoPresets,
@@ -33,29 +32,10 @@ import useRoom from '../hooks/useRoom';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectGroup } from '../redux/WorldSlice';
-import { setScreenShareTrackEnabled } from '../lib/ExtendedLocalParticipant';
+import { startStream } from '../lib/ExtendedLocalParticipant';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
-
-const startStream = (
-  localParticipant: LocalParticipant,
-  userId: string,
-  sourceId: string
-) => {
-  console.log('starting stream', sourceId);
-  const options: ScreenShareCaptureOptions = {
-    audio: false,
-    resolution: ScreenSharePresets.h1080fps15,
-  };
-  return setScreenShareTrackEnabled(
-    localParticipant,
-    userId,
-    sourceId,
-    true,
-    options
-  );
-};
 
 export type VideoItemValue = {
   userName: string;

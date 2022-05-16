@@ -5,6 +5,7 @@ import {
   ScreenShareCaptureOptions,
   TrackInvalidError,
   ParticipantEvent,
+  ScreenSharePresets,
   VideoPresets,
   LocalVideoTrack,
   LocalAudioTrack,
@@ -106,3 +107,22 @@ export async function setScreenShareTrackEnabled(
     localParticipant.unpublishTrack(track.track);
   }
 }
+
+export const startStream = (
+  localParticipant: LocalParticipant,
+  userId: string,
+  sourceId: string
+) => {
+  console.log('starting stream', sourceId);
+  const options: ScreenShareCaptureOptions = {
+    audio: false,
+    resolution: ScreenSharePresets.h1080fps15,
+  };
+  return setScreenShareTrackEnabled(
+    localParticipant,
+    userId,
+    sourceId,
+    true,
+    options
+  );
+};

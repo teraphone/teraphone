@@ -1,38 +1,18 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import {
-  Room,
   RoomEvent,
   LocalParticipant,
-  ScreenShareCaptureOptions,
   LocalTrackPublication,
-  LocalTrack,
-  VideoPresets,
   Track,
   RemoteTrackPublication,
   RemoteParticipant,
 } from 'livekit-client';
-import { useParticipant } from 'livekit-react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { VideoRenderer } from './VideoRenderer';
-import { VideoItem } from './VideoItem';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import {
-  setScreens,
-  setWindows,
-  setPickerVisible,
-  selectScreens,
-  selectWindows,
-  selectPickerVisible,
-  ScreenSource,
-} from '../redux/ScreenShareSlice';
 import useRoom from '../hooks/useRoom';
-import { selectAppUser } from '../redux/AppUserSlice';
-import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import { selectGroup } from '../redux/WorldSlice';
-import { startStream } from '../lib/ExtendedLocalParticipant';
+import { VideoItem } from './VideoItem';
+
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
@@ -48,23 +28,25 @@ export type VideoItemsObject = {
   [sid: string]: VideoItemValue;
 };
 
-function MainVideoView() {
-  const dispatch = useAppDispatch();
+export interface MainVideoViewProps {
+  setUpScreenTrack: (
+    videoTrack: RemoteTrackPublication | LocalTrackPublication,
+    participant: RemoteParticipant | LocalParticipant
+  ) => void;
+  takeDownScreenTrack: (
+    videoTrack: RemoteTrackPublication | LocalTrackPublication,
+    participant: RemoteParticipant | LocalParticipant
+  ) => void;
+  videoItems: VideoItemsObject;
+}
+
+function MainVideoView(props: MainVideoViewProps) {
+  const { setUpScreenTrack, takeDownScreenTrack, videoItems } = props;
   const { room } = useRoom();
-  const localParticipant = room?.localParticipant;
-  const participants = room?.participants;
-  const screens = useAppSelector(selectScreens);
-  const windows = useAppSelector(selectWindows);
-  const { appUser } = useAppSelector(selectAppUser);
-  const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { groupId } = currentRoom;
-  const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
-  const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
-  const isMounted = false;
   const [
     hideOverlay,
     onOverlayMouseEnter,
@@ -137,42 +119,6 @@ function MainVideoView() {
     };
   }, [escKeydownHandler, windowRef]);
 
-  const setUpScreenTrack = React.useCallback(
-    (
-      videoTrack: RemoteTrackPublication | LocalTrackPublication,
-      participant: RemoteParticipant | LocalParticipant
-    ) => {
-      const userId = participant.identity;
-      const user = groupInfo?.users.find(
-        (groupUser) => groupUser.user_id === +userId
-      );
-      const userName = user?.name || 'Unknown';
-      const sid = videoTrack.trackSid;
-      const isPopout = false;
-      const isLocal = participant.sid === localParticipant?.sid;
-      if (!isLocal && !videoTrack.isSubscribed) {
-        (videoTrack as RemoteTrackPublication).setSubscribed(true);
-      }
-      setVideoItems((prev) => ({
-        ...prev,
-        [sid]: { userName, isPopout, isLocal, videoTrack },
-      }));
-    },
-    [groupInfo?.users, localParticipant?.sid]
-  );
-
-  const takeDownScreenTrack = React.useCallback(
-    (
-      videoTrack: RemoteTrackPublication | LocalTrackPublication,
-      participant: RemoteParticipant | LocalParticipant
-    ) => {
-      const sid = videoTrack.trackSid;
-      delete videoItems[sid];
-      setVideoItems(videoItems);
-    },
-    [videoItems]
-  );
-
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
       if (track.kind === 'video') {
@@ -236,65 +182,6 @@ function MainVideoView() {
     handleLocalTrackUnpublished,
     room,
   ]);
-
-  React.useEffect(() => {
-    const p: Array<Promise<void>> = [];
-    if (room) {
-      if (Object.keys(screens).length > 0) {
-        Object.entries(screens).forEach(([sourceId, _]) => {
-          p.push(
-            startStream(room.localParticipant, appUser.id.toString(), sourceId)
-          );
-        });
-      }
-
-      if (Object.keys(windows).length > 0) {
-        Object.entries(windows).forEach(([sourceId, _]) => {
-          p.push(
-            startStream(room.localParticipant, appUser.id.toString(), sourceId)
-          );
-        });
-      }
-    }
-
-    Promise.all(p)
-      .then(() => {
-        // add local video tracks to videoItems
-        if (localParticipant) {
-          if (localParticipant?.videoTracks) {
-            localParticipant.videoTracks.forEach((videoTrack, _sid) => {
-              setUpScreenTrack(videoTrack, localParticipant);
-            });
-          }
-        }
-        return true;
-      })
-      .catch((err) => {
-        console.error(err);
-        return false;
-      });
-  }, [
-    appUser.id,
-    groupInfo?.users,
-    localParticipant,
-    room,
-    screens,
-    setUpScreenTrack,
-    windows,
-  ]);
-
-  React.useEffect(() => {
-    // add remote video tracks to videoItems
-    if (participants) {
-      participants.forEach((participant) => {
-        if (participant.videoTracks) {
-          participant.videoTracks.forEach((videoTrack, _sid) => {
-            setUpScreenTrack(videoTrack, participant);
-          });
-        }
-      });
-    }
-  }, [groupInfo?.users, participants, setUpScreenTrack]);
 
   const gridBoxStyle: React.CSSProperties = {
     background: 'black',

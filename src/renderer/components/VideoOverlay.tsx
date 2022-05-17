@@ -18,6 +18,7 @@ interface VideoOverlayProps {
   hidden?: boolean;
   setFocusViewCallback?: () => void;
   setGridViewCallback?: () => void;
+  setIsPopoutCallback?: (isPopout: boolean) => void;
 }
 
 const theme = createTheme({
@@ -38,6 +39,7 @@ function VideoOverlay(props: VideoOverlayProps) {
     hidden,
     setFocusViewCallback,
     setGridViewCallback,
+    setIsPopoutCallback,
   } = props;
   const isScreen = sourceType === Track.Source.ScreenShare;
   const descriptionLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
@@ -95,7 +97,9 @@ function VideoOverlay(props: VideoOverlayProps) {
             aria-label="focus"
             component="span"
             onClick={() => {
-              console.log('clicked popout button');
+              if (setIsPopoutCallback) {
+                setIsPopoutCallback(true);
+              }
             }}
           >
             <OpenInNewIcon fontSize="small" />
@@ -177,6 +181,7 @@ VideoOverlay.defaultProps = {
   hidden: false,
   setGridViewCallback: () => {},
   setFocusViewCallback: () => {},
+  setIsPopoutCallback: () => {},
 };
 
 export default VideoOverlay;

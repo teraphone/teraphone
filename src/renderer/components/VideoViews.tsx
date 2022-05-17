@@ -168,6 +168,7 @@ function VideoViews() {
             <MainVideoView
               setUpScreenTrack={setUpScreenTrack}
               takeDownScreenTrack={takeDownScreenTrack}
+              setIsPopout={setIsPopout}
               videoItems={videoItems}
             />
           </>

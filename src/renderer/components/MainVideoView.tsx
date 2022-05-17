@@ -37,11 +37,13 @@ export interface MainVideoViewProps {
     videoTrack: RemoteTrackPublication | LocalTrackPublication,
     participant: RemoteParticipant | LocalParticipant
   ) => void;
+  setIsPopout: (sid: string, isPopout: boolean) => void;
   videoItems: VideoItemsObject;
 }
 
 function MainVideoView(props: MainVideoViewProps) {
-  const { setUpScreenTrack, takeDownScreenTrack, videoItems } = props;
+  const { setUpScreenTrack, takeDownScreenTrack, setIsPopout, videoItems } =
+    props;
   const { room } = useRoom();
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
@@ -86,6 +88,13 @@ function MainVideoView(props: MainVideoViewProps) {
     setIsFocusView(false);
     setFocus('');
   }, []);
+
+  const createSetIsPopoutCallback = React.useCallback(
+    (sid: string) => (isPopout: boolean) => {
+      setIsPopout(sid, isPopout);
+    },
+    [setIsPopout]
+  );
 
   const escKeydownHandler = React.useCallback(
     (event: KeyboardEvent) => {
@@ -244,6 +253,7 @@ function MainVideoView(props: MainVideoViewProps) {
             sourceType={sourceType}
             hidden={isFocusView}
             setFocusViewCallback={createSetFocusViewCallback(sid)}
+            setIsPopoutCallback={createSetIsPopoutCallback(sid)}
           />
         </Box>
       </Grid>
@@ -267,6 +277,9 @@ function MainVideoView(props: MainVideoViewProps) {
         sourceType={focusVideoItem?.videoTrack.source}
         hidden={!isFocusView || hideOverlay}
         setGridViewCallback={setGridViewCallback}
+        setIsPopoutCallback={
+          isFocusView ? createSetIsPopoutCallback(focus) : () => {}
+        }
       />
       {gridItems}
     </Grid>

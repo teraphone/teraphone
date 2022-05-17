@@ -72,6 +72,17 @@ function VideoViews() {
     [videoItems]
   );
 
+  const setIsPopout = React.useCallback(
+    (sid: string, isPopout: boolean) => {
+      const videoItem = videoItems[sid];
+      setVideoItems((prev) => ({
+        ...prev,
+        [sid]: { ...videoItem, isPopout },
+      }));
+    },
+    [videoItems]
+  );
+
   React.useEffect(() => {
     // add remote video tracks to videoItems
     if (participants) {

@@ -132,6 +132,17 @@ function VideoViews() {
     windows,
   ]);
 
+  const popoutWindowNodes = Object.entries(videoItems)
+    .filter(([sid, videoItem]) => {
+      return videoItem.isPopout;
+    })
+    .map(([sid, videoItem]) => {
+      const { userName, isLocal, videoTrack } = videoItem;
+      const title = `${userName}'s Screen - T E R A P H O N E`;
+      console.log('popout', sid, videoItem);
+      return <></>;
+    });
+
   return (
     <>
       {videoViewWindowOpen && (

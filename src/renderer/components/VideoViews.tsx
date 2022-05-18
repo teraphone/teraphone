@@ -34,6 +34,13 @@ function VideoViews() {
   const localParticipant = room?.localParticipant;
   const participants = room?.participants;
 
+  React.useEffect(() => {
+    console.log('VideoViews Mounted');
+    return () => {
+      console.log('VideoViews Unmounted');
+    };
+  }, []);
+
   const handleCloseVideoView = React.useCallback(() => {
     dispatch(setWindowOpen(false));
   }, [dispatch]);
@@ -168,6 +175,7 @@ function VideoViews() {
           width={800}
           height={600}
           onClose={() => {
+            console.log('popout closed', sid);
             setIsPopout(sid, false);
           }}
         >

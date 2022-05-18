@@ -7,7 +7,9 @@ import {
   RemoteTrackPublication,
   RemoteParticipant,
 } from 'livekit-client';
+import Box from '@mui/material/Box';
 import useRoom from '../hooks/useRoom';
+import VideoItem from './VideoItem';
 import WindowPortal from './WindowPortal';
 import MainVideoView, { VideoItemsObject } from './MainVideoView';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -143,6 +145,14 @@ function VideoViews() {
     windows,
   ]);
 
+  const popoutStyle: React.CSSProperties = {
+    background: 'black',
+    boxSizing: 'border-box',
+    maxHeight: '100%',
+    maxWidth: '100%',
+    padding: '0px',
+  };
+
   const popoutWindowNodes = Object.entries(videoItems)
     .filter(([_sid, videoItem]) => {
       return videoItem.isPopout;
@@ -151,7 +161,21 @@ function VideoViews() {
       const { userName, isLocal, videoTrack } = videoItem;
       const title = `${userName}'s Screen - T E R A P H O N E`;
       console.log('popout', sid, videoItem);
-      return <></>;
+      return (
+        <WindowPortal
+          key={`popout-${sid}`}
+          title={title}
+          width={800}
+          height={600}
+          onClose={() => {
+            setIsPopout(sid, false);
+          }}
+        >
+          <Box style={popoutStyle}>
+            <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+          </Box>
+        </WindowPortal>
+      );
     });
 
   return (
@@ -171,6 +195,7 @@ function VideoViews() {
           />
         </WindowPortal>
       )}
+      {popoutWindowNodes}
     </>
   );
 }

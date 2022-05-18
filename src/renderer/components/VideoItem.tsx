@@ -13,7 +13,7 @@ export interface VideoItemProps {
   isLocal: boolean;
 }
 
-export const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
+const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
   const isFrontFacing =
     videoTrack.track?.mediaStreamTrack.getSettings().facingMode !==

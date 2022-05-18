@@ -12,7 +12,7 @@ import {
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import useRoom from '../hooks/useRoom';
-import { VideoItem } from './VideoItem';
+import VideoItem from './VideoItem';
 
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';

@@ -19,6 +19,7 @@ import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectScreens, selectWindows } from '../redux/ScreenShareSlice';
 import { startStream } from '../lib/ExtendedLocalParticipant';
+import PopoutVideoView from './PopoutVideoView';
 
 function VideoViews() {
   const dispatch = useAppDispatch();
@@ -152,21 +153,15 @@ function VideoViews() {
     windows,
   ]);
 
-  const popoutStyle: React.CSSProperties = {
-    background: 'black',
-    boxSizing: 'border-box',
-    maxHeight: '100%',
-    maxWidth: '100%',
-    padding: '0px',
-  };
-
   const popoutWindowNodes = Object.entries(videoItems)
     .filter(([_sid, videoItem]) => {
       return videoItem.isPopout;
     })
     .map(([sid, videoItem]) => {
       const { userName, isLocal, videoTrack } = videoItem;
-      const title = `${userName}'s Screen - T E R A P H O N E`;
+      const title = isLocal
+        ? 'Your Screen - T E R A P H O N E'
+        : `${userName}'s Screen - T E R A P H O N E`;
       console.log('popout', sid, videoItem);
       return (
         <WindowPortal
@@ -175,13 +170,14 @@ function VideoViews() {
           width={800}
           height={600}
           onClose={() => {
-            console.log('popout closed', sid);
-            setIsPopout(sid, false);
+            console.log('popout onClose', sid);
           }}
         >
-          <Box style={popoutStyle}>
-            <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-          </Box>
+          <PopoutVideoView
+            sid={sid}
+            videoItem={videoItem}
+            setIsPopout={setIsPopout}
+          />
         </WindowPortal>
       );
     });

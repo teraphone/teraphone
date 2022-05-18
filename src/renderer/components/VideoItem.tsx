@@ -46,13 +46,13 @@ const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
   }, [videoTrack, videoTrack.track]);
 
   const handleLoadedMetadata = React.useCallback((event: Event) => {
-    console.log('VideoRenderer.handleLoadedMetadata', event);
+    // console.log('VideoRenderer.handleLoadedMetadata', event);
     const target = event.target as HTMLVideoElement;
-    console.log(
-      'Video loaded metadata h w:',
-      target.videoHeight,
-      target.videoWidth
-    );
+    // console.log(
+    //   'Video loaded metadata h w:',
+    //   target.videoHeight,
+    //   target.videoWidth
+    // );
   }, []);
 
   React.useEffect(() => {

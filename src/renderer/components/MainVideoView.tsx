@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import * as React from 'react';
 import {
@@ -229,36 +230,40 @@ function MainVideoView(props: MainVideoViewProps) {
 
   const focusVideoItem = videoItems[focus];
 
-  const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
-    const { userName, isPopout, isLocal, videoTrack } = videoItem;
-    const isFocusItem = focus === sid;
-    const sourceType = videoTrack.source;
-    return (
-      <Grid
-        item
-        key={sid}
-        hidden={isFocusView && !isFocusItem}
-        style={isFocusItem ? gridItemFocusStyle : {}}
-      >
-        <Box
-          style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
-          onClick={handleVideoClickEvent(sid)}
+  const gridItems = Object.entries(videoItems)
+    .filter(([_sid, videoItem]) => {
+      return !videoItem.isPopout;
+    })
+    .map(([sid, videoItem]) => {
+      const { userName, isPopout, isLocal, videoTrack } = videoItem;
+      const isFocusItem = focus === sid;
+      const sourceType = videoTrack.source;
+      return (
+        <Grid
+          item
+          key={sid}
+          hidden={isFocusView && !isFocusItem}
+          style={isFocusItem ? gridItemFocusStyle : {}}
         >
-          <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-          <VideoOverlay
-            isFocusItem={isFocusItem}
-            userName={userName}
-            isPopout={isPopout}
-            isLocal={isLocal}
-            sourceType={sourceType}
-            hidden={isFocusView}
-            setFocusViewCallback={createSetFocusViewCallback(sid)}
-            setIsPopoutCallback={createSetIsPopoutCallback(sid)}
-          />
-        </Box>
-      </Grid>
-    );
-  });
+          <Box
+            style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
+            onClick={handleVideoClickEvent(sid)}
+          >
+            <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+            <VideoOverlay
+              isFocusItem={isFocusItem}
+              userName={userName}
+              isPopout={isPopout}
+              isLocal={isLocal}
+              sourceType={sourceType}
+              hidden={isFocusView}
+              setFocusViewCallback={createSetFocusViewCallback(sid)}
+              setIsPopoutCallback={createSetIsPopoutCallback(sid)}
+            />
+          </Box>
+        </Grid>
+      );
+    });
 
   return (
     <Grid

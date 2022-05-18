@@ -144,7 +144,7 @@ function VideoViews() {
   ]);
 
   const popoutWindowNodes = Object.entries(videoItems)
-    .filter(([sid, videoItem]) => {
+    .filter(([_sid, videoItem]) => {
       return videoItem.isPopout;
     })
     .map(([sid, videoItem]) => {
@@ -163,15 +163,12 @@ function VideoViews() {
           height={600}
           onClose={handleCloseVideoView}
         >
-          <>
-            {/* <VideoView /> */}
-            <MainVideoView
-              setUpScreenTrack={setUpScreenTrack}
-              takeDownScreenTrack={takeDownScreenTrack}
-              setIsPopout={setIsPopout}
-              videoItems={videoItems}
-            />
-          </>
+          <MainVideoView
+            setUpScreenTrack={setUpScreenTrack}
+            takeDownScreenTrack={takeDownScreenTrack}
+            setIsPopout={setIsPopout}
+            videoItems={videoItems}
+          />
         </WindowPortal>
       )}
     </>

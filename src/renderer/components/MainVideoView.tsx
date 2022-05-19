@@ -49,6 +49,7 @@ function MainVideoView(props: MainVideoViewProps) {
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);
+  const thisWindow = windowRef.current;
   const [
     hideOverlay,
     onOverlayMouseEnter,
@@ -110,7 +111,6 @@ function MainVideoView(props: MainVideoViewProps) {
   }, [focus, isFocusView]);
 
   React.useEffect(() => {
-    const thisWindow = windowRef.current;
     if (thisWindow) {
       console.log('thisWindow', thisWindow);
       thisWindow.addEventListener('keydown', escKeydownHandler);
@@ -120,14 +120,14 @@ function MainVideoView(props: MainVideoViewProps) {
         thisWindow.removeEventListener('keydown', escKeydownHandler);
       }
     };
-  }, [escKeydownHandler, windowRef]);
+  }, [escKeydownHandler, thisWindow]);
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
     return () => {
       console.log('MainVideoView Unmounted');
     };
-  }, [escKeydownHandler, windowRef]);
+  }, []);
 
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {

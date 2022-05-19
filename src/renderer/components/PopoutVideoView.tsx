@@ -14,7 +14,6 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   const { sid, videoItem, setIsPopout } = props;
   const { isLocal, videoTrack } = videoItem;
   const windowRef = React.useContext(ChildWindowContext);
-  const thisWindow = windowRef.current;
   const popoutStyle: React.CSSProperties = {
     background: 'black',
     boxSizing: 'border-box',
@@ -23,11 +22,20 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
     padding: '0px',
   };
 
+  React.useEffect(() => {
+    console.log('PopoutVideoView Mounted', sid);
+    return () => {
+      console.log('PopoutVideoView Unmounted', sid);
+    };
+  }, [sid]);
+
   const handleWindowClose = React.useCallback(() => {
+    console.log('PopoutVideoView.handleWindowClose', sid);
     setIsPopout(sid, false);
   }, [setIsPopout, sid]);
 
   React.useEffect(() => {
+    const thisWindow = windowRef.current;
     if (thisWindow) {
       thisWindow.addEventListener('beforeunload', handleWindowClose);
       return () => {
@@ -35,7 +43,7 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
       };
     }
     return () => {};
-  }, [handleWindowClose, thisWindow]);
+  }, [handleWindowClose, windowRef]);
 
   return (
     <Box style={popoutStyle}>

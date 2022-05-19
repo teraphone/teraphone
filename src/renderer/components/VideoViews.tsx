@@ -162,7 +162,6 @@ function VideoViews() {
       const title = isLocal
         ? 'Your Screen - T E R A P H O N E'
         : `${userName}'s Screen - T E R A P H O N E`;
-      console.log('popout', sid, videoItem);
       return (
         <WindowPortal
           key={`popout-${sid}`}
@@ -181,6 +180,7 @@ function VideoViews() {
         </WindowPortal>
       );
     });
+  console.log('popoutWindowNodes', popoutWindowNodes);
 
   return (
     <>

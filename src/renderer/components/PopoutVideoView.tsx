@@ -30,21 +30,6 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
     };
   }, [sid]);
 
-  const handleWindowClose = React.useCallback(() => {
-    console.log('PopoutVideoView.handleWindowClose', sid);
-    setIsPopout(sid, false);
-  }, [setIsPopout, sid]);
-
-  React.useEffect(() => {
-    if (thisWindow) {
-      thisWindow.addEventListener('beforeunload', handleWindowClose);
-      return () => {
-        thisWindow.removeEventListener('beforeunload', handleWindowClose);
-      };
-    }
-    return () => {};
-  }, [handleWindowClose, thisWindow]);
-
   return (
     <Box style={popoutStyle}>
       <VideoItem videoTrack={videoTrack} isLocal={isLocal} />

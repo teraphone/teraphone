@@ -107,12 +107,7 @@ function MainVideoView(props: MainVideoViewProps) {
   );
 
   React.useEffect(() => {
-    console.log('focus', focus, 'isFocusView', isFocusView);
-  }, [focus, isFocusView]);
-
-  React.useEffect(() => {
     if (thisWindow) {
-      console.log('thisWindow', thisWindow);
       thisWindow.addEventListener('keydown', escKeydownHandler);
     }
     return () => {

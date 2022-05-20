@@ -42,6 +42,10 @@ function VideoViews() {
     };
   }, []);
 
+  React.useEffect(() => {
+    console.log('videoItems', videoItems);
+  }, [videoItems]);
+
   const handleCloseVideoView = React.useCallback(() => {
     dispatch(setWindowOpen(false));
   }, [dispatch]);
@@ -153,33 +157,34 @@ function VideoViews() {
     windows,
   ]);
 
-  const popoutWindowNodes = Object.entries(videoItems)
-    .filter(([_sid, videoItem]) => {
-      return videoItem.isPopout;
-    })
-    .map(([sid, videoItem]) => {
-      const { userName, isLocal, videoTrack } = videoItem;
+  const popoutWindowNodes = Object.entries(videoItems).map(
+    ([sid, videoItem]) => {
+      const { userName, isLocal, isPopout } = videoItem;
       const title = isLocal
         ? 'Your Screen - T E R A P H O N E'
         : `${userName}'s Screen - T E R A P H O N E`;
       return (
-        <WindowPortal
-          key={`popout-${sid}`}
-          title={title}
-          width={800}
-          height={600}
-          onClose={() => {
-            console.log('popout onClose', sid);
-          }}
-        >
-          <PopoutVideoView
-            sid={sid}
-            videoItem={videoItem}
-            setIsPopout={setIsPopout}
-          />
-        </WindowPortal>
+        isPopout && (
+          <WindowPortal
+            key={`popout-${sid}`}
+            title={title}
+            width={800}
+            height={600}
+            onClose={() => {
+              console.log('popout onClose', sid);
+              setIsPopout(sid, false);
+            }}
+          >
+            <PopoutVideoView
+              sid={sid}
+              videoItem={videoItem}
+              setIsPopout={() => {}}
+            />
+          </WindowPortal>
+        )
       );
-    });
+    }
+  );
   console.log('popoutWindowNodes', popoutWindowNodes);
 
   return (

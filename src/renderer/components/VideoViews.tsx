@@ -108,7 +108,7 @@ function VideoViews() {
         }
       });
     }
-  }, [groupInfo?.users, participants, setUpScreenTrack]);
+  }, [participants, setUpScreenTrack]);
 
   React.useEffect(() => {
     // add local video tracks to videoItems
@@ -147,22 +147,14 @@ function VideoViews() {
         console.error(err);
         return false;
       });
-  }, [
-    appUser.id,
-    groupInfo?.users,
-    localParticipant,
-    room,
-    screens,
-    setUpScreenTrack,
-    windows,
-  ]);
+  }, [appUser.id, localParticipant, room, screens, setUpScreenTrack, windows]);
 
   const popoutWindowNodes = Object.entries(videoItems).map(
     ([sid, videoItem]) => {
       const { userName, isLocal, isPopout } = videoItem;
       const title = isLocal
-        ? 'Your Screen - T E R A P H O N E'
-        : `${userName}'s Screen - T E R A P H O N E`;
+        ? `Your Screen - T E R A P H O N E ${sid}`
+        : `${userName}'s Screen - T E R A P H O N E ${sid}`;
       return (
         isPopout && (
           <WindowPortal
@@ -191,6 +183,7 @@ function VideoViews() {
     <>
       {videoViewWindowOpen && (
         <WindowPortal
+          key="main-video-view"
           title="Video - T E R A P H O N E"
           width={800}
           height={600}

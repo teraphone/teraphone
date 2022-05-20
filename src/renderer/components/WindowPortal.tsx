@@ -21,27 +21,34 @@ function WindowPortal(props: {
   const cacheRef = React.useRef(
     createCache({ key: 'external', container: containerRef.current })
   );
+  const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
+    setIsMounted(true);
     console.log('WindowPortal Mounted');
-    return () => console.log('WindowPortal Unmounted');
+    return () => {
+      setIsMounted(false);
+      console.log('WindowPortal Unmounted');
+    };
   }, []);
 
   React.useEffect(() => {
-    windowRef.current = window.open(
-      'about:blank',
-      title,
-      `width=${width},height=${height}`
-    );
+    if (isMounted) {
+      windowRef.current = window.open(
+        'about:blank',
+        title,
+        `width=${width},height=${height}`
+      );
 
-    if (windowRef.current) {
-      windowRef.current.document.body.appendChild(containerRef.current);
-      windowRef.current.document.body.style.margin = '0';
-      windowRef.current.onunload = () => {
-        onClose();
-      };
+      if (windowRef.current) {
+        windowRef.current.document.body.appendChild(containerRef.current);
+        windowRef.current.document.body.style.margin = '0';
+        windowRef.current.onunload = () => {
+          onClose();
+        };
+      }
     }
-  }, [containerRef, height, onClose, title, width]);
+  }, [containerRef, height, isMounted, onClose, title, width]);
 
   return ReactDom.createPortal(
     <ChildWindowContext.Provider value={windowRef}>

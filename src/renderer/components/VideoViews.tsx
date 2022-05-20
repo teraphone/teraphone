@@ -158,7 +158,7 @@ function VideoViews() {
       return (
         isPopout && (
           <WindowPortal
-            key={`popout-${sid}`}
+            key={sid}
             title={title}
             width={800}
             height={600}
@@ -168,6 +168,7 @@ function VideoViews() {
             }}
           >
             <PopoutVideoView
+              key={sid}
               sid={sid}
               videoItem={videoItem}
               setIsPopout={() => {}}

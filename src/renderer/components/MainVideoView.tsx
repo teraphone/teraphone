@@ -63,15 +63,6 @@ function MainVideoView(props: MainVideoViewProps) {
     targetDoc: windowRef?.current?.document,
   });
 
-  const createSetFocusViewCallback = React.useCallback(
-    (sid: string) => () => {
-      console.log('got focus callback', sid);
-      setFocus(sid);
-      setIsFocusView(true);
-    },
-    [setFocus, setIsFocusView]
-  );
-
   const handleVideoClickEvent = React.useCallback(
     (sid: string) =>
       (event: React.MouseEvent<HTMLVideoElement | HTMLElement>) => {
@@ -89,13 +80,6 @@ function MainVideoView(props: MainVideoViewProps) {
     setIsFocusView(false);
     setFocus('');
   }, []);
-
-  const createSetIsPopoutCallback = React.useCallback(
-    (sid: string) => (isPopout: boolean) => {
-      setIsPopout(sid, isPopout);
-    },
-    [setIsPopout]
-  );
 
   const escKeydownHandler = React.useCallback(
     (event: KeyboardEvent) => {
@@ -226,7 +210,7 @@ function MainVideoView(props: MainVideoViewProps) {
   const focusVideoItem = videoItems[focus];
 
   const gridItems = Object.entries(videoItems)
-    .filter(([_sid, videoItem]) => {
+    .filter(([, videoItem]) => {
       return !videoItem.isPopout;
     })
     .map(([sid, videoItem]) => {
@@ -246,14 +230,16 @@ function MainVideoView(props: MainVideoViewProps) {
           >
             <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
             <VideoOverlay
+              sid={sid}
               isFocusItem={isFocusItem}
               userName={userName}
               isPopout={isPopout}
               isLocal={isLocal}
               sourceType={sourceType}
               hidden={isFocusView}
-              setFocusViewCallback={createSetFocusViewCallback(sid)}
-              setIsPopoutCallback={createSetIsPopoutCallback(sid)}
+              setFocus={setFocus}
+              setIsFocusView={setIsFocusView}
+              setIsPopout={setIsPopout}
             />
           </Box>
         </Grid>
@@ -270,16 +256,16 @@ function MainVideoView(props: MainVideoViewProps) {
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
     >
       <VideoOverlay // attach to grid container (if focus view)
+        sid={focus}
         isFocusItem
         userName={focusVideoItem?.userName}
         isPopout={focusVideoItem?.isPopout}
         isLocal={focusVideoItem?.isLocal}
         sourceType={focusVideoItem?.videoTrack.source}
         hidden={!isFocusView || hideOverlay}
-        setGridViewCallback={setGridViewCallback}
-        setIsPopoutCallback={
-          isFocusView ? createSetIsPopoutCallback(focus) : () => {}
-        }
+        setFocus={setFocus}
+        setIsFocusView={setIsFocusView}
+        setIsPopout={setIsPopout}
       />
       {gridItems}
     </Grid>

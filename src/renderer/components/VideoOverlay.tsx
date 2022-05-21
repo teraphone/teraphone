@@ -10,15 +10,16 @@ import Tooltip from '@mui/material/Tooltip';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 interface VideoOverlayProps {
+  sid: string;
   isFocusItem: boolean;
   userName: string;
   isPopout: boolean;
   isLocal: boolean;
   sourceType: Track.Source;
-  hidden?: boolean;
-  setFocusViewCallback?: () => void;
-  setGridViewCallback?: () => void;
-  setIsPopoutCallback?: (isPopout: boolean) => void;
+  hidden: boolean;
+  setFocus: (sid: string) => void;
+  setIsFocusView: (isFocusView: boolean) => void;
+  setIsPopout: (sid: string, isPopout: boolean) => void;
 }
 
 const theme = createTheme({
@@ -31,20 +32,35 @@ const theme = createTheme({
 
 function VideoOverlay(props: VideoOverlayProps) {
   const {
+    sid,
     isFocusItem,
     userName,
     isPopout,
     isLocal,
     sourceType,
     hidden,
-    setFocusViewCallback,
-    setGridViewCallback,
-    setIsPopoutCallback,
+    setFocus,
+    setIsFocusView,
+    setIsPopout,
   } = props;
   const isScreen = sourceType === Track.Source.ScreenShare;
   const descriptionLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
   const descriptionRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
   const description = isLocal ? descriptionLocal : descriptionRemote;
+
+  const handleFocusClick = React.useCallback(() => {
+    setFocus(sid);
+    setIsFocusView(true);
+  }, [setFocus, setIsFocusView, sid]);
+
+  const handleGridClick = React.useCallback(() => {
+    setIsFocusView(false);
+    setFocus('');
+  }, [setFocus, setIsFocusView]);
+
+  const handlePopoutClick = React.useCallback(() => {
+    setIsPopout(sid, true);
+  }, [setIsPopout, sid]);
 
   const FocusButton = () => {
     return (
@@ -54,11 +70,7 @@ function VideoOverlay(props: VideoOverlayProps) {
             color="primary"
             aria-label="focus"
             component="span"
-            onClick={() => {
-              if (setFocusViewCallback) {
-                setFocusViewCallback();
-              }
-            }}
+            onClick={handleFocusClick}
           >
             <OpenInFullIcon fontSize="small" />
           </IconButton>
@@ -75,11 +87,7 @@ function VideoOverlay(props: VideoOverlayProps) {
             color="primary"
             aria-label="focus"
             component="span"
-            onClick={() => {
-              if (setGridViewCallback) {
-                setGridViewCallback();
-              }
-            }}
+            onClick={handleGridClick}
           >
             <GridViewIcon fontSize="small" />
           </IconButton>
@@ -96,11 +104,7 @@ function VideoOverlay(props: VideoOverlayProps) {
             color="primary"
             aria-label="focus"
             component="span"
-            onClick={() => {
-              if (setIsPopoutCallback) {
-                setIsPopoutCallback(true);
-              }
-            }}
+            onClick={handlePopoutClick}
           >
             <OpenInNewIcon fontSize="small" />
           </IconButton>
@@ -176,12 +180,5 @@ function VideoOverlay(props: VideoOverlayProps) {
     </>
   );
 }
-
-VideoOverlay.defaultProps = {
-  hidden: false,
-  setGridViewCallback: () => {},
-  setFocusViewCallback: () => {},
-  setIsPopoutCallback: () => {},
-};
 
 export default VideoOverlay;

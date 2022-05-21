@@ -7,9 +7,7 @@ import {
   RemoteTrackPublication,
   RemoteParticipant,
 } from 'livekit-client';
-import Box from '@mui/material/Box';
 import useRoom from '../hooks/useRoom';
-import VideoItem from './VideoItem';
 import WindowPortal from './WindowPortal';
 import MainVideoView, { VideoItemsObject } from './MainVideoView';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -79,23 +77,20 @@ function VideoViews() {
       videoTrack: RemoteTrackPublication | LocalTrackPublication,
       _participant: RemoteParticipant | LocalParticipant
     ) => {
-      const sid = videoTrack.trackSid;
-      delete videoItems[sid];
-      setVideoItems(videoItems);
+      setVideoItems((prev) => {
+        const { [videoTrack.trackSid]: removed, ...rest } = prev;
+        return rest;
+      });
     },
-    [videoItems]
+    []
   );
 
-  const setIsPopout = React.useCallback(
-    (sid: string, isPopout: boolean) => {
-      const videoItem = videoItems[sid];
-      setVideoItems((prev) => ({
-        ...prev,
-        [sid]: { ...videoItem, isPopout },
-      }));
-    },
-    [videoItems]
-  );
+  const setIsPopout = React.useCallback((sid: string, isPopout: boolean) => {
+    setVideoItems((prev) => ({
+      ...prev,
+      [sid]: { ...prev[sid], isPopout },
+    }));
+  }, []);
 
   React.useEffect(() => {
     // add remote video tracks to videoItems
@@ -149,36 +144,18 @@ function VideoViews() {
       });
   }, [appUser.id, localParticipant, room, screens, setUpScreenTrack, windows]);
 
-  const popoutWindowNodes = Object.entries(videoItems).map(
-    ([sid, videoItem]) => {
-      const { userName, isLocal, isPopout } = videoItem;
-      const title = isLocal
-        ? `Your Screen - T E R A P H O N E ${sid}`
-        : `${userName}'s Screen - T E R A P H O N E ${sid}`;
+  const popoutWindowNodes = Object.entries(videoItems)
+    .filter(([, videoItem]) => videoItem.isPopout)
+    .map(([sid, videoItem]) => {
       return (
-        isPopout && (
-          <WindowPortal
-            key={sid}
-            title={title}
-            width={800}
-            height={600}
-            onClose={() => {
-              console.log('popout onClose', sid);
-              setIsPopout(sid, false);
-            }}
-          >
-            <PopoutVideoView
-              key={sid}
-              sid={sid}
-              videoItem={videoItem}
-              setIsPopout={() => {}}
-            />
-          </WindowPortal>
-        )
+        <PopoutVideoView
+          key={sid}
+          sid={sid}
+          videoItem={videoItem}
+          setIsPopout={setIsPopout}
+        />
       );
-    }
-  );
-  console.log('popoutWindowNodes', popoutWindowNodes);
+    });
 
   return (
     <>

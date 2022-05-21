@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import type { VideoItemValue } from './MainVideoView';
-import { ChildWindowContext } from './WindowPortal';
+import WindowPortal from './WindowPortal';
 import VideoItem from './VideoItem';
 
 export interface PopoutVideoViewProps {
@@ -12,9 +13,11 @@ export interface PopoutVideoViewProps {
 
 function PopoutVideoView(props: PopoutVideoViewProps) {
   const { sid, videoItem, setIsPopout } = props;
-  const { isLocal, videoTrack } = videoItem;
-  const windowRef = React.useContext(ChildWindowContext);
-  const thisWindow = windowRef.current;
+  const { isLocal, userName, videoTrack } = videoItem;
+  const title = isLocal
+    ? `Your Screen - T E R A P H O N E`
+    : `${userName}'s Screen - T E R A P H O N E`;
+
   const popoutStyle: React.CSSProperties = {
     background: 'black',
     boxSizing: 'border-box',
@@ -22,6 +25,10 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
     maxWidth: '100%',
     padding: '0px',
   };
+
+  const handleClose = React.useCallback(() => {
+    setIsPopout(sid, false);
+  }, [setIsPopout, sid]);
 
   React.useEffect(() => {
     console.log('PopoutVideoView Mounted', sid);
@@ -31,9 +38,17 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   }, [sid]);
 
   return (
-    <Box style={popoutStyle}>
-      <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-    </Box>
+    <WindowPortal
+      key={sid}
+      title={title}
+      width={800}
+      height={600}
+      onClose={handleClose}
+    >
+      <Box style={popoutStyle}>
+        <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+      </Box>
+    </WindowPortal>
   );
 }
 

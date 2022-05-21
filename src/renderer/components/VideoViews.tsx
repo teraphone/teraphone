@@ -6,6 +6,8 @@ import {
   LocalTrackPublication,
   RemoteTrackPublication,
   RemoteParticipant,
+  Track,
+  RoomEvent,
 } from 'livekit-client';
 import useRoom from '../hooks/useRoom';
 import WindowPortal from './WindowPortal';
@@ -143,6 +145,70 @@ function VideoViews() {
         return false;
       });
   }, [appUser.id, localParticipant, room, screens, setUpScreenTrack, windows]);
+
+  const handleTrackPublished = React.useCallback(
+    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
+      if (track.kind === 'video') {
+        setUpScreenTrack(track, participant);
+      }
+    },
+    [setUpScreenTrack]
+  );
+
+  const handleTrackUnpublished = React.useCallback(
+    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
+      if (track.kind === 'video') {
+        takeDownScreenTrack(track, participant);
+      }
+    },
+    [takeDownScreenTrack]
+  );
+
+  const handleTrackUnsubscribed = React.useCallback(
+    (
+      _: Track,
+      track: RemoteTrackPublication,
+      participant: RemoteParticipant
+    ) => {
+      console.log(RoomEvent.TrackUnsubscribed, _, track, participant);
+      if (track.kind === 'video') {
+        takeDownScreenTrack(track, participant);
+      }
+    },
+    [takeDownScreenTrack]
+  );
+
+  const handleLocalTrackUnpublished = React.useCallback(
+    (track: LocalTrackPublication, participant: LocalParticipant) => {
+      console.log(RoomEvent.LocalTrackUnpublished, track, participant);
+      if (track.kind === 'video') {
+        takeDownScreenTrack(track, participant);
+      }
+    },
+    [takeDownScreenTrack]
+  );
+
+  React.useEffect(() => {
+    if (room) {
+      room.on(RoomEvent.TrackPublished, handleTrackPublished);
+      room.on(RoomEvent.TrackUnpublished, handleTrackUnpublished);
+      room.on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
+      room.on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+      return () => {
+        room.off(RoomEvent.TrackPublished, handleTrackPublished);
+        room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);
+        room.off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
+        room.off(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+      };
+    }
+    return () => {};
+  }, [
+    handleTrackPublished,
+    handleTrackUnpublished,
+    handleTrackUnsubscribed,
+    handleLocalTrackUnpublished,
+    room,
+  ]);
 
   const popoutWindowNodes = Object.entries(videoItems)
     .filter(([, videoItem]) => videoItem.isPopout)

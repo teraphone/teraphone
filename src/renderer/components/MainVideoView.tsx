@@ -76,19 +76,12 @@ function MainVideoView(props: MainVideoViewProps) {
     []
   );
 
-  const setGridViewCallback = React.useCallback(() => {
-    setIsFocusView(false);
-    setFocus('');
+  const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setIsFocusView(false);
+      setFocus('');
+    }
   }, []);
-
-  const escKeydownHandler = React.useCallback(
-    (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setGridViewCallback();
-      }
-    },
-    [setGridViewCallback]
-  );
 
   React.useEffect(() => {
     if (thisWindow) {
@@ -107,70 +100,6 @@ function MainVideoView(props: MainVideoViewProps) {
       console.log('MainVideoView Unmounted');
     };
   }, []);
-
-  const handleTrackPublished = React.useCallback(
-    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
-      if (track.kind === 'video') {
-        setUpScreenTrack(track, participant);
-      }
-    },
-    [setUpScreenTrack]
-  );
-
-  const handleTrackUnpublished = React.useCallback(
-    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
-      if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
-      }
-    },
-    [takeDownScreenTrack]
-  );
-
-  const handleTrackUnsubscribed = React.useCallback(
-    (
-      _: Track,
-      track: RemoteTrackPublication,
-      participant: RemoteParticipant
-    ) => {
-      console.log(RoomEvent.TrackUnsubscribed, _, track, participant);
-      if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
-      }
-    },
-    [takeDownScreenTrack]
-  );
-
-  const handleLocalTrackUnpublished = React.useCallback(
-    (track: LocalTrackPublication, participant: LocalParticipant) => {
-      console.log(RoomEvent.LocalTrackUnpublished, track, participant);
-      if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
-      }
-    },
-    [takeDownScreenTrack]
-  );
-
-  React.useEffect(() => {
-    if (room) {
-      room.on(RoomEvent.TrackPublished, handleTrackPublished);
-      room.on(RoomEvent.TrackUnpublished, handleTrackUnpublished);
-      room.on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
-      room.on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
-      return () => {
-        room.off(RoomEvent.TrackPublished, handleTrackPublished);
-        room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);
-        room.off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
-        room.off(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
-      };
-    }
-    return () => {};
-  }, [
-    handleTrackPublished,
-    handleTrackUnpublished,
-    handleTrackUnsubscribed,
-    handleLocalTrackUnpublished,
-    room,
-  ]);
 
   const gridBoxStyle: React.CSSProperties = {
     background: 'black',

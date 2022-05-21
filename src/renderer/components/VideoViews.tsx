@@ -233,12 +233,7 @@ function VideoViews() {
           height={600}
           onClose={handleCloseVideoView}
         >
-          <MainVideoView
-            setUpScreenTrack={setUpScreenTrack}
-            takeDownScreenTrack={takeDownScreenTrack}
-            setIsPopout={setIsPopout}
-            videoItems={videoItems}
-          />
+          <MainVideoView setIsPopout={setIsPopout} videoItems={videoItems} />
         </WindowPortal>
       )}
       {popoutWindowNodes}

@@ -1,17 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import * as React from 'react';
-import {
-  RoomEvent,
-  LocalParticipant,
-  LocalTrackPublication,
-  Track,
-  RemoteTrackPublication,
-  RemoteParticipant,
-} from 'livekit-client';
+import { LocalTrackPublication, RemoteTrackPublication } from 'livekit-client';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import useRoom from '../hooks/useRoom';
 import VideoItem from './VideoItem';
 
 import { ChildWindowContext } from './WindowPortal';
@@ -30,22 +22,12 @@ export type VideoItemsObject = {
 };
 
 export interface MainVideoViewProps {
-  setUpScreenTrack: (
-    videoTrack: RemoteTrackPublication | LocalTrackPublication,
-    participant: RemoteParticipant | LocalParticipant
-  ) => void;
-  takeDownScreenTrack: (
-    videoTrack: RemoteTrackPublication | LocalTrackPublication,
-    participant: RemoteParticipant | LocalParticipant
-  ) => void;
   setIsPopout: (sid: string, isPopout: boolean) => void;
   videoItems: VideoItemsObject;
 }
 
 function MainVideoView(props: MainVideoViewProps) {
-  const { setUpScreenTrack, takeDownScreenTrack, setIsPopout, videoItems } =
-    props;
-  const { room } = useRoom();
+  const { setIsPopout, videoItems } = props;
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);

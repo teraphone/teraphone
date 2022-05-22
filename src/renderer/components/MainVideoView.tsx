@@ -48,7 +48,6 @@ function MainVideoView(props: MainVideoViewProps) {
   const handleVideoClickEvent = React.useCallback(
     (sid: string) =>
       (event: React.MouseEvent<HTMLVideoElement | HTMLElement>) => {
-        console.log('handleClickEvent', event);
         const target = event.target as HTMLVideoElement | HTMLElement;
         if (target.localName === 'video') {
           setFocus(sid);

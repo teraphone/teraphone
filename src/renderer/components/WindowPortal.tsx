@@ -33,7 +33,7 @@ function WindowPortal(props: {
   React.useEffect(() => {
     windowRef.current = window.open(
       'about:blank',
-      title,
+      id,
       `width=${width},height=${height}`
     );
 
@@ -44,10 +44,10 @@ function WindowPortal(props: {
         onClose();
       };
     }
-  }, [height, onClose, title, width]);
+  }, [height, onClose, id, width]);
 
   return ReactDom.createPortal(
-    <ChildWindowContext.Provider value={windowRef}>
+    <ChildWindowContext.Provider key={id} value={windowRef}>
       <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
     </ChildWindowContext.Provider>,
     containerRef.current,

@@ -15,8 +15,8 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   const { sid, videoItem, setIsPopout } = props;
   const { isLocal, userName, videoTrack } = videoItem;
   const title = isLocal
-    ? `Your Screen - T E R A P H O N E ${sid}`
-    : `${userName}'s Screen - T E R A P H O N E ${sid}`;
+    ? `Your Screen - T E R A P H O N E`
+    : `${userName}'s Screen - T E R A P H O N E`;
 
   const popoutStyle: React.CSSProperties = {
     background: 'black',

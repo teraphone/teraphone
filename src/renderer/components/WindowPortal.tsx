@@ -34,7 +34,7 @@ function WindowPortal(props: {
     windowRef.current = window.open(
       'about:blank',
       id,
-      `width=${width},height=${height}`
+      `width=${width},height=${height},title=${title}`
     );
 
     if (windowRef.current) {
@@ -44,7 +44,7 @@ function WindowPortal(props: {
         onClose();
       };
     }
-  }, [height, onClose, id, width]);
+  }, [height, onClose, id, width, title]);
 
   return ReactDom.createPortal(
     <ChildWindowContext.Provider key={id} value={windowRef}>

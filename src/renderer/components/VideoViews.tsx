@@ -154,10 +154,6 @@ function VideoViews() {
           const { trackName, track } = videoTrack;
           const sourceId = trackName.split('/')[1];
           if (!screens[sourceId] && !windows[sourceId] && track) {
-            setVideoItems((prev) => {
-              const { [sid]: removed, ...rest } = prev;
-              return rest;
-            });
             localParticipant.unpublishTrack(track, true);
           }
         });

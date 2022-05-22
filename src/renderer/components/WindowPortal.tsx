@@ -27,6 +27,7 @@ function WindowPortal(props: {
     console.log('WindowPortal Mounted', title);
     return () => {
       console.log('WindowPortal Unmounted', title);
+      windowRef?.current?.close();
     };
   }, [title]);
 
@@ -42,6 +43,7 @@ function WindowPortal(props: {
       windowRef.current.document.body.style.margin = '0';
       windowRef.current.onunload = () => {
         onClose();
+        windowRef?.current?.close();
       };
     }
   }, [height, onClose, id, width, title]);

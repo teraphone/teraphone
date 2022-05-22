@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import * as React from 'react';
-import { LocalTrackPublication, RemoteTrackPublication } from 'livekit-client';
+import {
+  LocalTrackPublication,
+  RemoteTrackPublication,
+  Track,
+} from 'livekit-client';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import VideoItem from './VideoItem';
-
+import VideoItemPlaceholder from './VideoItemPlaceholder';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
@@ -119,42 +123,53 @@ function MainVideoView(props: MainVideoViewProps) {
 
   const focusVideoItem = videoItems[focus];
 
-  const gridItems = Object.entries(videoItems)
-    .filter(([, videoItem]) => {
-      return !videoItem.isPopout;
-    })
-    .map(([sid, videoItem]) => {
-      const { userName, isPopout, isLocal, videoTrack } = videoItem;
-      const isFocusItem = focus === sid;
-      const sourceType = videoTrack.source;
-      return (
-        <Grid
-          item
-          key={sid}
-          hidden={isFocusView && !isFocusItem}
-          style={isFocusItem ? gridItemFocusStyle : {}}
+  const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
+    const { userName, isPopout, isLocal, videoTrack } = videoItem;
+    const isFocusItem = focus === sid;
+    const sourceType = videoTrack.source;
+    const isScreen = sourceType === Track.Source.ScreenShare;
+    const sourceNameLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
+    const sourceNameRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
+    const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
+    const placeholderMessage = `${sourceName} is playing in a popout window`;
+    return (
+      <Grid
+        item
+        key={sid}
+        hidden={isFocusView && !isFocusItem}
+        style={isFocusItem ? gridItemFocusStyle : {}}
+      >
+        <Box
+          style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
+          onClick={handleVideoClickEvent(sid)}
         >
-          <Box
-            style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
-            onClick={handleVideoClickEvent(sid)}
-          >
-            <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-            <VideoOverlay
-              sid={sid}
-              isFocusItem={isFocusItem}
-              userName={userName}
-              isPopout={isPopout}
-              isLocal={isLocal}
-              sourceType={sourceType}
-              hidden={isFocusView}
-              setFocus={setFocus}
-              setIsFocusView={setIsFocusView}
-              setIsPopout={setIsPopout}
+          {videoItem.isPopout ? (
+            <VideoItemPlaceholder
+              message={placeholderMessage}
+              buttonText="Restore"
+              buttonAction={() => setIsPopout(sid, false)}
             />
-          </Box>
-        </Grid>
-      );
-    });
+          ) : (
+            <>
+              <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+              <VideoOverlay
+                sid={sid}
+                isFocusItem={isFocusItem}
+                userName={userName}
+                isPopout={isPopout}
+                isLocal={isLocal}
+                sourceType={sourceType}
+                hidden={isFocusView}
+                setFocus={setFocus}
+                setIsFocusView={setIsFocusView}
+                setIsPopout={setIsPopout}
+              />
+            </>
+          )}
+        </Box>
+      </Grid>
+    );
+  });
 
   return (
     <Grid

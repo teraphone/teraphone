@@ -55,12 +55,15 @@ function VideoViews() {
       videoTrack: RemoteTrackPublication | LocalTrackPublication,
       participant: RemoteParticipant | LocalParticipant
     ) => {
+      const sid = videoTrack.trackSid;
+      if (videoItems[sid]) {
+        return;
+      }
       const userId = participant.identity;
       const user = groupInfo?.users.find(
         (groupUser) => groupUser.user_id === +userId
       );
       const userName = user?.name || 'Unknown';
-      const sid = videoTrack.trackSid;
       const isPopout = false;
       const isLocal = participant.sid === localParticipant?.sid;
       if (!isLocal && !videoTrack.isSubscribed) {
@@ -71,7 +74,7 @@ function VideoViews() {
         [sid]: { userName, isPopout, isLocal, videoTrack },
       }));
     },
-    [groupInfo?.users, localParticipant?.sid]
+    [groupInfo?.users, localParticipant?.sid, videoItems]
   );
 
   const takeDownScreenTrack = React.useCallback(
@@ -94,6 +97,23 @@ function VideoViews() {
     }));
   }, []);
 
+  const sourceIsPublished = React.useCallback(
+    (trySourceId: string) => {
+      let isPublished = false;
+      Object.entries(videoItems)
+        .filter(([, videoItem]) => videoItem.isLocal)
+        .forEach(([, videoItem]) => {
+          const { trackName } = videoItem.videoTrack;
+          const sourceId = trackName.split('/')[1];
+          if (sourceId === trySourceId) {
+            isPublished = true;
+          }
+        });
+      return isPublished;
+    },
+    [videoItems]
+  );
+
   React.useEffect(() => {
     // add remote video tracks to videoItems
     if (participants) {
@@ -113,17 +133,29 @@ function VideoViews() {
     if (room) {
       if (Object.keys(screens).length > 0) {
         Object.entries(screens).forEach(([sourceId, _]) => {
-          p.push(
-            startStream(room.localParticipant, appUser.id.toString(), sourceId)
-          );
+          if (!sourceIsPublished(sourceId)) {
+            p.push(
+              startStream(
+                room.localParticipant,
+                appUser.id.toString(),
+                sourceId
+              )
+            );
+          }
         });
       }
 
       if (Object.keys(windows).length > 0) {
         Object.entries(windows).forEach(([sourceId, _]) => {
-          p.push(
-            startStream(room.localParticipant, appUser.id.toString(), sourceId)
-          );
+          if (!sourceIsPublished(sourceId)) {
+            p.push(
+              startStream(
+                room.localParticipant,
+                appUser.id.toString(),
+                sourceId
+              )
+            );
+          }
         });
       }
     }
@@ -144,7 +176,15 @@ function VideoViews() {
         console.error(err);
         return false;
       });
-  }, [appUser.id, localParticipant, room, screens, setUpScreenTrack, windows]);
+  }, [
+    appUser.id,
+    localParticipant,
+    room,
+    screens,
+    setUpScreenTrack,
+    sourceIsPublished,
+    windows,
+  ]);
 
   React.useEffect(() => {
     // unpublish local video tracks

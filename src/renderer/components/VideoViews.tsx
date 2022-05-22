@@ -228,6 +228,7 @@ function VideoViews() {
       {videoViewWindowOpen && (
         <WindowPortal
           key="main-video-view"
+          id="main-video-view"
           title="Video - T E R A P H O N E"
           width={800}
           height={600}

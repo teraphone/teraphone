@@ -9,53 +9,49 @@ export const ChildWindowContext = React.createContext<
 >({ current: null });
 
 function WindowPortal(props: {
+  id: string;
   title: string;
   width: number;
   height: number;
   children: JSX.Element;
   onClose: () => void;
 }) {
-  const { title, width, height, children, onClose } = props;
+  const { id, title, width, height, children, onClose } = props;
   const containerRef = React.useRef(document.createElement('div'));
   const windowRef = React.useRef<Window | null>(null);
   const cacheRef = React.useRef(
     createCache({ key: 'external', container: containerRef.current })
   );
-  const [isMounted, setIsMounted] = React.useState(false);
 
   React.useEffect(() => {
-    setIsMounted(true);
-    console.log('WindowPortal Mounted');
+    console.log('WindowPortal Mounted', title);
     return () => {
-      setIsMounted(false);
-      console.log('WindowPortal Unmounted');
+      console.log('WindowPortal Unmounted', title);
     };
-  }, []);
+  }, [title]);
 
   React.useEffect(() => {
-    if (isMounted) {
-      windowRef.current = window.open(
-        'about:blank',
-        title,
-        `width=${width},height=${height}`
-      );
+    windowRef.current = window.open(
+      'about:blank',
+      title,
+      `width=${width},height=${height}`
+    );
 
-      if (windowRef.current) {
-        windowRef.current.document.body.appendChild(containerRef.current);
-        windowRef.current.document.body.style.margin = '0';
-        windowRef.current.onunload = () => {
-          onClose();
-        };
-      }
+    if (windowRef.current) {
+      windowRef.current.document.body.appendChild(containerRef.current);
+      windowRef.current.document.body.style.margin = '0';
+      windowRef.current.onunload = () => {
+        onClose();
+      };
     }
-  }, [containerRef, height, isMounted, onClose, title, width]);
+  }, [height, onClose, title, width]);
 
   return ReactDom.createPortal(
     <ChildWindowContext.Provider value={windowRef}>
       <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
     </ChildWindowContext.Provider>,
     containerRef.current,
-    title
+    id
   );
 }
 

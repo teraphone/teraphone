@@ -15,8 +15,8 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   const { sid, videoItem, setIsPopout } = props;
   const { isLocal, userName, videoTrack } = videoItem;
   const title = isLocal
-    ? `Your Screen - T E R A P H O N E`
-    : `${userName}'s Screen - T E R A P H O N E`;
+    ? `Your Screen - T E R A P H O N E ${sid}`
+    : `${userName}'s Screen - T E R A P H O N E ${sid}`;
 
   const popoutStyle: React.CSSProperties = {
     background: 'black',
@@ -31,15 +31,16 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   }, [setIsPopout, sid]);
 
   React.useEffect(() => {
-    console.log('PopoutVideoView Mounted', sid);
+    console.log('PopoutVideoView Mounted', videoItem);
     return () => {
-      console.log('PopoutVideoView Unmounted', sid);
+      console.log('PopoutVideoView Unmounted', videoItem);
     };
-  }, [sid]);
+  }, [videoItem]);
 
   return (
     <WindowPortal
       key={sid}
+      id={sid}
       title={title}
       width={800}
       height={600}

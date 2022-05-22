@@ -181,4 +181,4 @@ function VideoOverlay(props: VideoOverlayProps) {
   );
 }
 
-export default VideoOverlay;
+export default React.memo(VideoOverlay);

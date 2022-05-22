@@ -53,4 +53,4 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   );
 }
 
-export default PopoutVideoView;
+export default React.memo(PopoutVideoView);

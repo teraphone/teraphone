@@ -257,7 +257,7 @@ function VideoViews() {
   );
 }
 
-export default VideoViews;
+export default React.memo(VideoViews);
 
 // Todo:
 // - (bug) adding/removing a screen will break existing popout windows

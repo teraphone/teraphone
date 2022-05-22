@@ -1,7 +1,7 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export interface VideoItemPlaceholderProps {
   message: string;
@@ -9,24 +9,45 @@ export interface VideoItemPlaceholderProps {
   buttonAction: () => void | undefined;
 }
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#fff',
+    },
+  },
+});
+
 function VideoItemPlaceholder(props: VideoItemPlaceholderProps) {
   const { message, buttonText, buttonAction } = props;
   return (
-    <Box>
-      <Typography
+    <ThemeProvider theme={theme}>
+      <Box
         sx={{
-          color: 'white',
+          textAlign: 'center',
+          pt: '30%',
         }}
-        variant="body1"
       >
-        {message}
-      </Typography>
-      {buttonText && (
-        <Button variant="outlined" onClick={buttonAction}>
-          {buttonText}
-        </Button>
-      )}
-    </Box>
+        <Typography
+          sx={{
+            color: 'white',
+          }}
+          variant="body1"
+        >
+          {message}
+        </Typography>
+        {buttonText && (
+          <Button
+            sx={{
+              mt: '20',
+            }}
+            variant="outlined"
+            onClick={buttonAction}
+          >
+            {buttonText}
+          </Button>
+        )}
+      </Box>
+    </ThemeProvider>
   );
 }
 

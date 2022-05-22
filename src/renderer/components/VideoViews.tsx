@@ -146,6 +146,25 @@ function VideoViews() {
       });
   }, [appUser.id, localParticipant, room, screens, setUpScreenTrack, windows]);
 
+  React.useEffect(() => {
+    // unpublish local video tracks
+    if (localParticipant) {
+      if (localParticipant.videoTracks) {
+        localParticipant.videoTracks.forEach((videoTrack, sid) => {
+          const { trackName, track } = videoTrack;
+          const sourceId = trackName.split('/')[1];
+          if (!screens[sourceId] && !windows[sourceId] && track) {
+            setVideoItems((prev) => {
+              const { [sid]: removed, ...rest } = prev;
+              return rest;
+            });
+            localParticipant.unpublishTrack(track, true);
+          }
+        });
+      }
+    }
+  }, [localParticipant, screens, windows]);
+
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
       if (track.kind === 'video') {
@@ -243,3 +262,6 @@ function VideoViews() {
 }
 
 export default VideoViews;
+
+// Todo:
+// - (bug) adding/removing a screen will break existing popout windows

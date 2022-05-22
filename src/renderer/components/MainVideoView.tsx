@@ -49,6 +49,13 @@ function MainVideoView(props: MainVideoViewProps) {
     targetDoc: windowRef?.current?.document,
   });
 
+  React.useEffect(() => {
+    if (focus !== '' && !videoItems[focus]) {
+      setIsFocusView(false);
+      setFocus('');
+    }
+  }, [focus, videoItems]);
+
   const handleVideoClickEvent = React.useCallback(
     (sid: string) =>
       (event: React.MouseEvent<HTMLVideoElement | HTMLElement>) => {
@@ -125,50 +132,55 @@ function MainVideoView(props: MainVideoViewProps) {
 
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userName, isPopout, isLocal, videoTrack } = videoItem;
-    const isFocusItem = focus === sid;
-    const sourceType = videoTrack.source;
-    const isScreen = sourceType === Track.Source.ScreenShare;
-    const sourceNameLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
-    const sourceNameRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
-    const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
-    const placeholderMessage = `${sourceName} is playing in a popout window`;
-    return (
-      <Grid
-        item
-        key={sid}
-        hidden={isFocusView && !isFocusItem}
-        style={isFocusItem ? gridItemFocusStyle : {}}
-      >
-        <Box
-          style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
-          onClick={handleVideoClickEvent(sid)}
+    if (videoTrack) {
+      const isFocusItem = focus === sid;
+      const sourceType = videoTrack.source;
+      const isScreen = sourceType === Track.Source.ScreenShare;
+      const sourceNameLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
+      const sourceNameRemote = `${userName}'s ${
+        isScreen ? 'Screen' : 'Camera'
+      }`;
+      const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
+      const placeholderMessage = `${sourceName} is playing in a popout window`;
+      return (
+        <Grid
+          item
+          key={sid}
+          hidden={isFocusView && !isFocusItem}
+          style={isFocusItem ? gridItemFocusStyle : {}}
         >
-          {videoItem.isPopout ? (
-            <VideoItemPlaceholder
-              message={placeholderMessage}
-              buttonText="Restore"
-              buttonAction={() => setIsPopout(sid, false)}
-            />
-          ) : (
-            <>
-              <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-              <VideoOverlay
-                sid={sid}
-                isFocusItem={isFocusItem}
-                userName={userName}
-                isPopout={isPopout}
-                isLocal={isLocal}
-                sourceType={sourceType}
-                hidden={isFocusView}
-                setFocus={setFocus}
-                setIsFocusView={setIsFocusView}
-                setIsPopout={setIsPopout}
+          <Box
+            style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
+            onClick={handleVideoClickEvent(sid)}
+          >
+            {videoItem.isPopout ? (
+              <VideoItemPlaceholder
+                message={placeholderMessage}
+                buttonText="Restore"
+                buttonAction={() => setIsPopout(sid, false)}
               />
-            </>
-          )}
-        </Box>
-      </Grid>
-    );
+            ) : (
+              <>
+                <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+                <VideoOverlay
+                  sid={sid}
+                  isFocusItem={isFocusItem}
+                  userName={userName}
+                  isPopout={isPopout}
+                  isLocal={isLocal}
+                  sourceType={sourceType}
+                  hidden={isFocusView}
+                  setFocus={setFocus}
+                  setIsFocusView={setIsFocusView}
+                  setIsPopout={setIsPopout}
+                />
+              </>
+            )}
+          </Box>
+        </Grid>
+      );
+    }
+    return null;
   });
 
   return (

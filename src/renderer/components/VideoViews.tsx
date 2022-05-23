@@ -300,4 +300,4 @@ function VideoViews() {
 export default React.memo(VideoViews);
 
 // Todo:
-// - (bug) adding/removing a screen will break existing popout windows
+// - display message and "close" button in MainVideoView when no video is published

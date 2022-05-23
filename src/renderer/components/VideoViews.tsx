@@ -8,6 +8,7 @@ import {
   RemoteParticipant,
   Track,
   RoomEvent,
+  RoomState,
 } from 'livekit-client';
 import useRoom from '../hooks/useRoom';
 import WindowPortal from './WindowPortal';
@@ -17,7 +18,12 @@ import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
 import { selectGroup } from '../redux/WorldSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import { selectScreens, selectWindows } from '../redux/ScreenShareSlice';
+import {
+  selectScreens,
+  selectWindows,
+  setScreens,
+  setWindows,
+} from '../redux/ScreenShareSlice';
 import { startStream } from '../lib/ExtendedLocalParticipant';
 import PopoutVideoView from './PopoutVideoView';
 
@@ -130,7 +136,7 @@ function VideoViews() {
   React.useEffect(() => {
     // add local video tracks to videoItems
     const p: Array<Promise<void>> = [];
-    if (room) {
+    if (room?.state === RoomState.Connected) {
       if (Object.keys(screens).length > 0) {
         Object.entries(screens).forEach(([sourceId, _]) => {
           if (!sourceIsPublished(sourceId)) {
@@ -243,17 +249,26 @@ function VideoViews() {
     [takeDownScreenTrack]
   );
 
+  const handleDisconnected = React.useCallback(() => {
+    console.log(RoomEvent.Disconnected);
+    dispatch(setScreens({}));
+    dispatch(setWindows({}));
+    dispatch(setWindowOpen(false));
+  }, [dispatch]);
+
   React.useEffect(() => {
     if (room) {
       room.on(RoomEvent.TrackPublished, handleTrackPublished);
       room.on(RoomEvent.TrackUnpublished, handleTrackUnpublished);
       room.on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
       room.on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+      room.on(RoomEvent.Disconnected, handleDisconnected);
       return () => {
         room.off(RoomEvent.TrackPublished, handleTrackPublished);
         room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);
         room.off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
         room.off(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+        room.off(RoomEvent.Disconnected, handleDisconnected);
       };
     }
     return () => {};
@@ -262,6 +277,7 @@ function VideoViews() {
     handleTrackUnpublished,
     handleTrackUnsubscribed,
     handleLocalTrackUnpublished,
+    handleDisconnected,
     room,
   ]);
 
@@ -303,4 +319,3 @@ export default React.memo(VideoViews);
 // - display message and "close" button in MainVideoView when no video is published
 // - (bug) when a remote participant publishes a video, the video in the MainVideoView
 //   does not play properly.
-// - (bug) when disconnecting the app attempts to re-publish shared screens???

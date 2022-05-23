@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-console */
 import * as React from 'react';
-import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import { Stack, Tab, Typography } from '@mui/material';
+import { Tab, Typography } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
@@ -24,7 +21,6 @@ import {
   selectPickerVisible,
   ScreenSource,
 } from '../redux/ScreenShareSlice';
-import useRoom from '../hooks/useRoom';
 import { SerializedDesktopCapturerSource } from '../global';
 import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
 
@@ -37,18 +33,22 @@ function validDataURL(dataURL: string | null) {
 
 function ScreenPickerItem(props: {
   source: SerializedDesktopCapturerSource;
-  selectedSources: ScreenSource;
-  changeCallback: (checked: boolean) => void;
+  selected: ScreenSource;
+  setSelected: React.Dispatch<React.SetStateAction<ScreenSource>>;
 }) {
-  const { source, selectedSources, changeCallback } = props;
-  const {
-    id,
-    name,
-    thumbnailDataURL,
-    display_id: displayId,
-    appIconDataURL,
-  } = source;
-  const checked = !!selectedSources[id];
+  const { source, selected, setSelected } = props;
+  const { id, name, thumbnailDataURL } = source;
+  const checked = !!selected[id];
+
+  const toggleSelected = React.useCallback(() => {
+    setSelected((prev) => {
+      const { [id]: target, ...rest } = { ...prev };
+      if (target) {
+        return rest;
+      }
+      return { ...prev, [id]: true };
+    });
+  }, [id, setSelected]);
 
   return (
     <ImageListItem key={id}>
@@ -70,9 +70,7 @@ function ScreenPickerItem(props: {
             display: 'flex',
             justifyContent: 'center',
           }}
-          onClick={() => {
-            changeCallback(!checked);
-          }}
+          onClick={toggleSelected}
         >
           <img
             src={thumbnailDataURL}
@@ -110,92 +108,98 @@ function ScreenPickerTabPanel(props: {
 
 function ScreenPickerDialog() {
   const dispatch = useAppDispatch();
-  const { room } = useRoom();
+
+  // global state
+  const screens = useAppSelector(selectScreens);
+  const windows = useAppSelector(selectWindows);
+  const pickerVisible = useAppSelector(selectPickerVisible);
+  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
+
+  // local state
+  const [selectedScreens, setSelectedScreens] =
+    React.useState<ScreenSource>(screens);
+  const [selectedWindows, setSelectedWindows] =
+    React.useState<ScreenSource>(windows);
   const [screenSources, setScreenSources] = React.useState<
     SerializedDesktopCapturerSource[]
   >([]);
   const [windowSources, setwindowSources] = React.useState<
     SerializedDesktopCapturerSource[]
   >([]);
-  const activeScreens = useAppSelector(selectScreens);
-  const activeWindows = useAppSelector(selectWindows);
-
-  // initialize the selected screens/windows from global state
-  const [selectedScreenSources, setSelectedScreenSources] =
-    React.useState<ScreenSource>(activeScreens);
-  const [selectedWindowSources, setSelectedWindowSources] =
-    React.useState<ScreenSource>(activeWindows);
-  const pickerVisible = useAppSelector(selectPickerVisible);
-
   const [tabId, setTabId] = React.useState('tab1');
-
   const [intervalId, setIntervalId] = React.useState<number | null>(null);
 
-  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
-
-  const handleDialogClose = () => {
+  const handleDialogClose = React.useCallback(() => {
     dispatch(setPickerVisible(false));
-    setSelectedScreenSources(activeScreens);
-    setSelectedWindowSources(activeWindows);
-  };
+    setSelectedScreens(screens);
+    setSelectedWindows(windows);
+  }, [dispatch, screens, windows]);
 
-  const handleClearAll = () => {
-    setSelectedScreenSources({});
-    setSelectedWindowSources({});
-  };
+  const handleClearAll = React.useCallback(() => {
+    setSelectedScreens({});
+    setSelectedWindows({});
+  }, []);
 
-  const handleSubmit = () => {
-    console.log('handleSubmit');
-    console.log('selectedScreenSources', selectedScreenSources);
-    console.log('selectedWindowSources', selectedWindowSources);
+  const handleSubmit = React.useCallback(() => {
+    console.log('ScreenPickerDialog.handleSubmit');
+    console.log('selectedScreens', selectedScreens);
+    console.log('selectedWindows', selectedWindows);
     dispatch(setPickerVisible(false));
-    dispatch(setScreens(selectedScreenSources));
-    dispatch(setWindows(selectedWindowSources));
+    dispatch(setScreens(selectedScreens));
+    dispatch(setWindows(selectedWindows));
     if (!videoViewWindowOpen) {
       if (
-        Object.keys(selectedWindowSources).length > 0 ||
-        Object.keys(selectedScreenSources).length > 0
+        Object.keys(selectedScreens).length > 0 ||
+        Object.keys(selectedWindows).length > 0
       ) {
         dispatch(setWindowOpen(true));
       }
     }
-  };
+  }, [dispatch, selectedScreens, selectedWindows, videoViewWindowOpen]);
 
-  const handleTabChange = (_event: React.SyntheticEvent, id: string) => {
-    setTabId(id);
-  };
+  const handleTabChange = React.useCallback(
+    (_event: React.SyntheticEvent, id: string) => {
+      setTabId(id);
+    },
+    []
+  );
 
-  const getDisplaySources = async () => {
+  const getDisplaySources = React.useCallback(async () => {
     console.log('getDisplaySources');
     const thumbWidth = 150;
     const thumbHeight = 150;
-    if (screenSources) {
-      const screens = await window.electron.ipcRenderer.queryScreens({
+
+    setScreenSources(
+      await window.electron.ipcRenderer.queryScreens({
         thumbnailSize: {
           width: thumbWidth,
           height: thumbHeight,
         },
         types: ['screen'],
-      });
-      setScreenSources(screens);
-    }
-    if (windowSources) {
-      const windows = await window.electron.ipcRenderer.queryScreens({
+      })
+    );
+
+    setwindowSources(
+      await window.electron.ipcRenderer.queryScreens({
         thumbnailSize: {
           width: thumbWidth,
           height: thumbHeight,
         },
         types: ['window'],
         fetchWindowIcons: true,
-      });
-      setwindowSources(windows);
-    }
-  };
+      })
+    );
+  }, []);
 
   React.useEffect(() => {
     console.log('ScreenPickerDialog Mounted');
     return () => console.log('ScreenPickerDialog Unmounted');
   }, []);
+
+  React.useEffect(() => {
+    setSelectedScreens(screens);
+    setSelectedWindows(windows);
+  }, [screens, windows]);
 
   React.useEffect(() => {
     if (pickerVisible) {
@@ -210,30 +214,9 @@ function ScreenPickerDialog() {
         window.clearInterval(intervalId);
       }
     };
-
     // array-valued dependencies cause infinite loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pickerVisible]);
-
-  const setSelectedWindowsCallback = (id: string) => (checked: boolean) => {
-    console.log('setSelectedWindowsCallback', id, checked);
-    if (checked) {
-      setSelectedWindowSources({ ...selectedWindowSources, [id]: true });
-    } else {
-      const { [id]: _, ...remaining } = selectedWindowSources;
-      setSelectedWindowSources(remaining);
-    }
-  };
-
-  const setSelectedScreensCallback = (id: string) => (checked: boolean) => {
-    console.log('setSelectedScreensCallback', id, checked);
-    if (checked) {
-      setSelectedScreenSources({ ...selectedScreenSources, [id]: true });
-    } else {
-      const { [id]: _, ...remaining } = selectedScreenSources;
-      setSelectedScreenSources(remaining);
-    }
-  };
 
   let windowThumbs: React.ReactNode[] = [];
   if (windowSources.length > 0) {
@@ -243,10 +226,10 @@ function ScreenPickerDialog() {
         if (validDataURL(source.thumbnailDataURL)) {
           return (
             <ScreenPickerItem
-              source={source}
               key={source.id}
-              selectedSources={selectedWindowSources}
-              changeCallback={setSelectedWindowsCallback(source.id)}
+              source={source}
+              selected={selectedWindows}
+              setSelected={setSelectedWindows}
             />
           );
         }
@@ -262,10 +245,10 @@ function ScreenPickerDialog() {
         if (validDataURL(source.thumbnailDataURL)) {
           return (
             <ScreenPickerItem
-              source={source}
               key={source.id}
-              selectedSources={selectedScreenSources}
-              changeCallback={setSelectedScreensCallback(source.id)}
+              source={source}
+              selected={selectedScreens}
+              setSelected={setSelectedScreens}
             />
           );
         }

@@ -6,6 +6,9 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
 import { remove, update, child, ref } from 'firebase/database';
 import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -165,6 +168,29 @@ function GroupRoom(props: {
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.name} />
+        {/* todo: OndemandVideoIcon goes here */}
+        {thisRoom && (
+          <Tooltip title="Open Video Window" placement="top" arrow>
+            <IconButton
+              sx={{
+                p: 0,
+              }}
+              size="small"
+              aria-label="open video window"
+              component="span"
+              onClick={() => {
+                console.log('clicked Open Video Window');
+              }}
+            >
+              <OndemandVideoIcon
+                sx={{
+                  color: 'black',
+                }}
+                fontSize="small"
+              />
+            </IconButton>
+          </Tooltip>
+        )}
       </ListItemButton>
       {thisRoom ? (
         <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />

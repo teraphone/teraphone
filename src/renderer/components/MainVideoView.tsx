@@ -209,4 +209,4 @@ function MainVideoView(props: MainVideoViewProps) {
   );
 }
 
-export default React.memo(MainVideoView);
+export default MainVideoView;

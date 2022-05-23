@@ -57,4 +57,4 @@ function WindowPortal(props: {
   );
 }
 
-export default React.memo(WindowPortal);
+export default WindowPortal;

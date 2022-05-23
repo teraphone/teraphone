@@ -52,4 +52,4 @@ function VideoItemPlaceholder(props: VideoItemPlaceholderProps) {
   );
 }
 
-export default React.memo(VideoItemPlaceholder);
+export default VideoItemPlaceholder;

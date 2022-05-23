@@ -72,4 +72,4 @@ const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
   );
 };
 
-export default React.memo(VideoItem);
+export default VideoItem;

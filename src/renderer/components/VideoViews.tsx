@@ -313,9 +313,7 @@ function VideoViews() {
   );
 }
 
-export default React.memo(VideoViews);
+export default VideoViews;
 
 // Todo:
 // - display message and "close" button in MainVideoView when no video is published
-// - (bug) when a remote participant publishes a video, the video in the MainVideoView
-//   does not play properly.

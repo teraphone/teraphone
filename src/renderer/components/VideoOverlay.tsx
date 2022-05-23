@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Track } from 'livekit-client';
-import OpenInFullIcon from '@mui/icons-material/OpenInFull'; // focus
+import FitScreenIcon from '@mui/icons-material/FitScreen'; // focus
 import GridViewIcon from '@mui/icons-material/GridView'; // grid
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'; // popout
 import IconButton from '@mui/material/IconButton';
@@ -72,7 +72,7 @@ function VideoOverlay(props: VideoOverlayProps) {
             component="span"
             onClick={handleFocusClick}
           >
-            <OpenInFullIcon fontSize="small" />
+            <FitScreenIcon fontSize="small" />
           </IconButton>
         </Tooltip>
       </ThemeProvider>
@@ -123,7 +123,7 @@ function VideoOverlay(props: VideoOverlayProps) {
           top: 0,
           zIndex: 1,
           width: '100%',
-          height: '20%',
+          height: '10%',
           background:
             'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
         }}
@@ -161,7 +161,7 @@ function VideoOverlay(props: VideoOverlayProps) {
           bottom: 0,
           zIndex: 1,
           width: '100%',
-          height: '20%',
+          height: '10%',
           background:
             'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
         }}

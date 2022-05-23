@@ -190,7 +190,7 @@ function VideoViews() {
     // unpublish local video tracks
     if (localParticipant) {
       if (localParticipant.videoTracks) {
-        localParticipant.videoTracks.forEach((videoTrack, sid) => {
+        localParticipant.videoTracks.forEach((videoTrack) => {
           const { trackName, track } = videoTrack;
           const sourceId = trackName.split('/')[1];
           if (!screens[sourceId] && !windows[sourceId] && track) {

@@ -39,7 +39,6 @@ const useHideOnMouseStop = ({
   const onMouseEnter = React.useCallback(
     (event: React.MouseEvent) => {
       if (event.type === 'mouseenter' && targetDoc.hasFocus()) {
-        console.log('onMouseEnter', 'hide', hide);
         if (hide) {
           setVisibility(true, 'default');
         }
@@ -51,7 +50,6 @@ const useHideOnMouseStop = ({
   const onMouseLeave = React.useCallback(
     (event: React.MouseEvent) => {
       if (event.type === 'mouseleave' && targetDoc.hasFocus()) {
-        console.log('onMouseLeave', 'hide', hide);
         clearTimeout(timer);
 
         timer = setTimeout(() => {
@@ -59,13 +57,12 @@ const useHideOnMouseStop = ({
         }, delay / 6);
       }
     },
-    [delay, hide, setVisibility, targetDoc]
+    [delay, setVisibility, targetDoc]
   );
 
   const onMouseMove = React.useCallback(
     (event: React.MouseEvent) => {
       if (event.type === 'mousemove' && targetDoc.hasFocus()) {
-        console.log('onMouseMove', 'hide', hide);
         clearTimeout(timer);
 
         if (hide) {

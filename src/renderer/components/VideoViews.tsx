@@ -19,6 +19,7 @@ import { selectGroup } from '../redux/WorldSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import {
+  ScreenSource,
   selectScreens,
   selectWindows,
   setScreens,
@@ -94,6 +95,19 @@ function VideoViews() {
       });
     },
     []
+  );
+
+  const unShareScreen = React.useCallback(
+    (sourceId: string) => {
+      if (screens[sourceId]) {
+        const { [sourceId]: removed, ...rest } = screens;
+        dispatch(setScreens(rest));
+      } else if (windows[sourceId]) {
+        const { [sourceId]: removed, ...rest } = windows;
+        dispatch(setWindows(rest));
+      }
+    },
+    [dispatch, screens, windows]
   );
 
   const setIsPopout = React.useCallback((sid: string, isPopout: boolean) => {
@@ -243,10 +257,13 @@ function VideoViews() {
     (track: LocalTrackPublication, participant: LocalParticipant) => {
       console.log(RoomEvent.LocalTrackUnpublished, track, participant);
       if (track.kind === 'video') {
+        const { trackName } = track;
+        const sourceId = trackName.split('/')[1];
+        unShareScreen(sourceId);
         takeDownScreenTrack(track, participant);
       }
     },
-    [takeDownScreenTrack]
+    [takeDownScreenTrack, unShareScreen]
   );
 
   const handleDisconnected = React.useCallback(() => {
@@ -317,4 +334,3 @@ export default VideoViews;
 
 // Todo:
 // - display message and "close" button in MainVideoView when no video is published
-// - (bug) closing a window that you're sharing will break the app.

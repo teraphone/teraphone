@@ -8,7 +8,8 @@ import { remove, update, child, ref } from 'firebase/database';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation'; // close video window
+import SmartDisplayIcon from '@mui/icons-material/SmartDisplay'; // open video window
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -22,7 +23,7 @@ import { selectAppUser } from '../redux/AppUserSlice';
 import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
-import { setWindowOpen } from '../redux/VideoViewSlice';
+import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
 import { selectIsSharing } from '../redux/ScreenShareSlice';
 
 function GroupRoom(props: {
@@ -47,6 +48,7 @@ function GroupRoom(props: {
   const thisRoom =
     currentRoom.roomId === roomInfo.room.id &&
     connectionStatus === ConnectionStatus.Connected;
+  const isVideoWindowOpen = useAppSelector(selectWindowOpen);
 
   React.useEffect(() => {
     console.log('GroupRoom', roomInfo.room.name, 'Mounted');
@@ -179,29 +181,52 @@ function GroupRoom(props: {
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.name} />
         {/* todo: OndemandVideoIcon goes here */}
-        {thisRoom && (
-          <Tooltip title="Open Video Streams" placement="top" arrow>
-            <IconButton
-              sx={{
-                p: 0,
-              }}
-              size="small"
-              aria-label="open video streams"
-              component="span"
-              onClick={() => {
-                console.log('clicked Open Video Streams');
-                dispatch(setWindowOpen(true));
-              }}
-            >
-              <OndemandVideoIcon
+        {thisRoom &&
+          (!isVideoWindowOpen ? (
+            <Tooltip title="Open Video Window" placement="top" arrow>
+              <IconButton
                 sx={{
-                  color: 'black',
+                  p: 0,
                 }}
-                fontSize="small"
-              />
-            </IconButton>
-          </Tooltip>
-        )}
+                size="small"
+                aria-label="open video window"
+                component="span"
+                onClick={() => {
+                  console.log('clicked Open Video Window');
+                  dispatch(setWindowOpen(true));
+                }}
+              >
+                <SmartDisplayIcon
+                  sx={{
+                    color: 'black',
+                  }}
+                  fontSize="small"
+                />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Close Video Window" placement="top" arrow>
+              <IconButton
+                sx={{
+                  p: 0,
+                }}
+                size="small"
+                aria-label="close video window"
+                component="span"
+                onClick={() => {
+                  console.log('clicked close Video Window');
+                  dispatch(setWindowOpen(false));
+                }}
+              >
+                <CancelPresentationIcon
+                  sx={{
+                    color: 'black',
+                  }}
+                  fontSize="small"
+                />
+              </IconButton>
+            </Tooltip>
+          ))}
       </ListItemButton>
       {thisRoom ? (
         <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />

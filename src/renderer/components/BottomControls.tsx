@@ -22,7 +22,7 @@ function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
-  const debug = true;
+  const debug = false;
 
   const MuteButton = () => {
     if (mute) {

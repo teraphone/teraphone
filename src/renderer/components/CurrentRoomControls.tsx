@@ -36,7 +36,7 @@ function CurentRoomControls() {
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
   );
-  const debug = true;
+  const debug = false;
 
   const StatusConnected = () => {
     return (

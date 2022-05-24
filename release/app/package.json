@@ -1,7 +1,7 @@
 {
   "name": "teraphone",
-  "version": "0.1.4",
-  "description": "Voice chat for remote teams.",
+  "version": "0.1.5",
+  "description": "Voice chat and screen sharing for remote teams.",
   "main": "./dist/main/main.js",
   "author": {
     "name": "T E R A P H O N E",

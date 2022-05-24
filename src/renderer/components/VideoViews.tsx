@@ -318,8 +318,8 @@ function VideoViews() {
           key="main-video-view"
           id="main-video-view"
           title="Video Streams - T E R A P H O N E"
-          width={800}
-          height={600}
+          width={575}
+          height={475}
           onClose={handleCloseVideoView}
         >
           <MainVideoView setIsPopout={setIsPopout} videoItems={videoItems} />

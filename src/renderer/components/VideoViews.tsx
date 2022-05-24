@@ -213,12 +213,13 @@ function VideoViews() {
           const { trackName, track } = videoTrack;
           const sourceId = trackName.split('/')[1];
           if (!screens[sourceId] && !windows[sourceId] && track) {
+            takeDownScreenTrack(videoTrack, localParticipant);
             localParticipant.unpublishTrack(track, true);
           }
         });
       }
     }
-  }, [localParticipant, screens, windows]);
+  }, [localParticipant, screens, takeDownScreenTrack, windows]);
 
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {

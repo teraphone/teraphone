@@ -22,6 +22,8 @@ import { selectAppUser } from '../redux/AppUserSlice';
 import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
+import { setWindowOpen } from '../redux/VideoViewSlice';
+import { selectIsSharing } from '../redux/ScreenShareSlice';
 
 function GroupRoom(props: {
   groupInfo: models.GroupInfo;
@@ -41,6 +43,10 @@ function GroupRoom(props: {
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
   const dispatch = useAppDispatch();
+  const isScreenSharing = useAppSelector(selectIsSharing);
+  const thisRoom =
+    currentRoom.roomId === roomInfo.room.id &&
+    connectionStatus === ConnectionStatus.Connected;
 
   React.useEffect(() => {
     console.log('GroupRoom', roomInfo.room.name, 'Mounted');
@@ -49,18 +55,25 @@ function GroupRoom(props: {
   }, []);
 
   const pushUserRTInfo = React.useCallback(
-    (isMuted: boolean, isDeafened: boolean) => {
+    (isMuted: boolean, isDeafened: boolean, isScreenShare: boolean) => {
       const nodeRef = child(roomRTRef, `${appUser.id}`);
-      console.log('pushing RT node:', nodeRef);
-      update(nodeRef, {
+      const info = {
         isMuted,
         isDeafened,
         isCameraShare: false,
-        isScreenShare: false,
-      });
+        isScreenShare,
+      };
+      console.log('pushing RT node:', nodeRef, info);
+      update(nodeRef, info);
     },
     [appUser.id, roomRTRef]
   );
+
+  React.useEffect(() => {
+    if (thisRoom) {
+      pushUserRTInfo(mute, deafen, isScreenSharing);
+    }
+  }, [deafen, isScreenSharing, mute, pushUserRTInfo, thisRoom]);
 
   const removeUserRTInfo = React.useCallback(() => {
     const nodeRef = ref(
@@ -94,7 +107,7 @@ function GroupRoom(props: {
       .then((livekitRoom) => {
         console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
         if (livekitRoom) {
-          pushUserRTInfo(mute, deafen);
+          pushUserRTInfo(mute, deafen, isScreenSharing);
         }
         livekitRoom?.localParticipant.setMicrophoneEnabled(true);
         return true;
@@ -113,6 +126,7 @@ function GroupRoom(props: {
     roomInfo.room.id,
     roomInfo.room.name,
     roomInfo.token,
+    isScreenSharing,
   ]);
 
   const handleClick = React.useCallback(() => {
@@ -152,10 +166,6 @@ function GroupRoom(props: {
     roomInfo,
   ]);
 
-  const thisRoom =
-    currentRoom.roomId === roomInfo.room.id &&
-    connectionStatus === ConnectionStatus.Connected;
-
   return (
     <>
       <ListItemButton
@@ -180,6 +190,7 @@ function GroupRoom(props: {
               component="span"
               onClick={() => {
                 console.log('clicked Open Video Window');
+                dispatch(setWindowOpen(true));
               }}
             >
               <OndemandVideoIcon

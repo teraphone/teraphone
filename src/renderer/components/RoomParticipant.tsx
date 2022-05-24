@@ -12,6 +12,7 @@ import {
 import { useParticipant, ParticipantState } from 'livekit-react';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
+import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import * as models from '../models/models';
 import AudioRenderer from './AudioRenderer';
 import { useAppSelector } from '../redux/hooks';
@@ -22,8 +23,9 @@ function RoomParticipant(props: {
   participant: Participant;
   isMuted: boolean;
   isDeafened: boolean;
+  isScreenShare: boolean;
 }) {
-  const { userinfo, participant, isMuted, isDeafened } = props;
+  const { userinfo, participant, isMuted, isDeafened, isScreenShare } = props;
   const { name } = userinfo;
 
   React.useEffect(() => {
@@ -65,6 +67,7 @@ function RoomParticipant(props: {
       {!deafen && track && (
         <AudioRenderer track={track} isLocal={isLocal} volume={0.5} />
       )}
+
       {isMuted && (
         <MicOffIcon
           sx={{
@@ -73,8 +76,18 @@ function RoomParticipant(props: {
           }}
         />
       )}
+
       {isDeafened && (
         <HeadsetOffIcon
+          sx={{
+            width: 16,
+            height: 16,
+          }}
+        />
+      )}
+
+      {isScreenShare && (
+        <ScreenShareIcon
           sx={{
             width: 16,
             height: 16,

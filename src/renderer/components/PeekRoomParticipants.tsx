@@ -35,13 +35,14 @@ function PeakRoomParticipants(props: {
         })
       );
     }
-    const { isMuted, isDeafened } = participantRTInfo;
+    const { isMuted, isDeafened, isScreenShare } = participantRTInfo;
     roomParticipants.push(
       <PeekRoomParticipant
         key={userId}
         userinfo={userInfo}
         isMuted={isMuted}
         isDeafened={isDeafened}
+        isScreenShare={isScreenShare}
       />
     );
     return true;

@@ -9,50 +9,20 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import { update, ref } from 'firebase/database';
 import * as React from 'react';
-import useFirebase from '../hooks/useFirebase';
-import {
-  ConnectionStatus,
-  selectConnectionStatus,
-} from '../redux/ConnectionStatusSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { selectAppUser } from '../redux/AppUserSlice';
 import {
   selectMute,
   selectDeafen,
   toggleMute,
   toggleDeafen,
 } from '../redux/MuteSlice';
-import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 
 function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
-  const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { database } = useFirebase();
-  const { appUser } = useAppSelector(selectAppUser);
-  const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const debug = true;
-
-  const pushUserRTInfoIfConnected = (isMuted: boolean, isDeafened: boolean) => {
-    const nodeRef = ref(
-      database,
-      `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
-    );
-    if (connectionStatus === ConnectionStatus.Connected) {
-      console.log('pushing RT node:', nodeRef);
-      update(nodeRef, {
-        isMuted,
-        isDeafened,
-        isCameraShare: false,
-        isScreenShare: false,
-      });
-    } else {
-      console.log('skip pushing RT node:', nodeRef);
-    }
-  };
 
   const MuteButton = () => {
     if (mute) {
@@ -63,7 +33,6 @@ function BottomControls() {
             aria-label="unmute"
             component="span"
             onClick={() => {
-              pushUserRTInfoIfConnected(!mute, deafen);
               dispatch(toggleMute());
             }}
           >
@@ -79,7 +48,6 @@ function BottomControls() {
           aria-label="mute"
           component="span"
           onClick={() => {
-            pushUserRTInfoIfConnected(!mute, deafen);
             dispatch(toggleMute());
           }}
         >
@@ -98,7 +66,6 @@ function BottomControls() {
             aria-label="undeafen"
             component="span"
             onClick={() => {
-              pushUserRTInfoIfConnected(mute, !deafen);
               dispatch(toggleDeafen());
             }}
           >
@@ -114,7 +81,6 @@ function BottomControls() {
           aria-label="deafen"
           component="span"
           onClick={() => {
-            pushUserRTInfoIfConnected(mute, !deafen);
             dispatch(toggleDeafen());
           }}
         >

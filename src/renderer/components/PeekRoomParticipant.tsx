@@ -6,14 +6,16 @@ import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
+import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import * as models from '../models/models';
 
 function PeekRoomParticipant(props: {
   userinfo: models.GroupUserInfo;
   isMuted: boolean;
   isDeafened: boolean;
+  isScreenShare: boolean;
 }) {
-  const { userinfo, isMuted, isDeafened } = props;
+  const { userinfo, isMuted, isDeafened, isScreenShare } = props;
   const { name } = userinfo;
 
   return (
@@ -22,6 +24,7 @@ function PeekRoomParticipant(props: {
         <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>{name[0]}</Avatar>
       </ListItemIcon>
       <ListItemText primary={name} />
+
       {isMuted && (
         <MicOffIcon
           sx={{
@@ -30,8 +33,18 @@ function PeekRoomParticipant(props: {
           }}
         />
       )}
+
       {isDeafened && (
         <HeadsetOffIcon
+          sx={{
+            width: 16,
+            height: 16,
+          }}
+        />
+      )}
+
+      {isScreenShare && (
+        <ScreenShareIcon
           sx={{
             width: 16,
             height: 16,

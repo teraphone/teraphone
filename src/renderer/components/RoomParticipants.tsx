@@ -58,7 +58,7 @@ function RoomParticipants(props: {
       participantRTInfo.isScreenShare = false;
     }
 
-    const { isMuted, isDeafened } = participantRTInfo;
+    const { isMuted, isDeafened, isScreenShare } = participantRTInfo;
 
     return (
       <RoomParticipant
@@ -67,6 +67,7 @@ function RoomParticipants(props: {
         participant={participant}
         isMuted={isMuted}
         isDeafened={isDeafened}
+        isScreenShare={isScreenShare}
       />
     );
   });

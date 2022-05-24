@@ -9,12 +9,14 @@ type ScreenShareState = {
   screens: ScreenSource;
   windows: ScreenSource;
   pickerVisible: boolean;
+  isSharing: boolean;
 };
 
 const initialState: ScreenShareState = {
   screens: {},
   windows: {},
   pickerVisible: false,
+  isSharing: false,
 };
 
 export const screenShareSlice = createSlice({
@@ -23,9 +25,25 @@ export const screenShareSlice = createSlice({
   reducers: {
     setScreens: (state, action: PayloadAction<ScreenSource>) => {
       state.screens = action.payload;
+      if (
+        Object.keys(action.payload).length > 0 ||
+        Object.keys(state.windows).length > 0
+      ) {
+        state.isSharing = true;
+      } else {
+        state.isSharing = false;
+      }
     },
     setWindows: (state, action: PayloadAction<ScreenSource>) => {
       state.windows = action.payload;
+      if (
+        Object.keys(action.payload).length > 0 ||
+        Object.keys(state.screens).length > 0
+      ) {
+        state.isSharing = true;
+      } else {
+        state.isSharing = false;
+      }
     },
     setPickerVisible: (state, action: PayloadAction<boolean>) => {
       state.pickerVisible = action.payload;
@@ -42,5 +60,8 @@ export const selectWindows = (state: RootState) => state.screenShare.windows;
 
 export const selectPickerVisible = (state: RootState) =>
   state.screenShare.pickerVisible;
+
+export const selectIsSharing = (state: RootState) =>
+  state.screenShare.isSharing;
 
 export default screenShareSlice.reducer;

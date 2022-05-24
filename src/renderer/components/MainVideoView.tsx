@@ -13,6 +13,9 @@ import VideoItemPlaceholder from './VideoItemPlaceholder';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
+import VideoEmptyMessage from './VideoEmptyMessage';
+import { useAppDispatch } from '../redux/hooks';
+import { setWindowOpen } from '../redux/VideoViewSlice';
 
 export type VideoItemValue = {
   userName: string;
@@ -48,6 +51,7 @@ function MainVideoView(props: MainVideoViewProps) {
     showOnlyOnContainerHover: true,
     targetDoc: windowRef?.current?.document,
   });
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
     if (focus !== '' && !videoItems[focus]) {
@@ -182,6 +186,22 @@ function MainVideoView(props: MainVideoViewProps) {
     }
     return null;
   });
+
+  const isEmpty = Object.keys(videoItems).length === 0;
+
+  const handleClose = React.useCallback(() => {
+    dispatch(setWindowOpen(false));
+  }, [dispatch]);
+
+  if (isEmpty) {
+    return (
+      <VideoEmptyMessage
+        message="No one is sharing their camera or screen."
+        buttonText="Close"
+        buttonAction={handleClose}
+      />
+    );
+  }
 
   return (
     <Grid

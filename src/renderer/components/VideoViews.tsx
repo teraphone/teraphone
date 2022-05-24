@@ -19,7 +19,6 @@ import { selectGroup } from '../redux/WorldSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import {
-  ScreenSource,
   selectScreens,
   selectWindows,
   setScreens,
@@ -317,7 +316,7 @@ function VideoViews() {
         <WindowPortal
           key="main-video-view"
           id="main-video-view"
-          title="Video - T E R A P H O N E"
+          title="Video Streams - T E R A P H O N E"
           width={800}
           height={600}
           onClose={handleCloseVideoView}
@@ -331,6 +330,3 @@ function VideoViews() {
 }
 
 export default VideoViews;
-
-// Todo:
-// - display message and "close" button in MainVideoView when no video is published

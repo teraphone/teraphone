@@ -180,16 +180,16 @@ function GroupRoom(props: {
         <ListItemText primary={roomInfo.room.name} />
         {/* todo: OndemandVideoIcon goes here */}
         {thisRoom && (
-          <Tooltip title="Open Video Window" placement="top" arrow>
+          <Tooltip title="Open Video Streams" placement="top" arrow>
             <IconButton
               sx={{
                 p: 0,
               }}
               size="small"
-              aria-label="open video window"
+              aria-label="open video streams"
               component="span"
               onClick={() => {
-                console.log('clicked Open Video Window');
+                console.log('clicked Open Video Streams');
                 dispatch(setWindowOpen(true));
               }}
             >

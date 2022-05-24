@@ -317,3 +317,4 @@ export default VideoViews;
 
 // Todo:
 // - display message and "close" button in MainVideoView when no video is published
+// - (bug) closing a window that you're sharing will break the app.

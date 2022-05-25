@@ -152,8 +152,12 @@ export type ParticipantRTGroups = {
   [groupId: string]: ParticipantRTRooms;
 };
 
+export type OnlineRTInfo = {
+  isOnline: boolean;
+};
+
 export type OnlineRTUsers = {
-  [userId: string]: boolean;
+  [userId: string]: OnlineRTInfo;
 };
 
 export type OnlineRTGroups = {

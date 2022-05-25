@@ -2,7 +2,9 @@ import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { onValue, ref } from 'firebase/database';
 import {
   addParticipantRTListener,
+  addOnlineRTListener,
   setParticipantsGroup,
+  setOnlineGroup,
   unknownParticipant,
 } from './ArtySlice';
 import * as models from '../models/models';
@@ -19,6 +21,18 @@ listenerMiddleware.startListening({
     onValue(nodeRef, (snapshot) => {
       const rooms = snapshot.val() as models.ParticipantRTRooms;
       listenerApi.dispatch(setParticipantsGroup({ groupId, rooms }));
+    });
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: addOnlineRTListener,
+  effect: (action, listenerApi) => {
+    const { db, groupId } = action.payload;
+    const nodeRef = ref(db, `online/${groupId}`);
+    onValue(nodeRef, (snapshot) => {
+      const users = snapshot.val() as models.OnlineRTUsers;
+      listenerApi.dispatch(setOnlineGroup({ groupId, users }));
     });
   },
 });

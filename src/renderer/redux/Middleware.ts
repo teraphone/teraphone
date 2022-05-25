@@ -2,7 +2,7 @@ import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { onValue, ref } from 'firebase/database';
 import {
   addParticipantRTListener,
-  setGroup,
+  setParticipantsGroup,
   unknownParticipant,
 } from './ArtySlice';
 import * as models from '../models/models';
@@ -18,7 +18,7 @@ listenerMiddleware.startListening({
     const nodeRef = ref(db, `participants/${groupId}`);
     onValue(nodeRef, (snapshot) => {
       const rooms = snapshot.val() as models.ParticipantRTRooms;
-      listenerApi.dispatch(setGroup({ groupId, rooms }));
+      listenerApi.dispatch(setParticipantsGroup({ groupId, rooms }));
     });
   },
 });

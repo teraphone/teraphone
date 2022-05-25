@@ -8,7 +8,7 @@ type ArtyState = {
   participants: models.ParticipantRTGroups;
 };
 
-type SetGroupPayload = {
+type SetParticipantsGroupPayload = {
   groupId: string;
   rooms: models.ParticipantRTRooms;
 };
@@ -21,14 +21,17 @@ export const artySlice = createSlice({
   name: 'arty',
   initialState,
   reducers: {
-    setGroup: (state, action: PayloadAction<SetGroupPayload>) => {
+    setParticipantsGroup: (
+      state,
+      action: PayloadAction<SetParticipantsGroupPayload>
+    ) => {
       const { groupId, rooms } = action.payload;
       state.participants[groupId] = rooms;
     },
   },
 });
 
-export const { setGroup } = artySlice.actions;
+export const { setParticipantsGroup } = artySlice.actions;
 
 export const selectParticipants = (state: RootState) => state.arty.participants;
 

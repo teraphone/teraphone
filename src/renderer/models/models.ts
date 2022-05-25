@@ -151,3 +151,11 @@ export type ParticipantRTRooms = {
 export type ParticipantRTGroups = {
   [groupId: string]: ParticipantRTRooms;
 };
+
+export type OnlineRTUsers = {
+  [userId: string]: boolean;
+};
+
+export type OnlineRTGroups = {
+  [groupId: string]: OnlineRTUsers;
+};

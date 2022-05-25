@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import * as ReactDom from 'react-dom';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
+import Portal from '@mui/material/Portal';
 
 export const ChildWindowContext = React.createContext<
   React.MutableRefObject<Window | null>
@@ -48,12 +48,12 @@ function WindowPortal(props: {
     }
   }, [height, onClose, id, width, title]);
 
-  return ReactDom.createPortal(
-    <ChildWindowContext.Provider key={id} value={windowRef}>
-      <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
-    </ChildWindowContext.Provider>,
-    containerRef.current,
-    id
+  return (
+    <Portal container={containerRef.current}>
+      <ChildWindowContext.Provider key={id} value={windowRef}>
+        <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
+      </ChildWindowContext.Provider>
+    </Portal>
   );
 }
 

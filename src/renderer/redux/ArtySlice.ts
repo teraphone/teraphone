@@ -6,6 +6,7 @@ import * as models from '../models/models';
 
 type ArtyState = {
   participants: models.ParticipantRTGroups;
+  online: models.OnlineRTGroups;
 };
 
 type SetParticipantsGroupPayload = {
@@ -13,8 +14,14 @@ type SetParticipantsGroupPayload = {
   rooms: models.ParticipantRTRooms;
 };
 
+type SetOnlineGroupPayload = {
+  groupId: string;
+  users: models.OnlineRTUsers;
+};
+
 const initialState: ArtyState = {
   participants: {} as models.ParticipantRTGroups,
+  online: {} as models.OnlineRTGroups,
 };
 
 export const artySlice = createSlice({
@@ -28,12 +35,18 @@ export const artySlice = createSlice({
       const { groupId, rooms } = action.payload;
       state.participants[groupId] = rooms;
     },
+    setOnlineGroup: (state, action: PayloadAction<SetOnlineGroupPayload>) => {
+      const { groupId, users } = action.payload;
+      state.online[groupId] = users;
+    },
   },
 });
 
-export const { setParticipantsGroup } = artySlice.actions;
+export const { setParticipantsGroup, setOnlineGroup } = artySlice.actions;
 
 export const selectParticipants = (state: RootState) => state.arty.participants;
+
+export const selectOnline = (state: RootState) => state.arty.online;
 
 export const selectRoomParticipants = (
   state: RootState,
@@ -51,9 +64,21 @@ export const selectRoomParticipants = (
   return {} as models.ParticipantRTUsers;
 };
 
+export const selectGroupOnline = (state: RootState, groupId: string) => {
+  if (groupId in state.arty.online) {
+    return state.arty.online[groupId];
+  }
+  return {} as models.OnlineRTUsers;
+};
+
 export default artySlice.reducer;
 
 export type AddParticipantRTListenerPayload = {
+  db: Database;
+  groupId: string;
+};
+
+export type AddOnlineRTListenerPayload = {
   db: Database;
   groupId: string;
 };
@@ -62,6 +87,10 @@ export const addParticipantRTListener =
   createAction<AddParticipantRTListenerPayload>(
     'arty/addParticipantRTListener'
   );
+
+export const addOnlineRTListener = createAction<AddOnlineRTListenerPayload>(
+  'arty/addOnlineRTListener'
+);
 
 export type UnknownParticipantPayload = {
   client: AxiosInstance;

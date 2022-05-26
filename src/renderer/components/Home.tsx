@@ -36,10 +36,6 @@ const Home = () => {
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { appUser } = useAppSelector(selectAppUser);
   const groups = useAppSelector(selectGroups);
-  const userRTRef = ref(
-    database,
-    `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
-  );
 
   const setOnlineStatus = React.useCallback(
     (groupId: string, isOnline: boolean) => {
@@ -51,6 +47,14 @@ const Home = () => {
     },
     [appUser.id, database]
   );
+
+  const clearUserRTInfo = React.useCallback(() => {
+    const nodeRef = ref(
+      database,
+      `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
+    );
+    return remove(nodeRef);
+  }, [appUser.id, currentRoom.groupId, currentRoom.roomId, database]);
 
   React.useEffect(() => {
     console.log('useEffect -> dispatch getWorld');
@@ -105,14 +109,14 @@ const Home = () => {
     console.log('handling window unloaded event');
     if (connectionStatus !== ConnectionStatus.Disconnected) {
       room?.disconnect();
-      remove(userRTRef);
     }
+    clearUserRTInfo();
     groups.forEach((groupInfo) => {
       const { group } = groupInfo;
       const groupId = group.id.toString();
       setOnlineStatus(groupId, false);
     });
-  }, [connectionStatus, groups, room, setOnlineStatus, userRTRef]);
+  }, [clearUserRTInfo, connectionStatus, groups, room, setOnlineStatus]);
 
   React.useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);

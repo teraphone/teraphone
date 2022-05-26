@@ -5,6 +5,7 @@ import GroupRooms from './GroupRooms';
 import GroupMenu from './GroupMenu';
 import BottomControls from './BottomControls';
 import CurrentRoomControls from './CurrentRoomControls';
+import GroupContacts from './GroupContacts';
 
 interface GroupTabPanelProps {
   index: number;
@@ -28,24 +29,32 @@ function GroupTabPanel(props: GroupTabPanelProps) {
       aria-labelledby={`vertical-tab-${index}`}
     >
       {value === index && (
-        <Box sx={{ width: 310 }}>
-          <Box>
-            <GroupMenu groupInfo={groupInfo} />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <Box sx={{ width: 310 }}>
+            <Box>
+              <GroupMenu groupInfo={groupInfo} />
+            </Box>
+            <Box>
+              <GroupRooms groupInfo={groupInfo} />
+            </Box>
+            <Box
+              sx={{
+                position: 'fixed',
+                bottom: '0',
+                width: '100%',
+                backgroundColor: 'background.paper',
+              }}
+            >
+              <CurrentRoomControls />
+              <BottomControls />
+            </Box>
           </Box>
-          <Box>
-            <GroupRooms groupInfo={groupInfo} />
-          </Box>
-          <Box
-            sx={{
-              position: 'fixed',
-              bottom: '0',
-              width: '100%',
-              backgroundColor: 'background.paper',
-            }}
-          >
-            <CurrentRoomControls />
-            <BottomControls />
-          </Box>
+          <GroupContacts groupInfo={groupInfo} />
         </Box>
       )}
     </div>

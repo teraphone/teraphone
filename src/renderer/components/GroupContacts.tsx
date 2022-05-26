@@ -78,9 +78,6 @@ function GroupContacts(props: GroupContactsProps) {
       }
     });
 
-  console.log('onlineUsers', onlineUsers);
-  console.log('offlineUsers', offlineUsers);
-
   const thisContact = (
     <ListItemButton dense component="li" key={thisUser.user_id}>
       <ListItemIcon>

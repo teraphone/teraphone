@@ -96,10 +96,17 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 400,
+    width: 600,
+    minWidth: 600,
+    maxWidth: 600,
     height: 600,
     minHeight: 600,
-    minWidth: 400,
+    maxHeight: 600,
+    resizable: false,
+    maximizable: false,
+    fullscreen: false,
+    fullscreenable: false,
+    acceptFirstMouse: true,
     icon: getAssetPath('icon.png'),
     useContentSize: true,
     webPreferences: {
@@ -134,6 +141,7 @@ const createWindow = async () => {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
+          acceptFirstMouse: true,
           webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
           },

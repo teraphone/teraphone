@@ -46,7 +46,7 @@ function GroupTabPanel(props: GroupTabPanelProps) {
               sx={{
                 position: 'fixed',
                 bottom: '0',
-                width: '100%',
+                width: '310px',
                 backgroundColor: 'background.paper',
               }}
             >

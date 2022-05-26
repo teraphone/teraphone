@@ -5,6 +5,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
 import * as models from '../models/models';
 
 export interface GroupContactsProps {
@@ -29,7 +30,31 @@ function GroupContacts(props: GroupContactsProps) {
     );
   });
 
-  return <List disablePadding>{contacts}</List>;
+  return (
+    <Box
+      sx={{
+        width: '200px',
+        borderLeft: 1,
+        borderColor: 'divider',
+        height: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: 48,
+        }}
+      >
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          Group Contacts
+        </Typography>
+      </Box>
+      <List disablePadding>{contacts}</List>
+    </Box>
+  );
 }
 
 export default GroupContacts;

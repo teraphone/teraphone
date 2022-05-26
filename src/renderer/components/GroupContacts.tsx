@@ -19,13 +19,19 @@ function GroupContacts(props: GroupContactsProps) {
   const contacts = users.map((user) => {
     const { user_id: userId, name } = user;
     return (
-      <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }} key={userId}>
+      <ListItemButton dense component="li" key={userId}>
         <ListItemIcon>
           <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
             {name[0]}
           </Avatar>
         </ListItemIcon>
-        <ListItemText primary={name} />
+        <ListItemText
+          primary={name}
+          primaryTypographyProps={{
+            variant: 'body2',
+            noWrap: true,
+          }}
+        />
       </ListItemButton>
     );
   });

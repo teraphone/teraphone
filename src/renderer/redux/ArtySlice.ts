@@ -9,12 +9,12 @@ type ArtyState = {
   online: models.OnlineRTGroups;
 };
 
-type SetParticipantsGroupPayload = {
+export type SetParticipantsGroupPayload = {
   groupId: string;
   rooms: models.ParticipantRTRooms;
 };
 
-type SetOnlineGroupPayload = {
+export type SetOnlineGroupPayload = {
   groupId: string;
   users: models.OnlineRTUsers;
 };

@@ -9,7 +9,7 @@ import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation'; // close video window
-import SmartDisplayIcon from '@mui/icons-material/SmartDisplay'; // open video window
+import SmartDisplayIcon from '@mui/icons-material/SmartDisplay'; // open video streams
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -183,16 +183,16 @@ function GroupRoom(props: {
         {/* todo: OndemandVideoIcon goes here */}
         {thisRoom &&
           (!isVideoWindowOpen ? (
-            <Tooltip title="Open Video Window" placement="top" arrow>
+            <Tooltip title="Open Video Streams" placement="top" arrow>
               <IconButton
                 sx={{
                   p: 0,
                 }}
                 size="small"
-                aria-label="open video window"
+                aria-label="open video streams"
                 component="span"
                 onClick={() => {
-                  console.log('clicked Open Video Window');
+                  console.log('clicked Open Video Streams');
                   dispatch(setWindowOpen(true));
                 }}
               >

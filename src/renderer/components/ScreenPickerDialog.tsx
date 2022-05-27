@@ -58,15 +58,15 @@ function ScreenPickerItem(props: {
           m: 0,
           border: 3,
           borderColor: checked ? 'primary.main' : 'transparent',
-          backgroundColor: '#F4F4F4',
+          backgroundColor: '#000',
           alignSelf: 'center',
           boxShadow: 0,
         }}
       >
         <Box
           sx={{
-            height: '100px',
-            width: '170px',
+            height: '140px',
+            width: '240px',
             display: 'flex',
             justifyContent: 'center',
           }}
@@ -166,8 +166,8 @@ function ScreenPickerDialog() {
 
   const getDisplaySources = React.useCallback(async () => {
     console.log('getDisplaySources');
-    const thumbWidth = 150;
-    const thumbHeight = 150;
+    const thumbWidth = 240;
+    const thumbHeight = 240;
 
     setScreenSources(
       await window.electron.ipcRenderer.queryScreens({

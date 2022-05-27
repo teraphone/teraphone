@@ -30,7 +30,7 @@
     ]
   },
   "build": {
-    "productName": "T E R A P H O N E",
+    "productName": "TERAPHONE",
     "appId": "app.teraphone",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",

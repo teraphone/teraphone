@@ -7,7 +7,7 @@ import GridViewIcon from '@mui/icons-material/GridView'; // grid
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'; // popout
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 
 interface VideoOverlayProps {
   sid: string;
@@ -22,13 +22,67 @@ interface VideoOverlayProps {
   setIsPopout: (sid: string, isPopout: boolean) => void;
 }
 
-const theme = createTheme({
+const overlayTheme = createTheme({
   palette: {
     primary: {
       main: '#fff',
     },
   },
 });
+
+const FocusButton = (props: { theme: Theme; onClick: () => void }) => {
+  const { theme, onClick } = props;
+  return (
+    <ThemeProvider theme={theme}>
+      <Tooltip title="Focus View (click)" placement="left">
+        <IconButton
+          color="primary"
+          aria-label="focus"
+          component="span"
+          onClick={onClick}
+        >
+          <FitScreenIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </ThemeProvider>
+  );
+};
+
+const GridButton = (props: { theme: Theme; onClick: () => void }) => {
+  const { theme, onClick } = props;
+  return (
+    <ThemeProvider theme={theme}>
+      <Tooltip title="Grid View (esc)" placement="left">
+        <IconButton
+          color="primary"
+          aria-label="focus"
+          component="span"
+          onClick={onClick}
+        >
+          <GridViewIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </ThemeProvider>
+  );
+};
+
+const PopoutButton = (props: { theme: Theme; onClick: () => void }) => {
+  const { theme, onClick } = props;
+  return (
+    <ThemeProvider theme={theme}>
+      <Tooltip title="Pop Out" placement="left">
+        <IconButton
+          color="primary"
+          aria-label="focus"
+          component="span"
+          onClick={onClick}
+        >
+          <OpenInNewIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
+    </ThemeProvider>
+  );
+};
 
 function VideoOverlay(props: VideoOverlayProps) {
   const {
@@ -61,57 +115,6 @@ function VideoOverlay(props: VideoOverlayProps) {
   const handlePopoutClick = React.useCallback(() => {
     setIsPopout(sid, true);
   }, [setIsPopout, sid]);
-
-  const FocusButton = () => {
-    return (
-      <ThemeProvider theme={theme}>
-        <Tooltip title="Focus View (click)" placement="left">
-          <IconButton
-            color="primary"
-            aria-label="focus"
-            component="span"
-            onClick={handleFocusClick}
-          >
-            <FitScreenIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </ThemeProvider>
-    );
-  };
-
-  const GridButton = () => {
-    return (
-      <ThemeProvider theme={theme}>
-        <Tooltip title="Grid View (esc)" placement="left">
-          <IconButton
-            color="primary"
-            aria-label="focus"
-            component="span"
-            onClick={handleGridClick}
-          >
-            <GridViewIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </ThemeProvider>
-    );
-  };
-
-  const PopoutButton = () => {
-    return (
-      <ThemeProvider theme={theme}>
-        <Tooltip title="Pop Out" placement="left">
-          <IconButton
-            color="primary"
-            aria-label="focus"
-            component="span"
-            onClick={handlePopoutClick}
-          >
-            <OpenInNewIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-      </ThemeProvider>
-    );
-  };
 
   return (
     <>
@@ -149,7 +152,11 @@ function VideoOverlay(props: VideoOverlayProps) {
             right: 0,
           }}
         >
-          {!isFocusItem ? <FocusButton /> : <GridButton />}
+          {!isFocusItem ? (
+            <FocusButton theme={overlayTheme} onClick={handleFocusClick} />
+          ) : (
+            <GridButton theme={overlayTheme} onClick={handleGridClick} />
+          )}
         </Box>
       </Box>
 
@@ -174,7 +181,9 @@ function VideoOverlay(props: VideoOverlayProps) {
             right: 0,
           }}
         >
-          {!isPopout && <PopoutButton />}
+          {!isPopout && (
+            <PopoutButton theme={overlayTheme} onClick={handlePopoutClick} />
+          )}
         </Box>
       </Box>
     </>

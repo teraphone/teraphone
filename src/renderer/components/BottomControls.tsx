@@ -18,134 +18,138 @@ import {
   toggleDeafen,
 } from '../redux/MuteSlice';
 
+const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
+  const { mute, onClick } = props;
+  if (mute) {
+    return (
+      <Tooltip title="Unmute" placement="top" arrow>
+        <IconButton
+          color="primary"
+          aria-label="unmute"
+          component="span"
+          onClick={onClick}
+        >
+          <MicOffIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+  return (
+    <Tooltip title="Mute" placement="top" arrow>
+      <IconButton
+        color="primary"
+        aria-label="mute"
+        component="span"
+        onClick={onClick}
+      >
+        <MicIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+const DeafenButton = (props: { deafen: boolean; onClick: () => void }) => {
+  const { deafen, onClick } = props;
+  if (deafen) {
+    return (
+      <Tooltip title="Undeafen" placement="top" arrow>
+        <IconButton
+          color="primary"
+          aria-label="undeafen"
+          component="span"
+          onClick={onClick}
+        >
+          <HeadsetOffIcon />
+        </IconButton>
+      </Tooltip>
+    );
+  }
+  return (
+    <Tooltip title="Deafen" placement="top" arrow>
+      <IconButton
+        color="primary"
+        aria-label="deafen"
+        component="span"
+        onClick={onClick}
+      >
+        <HeadsetIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+const MenuButton = (props: { onClick: () => void }) => {
+  const { onClick } = props;
+  return (
+    <Tooltip title="Settings" placement="top" arrow>
+      <IconButton
+        color="primary"
+        aria-label="settings"
+        component="span"
+        onClick={onClick}
+      >
+        <SettingsIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+const InfoButton = (props: { onClick: () => void }) => {
+  const { onClick } = props;
+  return (
+    <Tooltip title="Info" placement="top" arrow>
+      <IconButton
+        color="primary"
+        aria-label="info"
+        component="span"
+        onClick={onClick}
+      >
+        <InfoIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+
 function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
   const debug = false;
 
-  const MuteButton = () => {
-    if (mute) {
-      return (
-        <Tooltip title="Unmute" placement="top" arrow>
-          <IconButton
-            color="primary"
-            aria-label="unmute"
-            component="span"
-            onClick={() => {
-              dispatch(toggleMute());
-            }}
-          >
-            <MicOffIcon />
-          </IconButton>
-        </Tooltip>
-      );
-    }
-    return (
-      <Tooltip title="Mute" placement="top" arrow>
-        <IconButton
-          color="primary"
-          aria-label="mute"
-          component="span"
-          onClick={() => {
-            dispatch(toggleMute());
-          }}
-        >
-          <MicIcon />
-        </IconButton>
-      </Tooltip>
-    );
-  };
+  const handleMuteClick = React.useCallback(() => {
+    dispatch(toggleMute());
+  }, [dispatch]);
 
-  const DeafenButton = () => {
-    if (deafen) {
-      return (
-        <Tooltip title="Undeafen" placement="top" arrow>
-          <IconButton
-            color="primary"
-            aria-label="undeafen"
-            component="span"
-            onClick={() => {
-              dispatch(toggleDeafen());
-            }}
-          >
-            <HeadsetOffIcon />
-          </IconButton>
-        </Tooltip>
-      );
-    }
-    return (
-      <Tooltip title="Deafen" placement="top" arrow>
-        <IconButton
-          color="primary"
-          aria-label="deafen"
-          component="span"
-          onClick={() => {
-            dispatch(toggleDeafen());
-          }}
-        >
-          <HeadsetIcon />
-        </IconButton>
-      </Tooltip>
-    );
-  };
+  const handleDeafenClick = React.useCallback(() => {
+    dispatch(toggleDeafen());
+  }, [dispatch]);
 
-  const MenuButton = () => {
-    const handleClick = () => {
-      alert('Not implemented yet.');
-    };
+  const handleMenuClick = React.useCallback(() => {
+    alert('Not implemented yet.');
+  }, []);
 
-    return (
-      <Tooltip title="Settings" placement="top" arrow>
-        <IconButton
-          color="primary"
-          aria-label="settings"
-          component="span"
-          onClick={handleClick}
-        >
-          <SettingsIcon />
-        </IconButton>
-      </Tooltip>
-    );
-  };
-
-  const InfoButton = () => {
-    const handleClick = async () => {
-      window.electron.ipcRenderer.myPing();
-      const constraints = navigator.mediaDevices.getSupportedConstraints();
-      console.log('constraints:', constraints);
-      navigator.mediaDevices
-        .enumerateDevices()
-        .then((devices) => {
-          console.log('devices:', devices);
-          return devices;
-        })
-        .catch((err) => {
-          console.error('error:', err);
-          return [];
-        });
-    };
-
-    return (
-      <Tooltip title="Info" placement="top" arrow>
-        <IconButton
-          color="primary"
-          aria-label="info"
-          component="span"
-          onClick={handleClick}
-        >
-          <InfoIcon />
-        </IconButton>
-      </Tooltip>
-    );
-  };
+  const handleInfoClick = React.useCallback(async () => {
+    window.electron.ipcRenderer.myPing();
+    const constraints = navigator.mediaDevices.getSupportedConstraints();
+    console.log('constraints:', constraints);
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) => {
+        console.log('devices:', devices);
+        return devices;
+      })
+      .catch((err) => {
+        console.error('error:', err);
+        return [];
+      });
+  }, []);
 
   return (
     <Stack direction="row" alignItems="right" spacing={0}>
-      <MuteButton />
-      <DeafenButton />
-      <MenuButton />
-      {debug && <InfoButton />}
+      <MuteButton mute={mute} onClick={handleMuteClick} />
+      <DeafenButton deafen={deafen} onClick={handleDeafenClick} />
+      <MenuButton onClick={handleMenuClick} />
+      {debug && <InfoButton onClick={handleInfoClick} />}
     </Stack>
   );
 }

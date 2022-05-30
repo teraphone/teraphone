@@ -53,8 +53,7 @@ function GroupRoom(props: {
   React.useEffect(() => {
     console.log('GroupRoom', roomInfo.room.name, 'Mounted');
     return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [roomInfo.room.name]);
 
   const pushUserRTInfo = React.useCallback(
     (isMuted: boolean, isDeafened: boolean, isScreenShare: boolean) => {
@@ -72,10 +71,28 @@ function GroupRoom(props: {
   );
 
   React.useEffect(() => {
+    console.log(
+      roomInfo.room.name,
+      'thisRoom',
+      thisRoom,
+      'mute',
+      mute,
+      'deafen',
+      deafen,
+      'isScreenSharing',
+      isScreenSharing
+    );
     if (thisRoom) {
       pushUserRTInfo(mute, deafen, isScreenSharing);
     }
-  }, [deafen, isScreenSharing, mute, pushUserRTInfo, thisRoom]);
+  }, [
+    roomInfo.room.name,
+    deafen,
+    isScreenSharing,
+    mute,
+    pushUserRTInfo,
+    thisRoom,
+  ]);
 
   const removeUserRTInfo = React.useCallback(() => {
     const nodeRef = ref(

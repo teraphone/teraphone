@@ -180,7 +180,6 @@ function GroupRoom(props: {
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.name} />
-        {/* todo: OndemandVideoIcon goes here */}
         {thisRoom &&
           (!isVideoWindowOpen ? (
             <Tooltip title="Open Video Streams" placement="top" arrow>

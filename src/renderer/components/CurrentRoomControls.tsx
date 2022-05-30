@@ -186,7 +186,7 @@ function CurentRoomControls() {
     database,
     `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
   );
-  const debug = false;
+  const debug = true;
 
   const handleShareCameraClick = React.useCallback(() => {
     console.log('handleShareCameraClick');

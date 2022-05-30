@@ -114,7 +114,7 @@ function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
-  const debug = false;
+  const debug = true;
 
   const handleMuteClick = React.useCallback(() => {
     dispatch(toggleMute());

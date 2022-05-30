@@ -6,7 +6,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import GroupTabs from './GroupTabs';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getWorld, selectGroups } from '../redux/WorldSlice';
-import useFirebase from '../hooks/useFirebase';
+import { database } from '../redux/Firebase';
 import {
   addParticipantRTListener,
   addOnlineRTListener,
@@ -30,7 +30,6 @@ const Home = () => {
   }, []);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
-  const { database } = useFirebase();
   const { isConnecting, error, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);

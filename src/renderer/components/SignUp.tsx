@@ -13,7 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
 import axios from '../api/axios';
-import useFirebase from '../hooks/useFirebase';
+import { signIn } from '../redux/Firebase';
 import { useAppDispatch } from '../redux/hooks';
 import { setAppUser } from '../redux/AppUserSlice';
 import { setAuth } from '../redux/AuthSlice';
@@ -43,7 +43,6 @@ function SignUp() {
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
-  const { signIn } = useFirebase();
   const dispatch = useAppDispatch();
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {

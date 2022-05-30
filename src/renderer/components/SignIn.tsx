@@ -15,7 +15,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import validator from 'validator';
 import axios from '../api/axios';
-import useFirebase from '../hooks/useFirebase';
+import { signIn } from '../redux/Firebase';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setAppUser } from '../redux/AppUserSlice';
 import { setAuth, selectAuth } from '../redux/AuthSlice';
@@ -37,7 +37,6 @@ function SignIn() {
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
-  const { signIn } = useFirebase();
   const dispatch = useAppDispatch();
   const auth = useAppSelector(selectAuth);
 

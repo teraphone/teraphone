@@ -17,7 +17,7 @@ import {
   ConnectionStatus,
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
-import useFirebase from '../hooks/useFirebase';
+import { database } from '../redux/Firebase';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import PeekRoomParticipants from './PeekRoomParticipants';
@@ -38,7 +38,6 @@ function GroupRoom(props: {
   const { connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
   const roomRTRef = ref(database, `participants/${groupId}/${roomId}`);
   const mute = useAppSelector(selectMute);
@@ -101,7 +100,7 @@ function GroupRoom(props: {
     );
     console.log('removing RT node:', nodeRef);
     remove(nodeRef);
-  }, [appUser.id, currentRoom.groupId, currentRoom.roomId, database]);
+  }, [appUser.id, currentRoom.groupId, currentRoom.roomId]);
 
   const connectRoom = React.useCallback(() => {
     const connectConfig: Livekit.ConnectOptions = {

@@ -18,7 +18,7 @@ import {
   ConnectionStatus,
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
-import useFirebase from '../hooks/useFirebase';
+import { database } from '../redux/Firebase';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
@@ -180,7 +180,6 @@ function CurentRoomControls() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const { database } = useFirebase();
   const { appUser } = useAppSelector(selectAppUser);
   const userRTRef = ref(
     database,

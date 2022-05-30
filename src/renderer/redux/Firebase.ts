@@ -1,12 +1,6 @@
-import { getDatabase, Database, ref, set, onValue } from 'firebase/database';
-import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getAnalytics, Analytics } from 'firebase/analytics';
-import {
-  getAuth,
-  signInWithCustomToken,
-  Auth,
-  UserCredential,
-} from 'firebase/auth';
+import { getDatabase } from 'firebase/database';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
 const config = {
   apiKey: 'AIzaSyDPFJHANvIyx-7OHZl-8UEI7vFOgaShaPI',

@@ -44,7 +44,7 @@ const Home = () => {
       }
       return remove(child(nodeRef, `${appUser.id}`));
     },
-    [appUser.id, database]
+    [appUser.id]
   );
 
   const clearUserRTInfo = React.useCallback(() => {
@@ -53,7 +53,7 @@ const Home = () => {
       `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
     );
     return remove(nodeRef);
-  }, [appUser.id, currentRoom.groupId, currentRoom.roomId, database]);
+  }, [appUser.id, currentRoom.groupId, currentRoom.roomId]);
 
   React.useEffect(() => {
     console.log('useEffect -> dispatch getWorld');
@@ -68,7 +68,6 @@ const Home = () => {
           console.log('addParticipantRTListener', groupId);
           dispatch(
             addParticipantRTListener({
-              db: database,
               groupId,
             })
           );
@@ -82,7 +81,7 @@ const Home = () => {
         console.log('dispatch getWorld -> error', err);
         return false;
       });
-  }, [axiosPrivate, dispatch, database, setOnlineStatus]);
+  }, [axiosPrivate, dispatch, setOnlineStatus]);
 
   React.useEffect(() => {
     console.log('Home Mounted');

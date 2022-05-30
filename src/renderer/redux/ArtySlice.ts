@@ -74,7 +74,6 @@ export const selectGroupOnline = (state: RootState, groupId: string) => {
 export default artySlice.reducer;
 
 export type AddParticipantRTListenerPayload = {
-  db: Database;
   groupId: string;
 };
 

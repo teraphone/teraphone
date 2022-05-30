@@ -10,14 +10,15 @@ import {
 import * as models from '../models/models';
 import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
 import type { RootState } from './store';
+import { database } from './Firebase';
 
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
   actionCreator: addParticipantRTListener,
   effect: (action, listenerApi) => {
-    const { db, groupId } = action.payload;
-    const nodeRef = ref(db, `participants/${groupId}`);
+    const { groupId } = action.payload;
+    const nodeRef = ref(database, `participants/${groupId}`);
     onValue(nodeRef, (snapshot) => {
       const rooms = snapshot.val() as models.ParticipantRTRooms;
       listenerApi.dispatch(setParticipantsGroup({ groupId, rooms }));

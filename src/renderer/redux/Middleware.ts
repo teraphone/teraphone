@@ -29,8 +29,8 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: addOnlineRTListener,
   effect: (action, listenerApi) => {
-    const { db, groupId } = action.payload;
-    const nodeRef = ref(db, `online/${groupId}`);
+    const { groupId } = action.payload;
+    const nodeRef = ref(database, `online/${groupId}`);
     onValue(nodeRef, (snapshot) => {
       const users = snapshot.val() as models.OnlineRTUsers;
       listenerApi.dispatch(setOnlineGroup({ groupId, users }));

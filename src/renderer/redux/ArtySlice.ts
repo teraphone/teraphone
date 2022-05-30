@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction, createAction } from '@reduxjs/toolkit';
-import { Database } from 'firebase/database';
 import { AxiosInstance } from 'axios';
 import type { RootState } from './store';
 import * as models from '../models/models';
@@ -78,7 +77,6 @@ export type AddParticipantRTListenerPayload = {
 };
 
 export type AddOnlineRTListenerPayload = {
-  db: Database;
   groupId: string;
 };
 

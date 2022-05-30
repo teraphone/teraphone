@@ -72,7 +72,7 @@ const Home = () => {
             })
           );
           console.log('addOnlineRTListener', groupId);
-          dispatch(addOnlineRTListener({ db: database, groupId }));
+          dispatch(addOnlineRTListener({ groupId }));
           setOnlineStatus(groupId, true);
         });
         return true;

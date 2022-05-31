@@ -99,9 +99,9 @@ export const unknownParticipant = createAction<UnknownParticipantPayload>(
   'arty/unknownParticipant'
 );
 
-export const SignedIn = createAction('arty/SignedIn');
+export const signedIn = createAction('arty/SignedIn');
 
-export const SignedOut = createAction('arty/SignedOut');
+export const signedOut = createAction('arty/SignedOut');
 
 export type PushUserParticipantRTInfoPayload = {
   groupId: string;

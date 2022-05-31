@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import { createListenerMiddleware } from '@reduxjs/toolkit';
+import { Action, AnyAction, createListenerMiddleware } from '@reduxjs/toolkit';
 import { onValue, ref, remove, update } from 'firebase/database';
 import {
   addParticipantRTListener,
@@ -114,15 +114,16 @@ listenerMiddleware.startListening({
   effect: (action, listenerApi) => {
     const connectionStatus = action.payload;
     const state = listenerApi.getState() as RootState;
-    const { appUser, currentRoom, mute, screenShare } = state;
-    const { groupId, roomId } = currentRoom.currentRoom;
-    const { id: userId } = appUser.appUser;
+    const { groupId, roomId } = state.currentRoom.currentRoom;
+    const { id: userId } = state.appUser.appUser;
+    const { mute, deafen } = state.mute;
+    const { isSharing } = state.screenShare;
     if (connectionStatus === ConnectionStatus.Connected) {
       const info: models.ParticipantRTInfo = {
-        isMuted: mute.mute,
-        isDeafened: mute.deafen,
+        isMuted: mute,
+        isDeafened: deafen,
         isCameraShare: false,
-        isScreenShare: screenShare.isSharing,
+        isScreenShare: isSharing,
       };
       listenerApi.dispatch(
         pushUserParticipantRTInfo({
@@ -141,6 +142,48 @@ listenerMiddleware.startListening({
         })
       );
     }
+  },
+});
+
+listenerMiddleware.startListening({
+  predicate: (_action, currentState, previousState) => {
+    const { mute: currentMute, deafen: currentDeafen } = (
+      currentState as RootState
+    ).mute;
+    const { mute: previousMute, deafen: previousDeafen } = (
+      previousState as RootState
+    ).mute;
+    const { isSharing: currentIsSharing } = (currentState as RootState)
+      .screenShare;
+    const { isSharing: previousIsSharing } = (previousState as RootState)
+      .screenShare;
+    const { connectionStatus } = (currentState as RootState).connectionStatus;
+    const case1 = currentMute !== previousMute;
+    const case2 = currentDeafen !== previousDeafen;
+    const case3 = currentIsSharing !== previousIsSharing;
+    const case4 = connectionStatus === ConnectionStatus.Connected;
+    return (case1 || case2 || case3) && case4;
+  },
+  effect: (_action, listenerApi) => {
+    const state = listenerApi.getState() as RootState;
+    const { groupId, roomId } = state.currentRoom.currentRoom;
+    const { id: userId } = state.appUser.appUser;
+    const { mute, deafen } = state.mute;
+    const { isSharing } = state.screenShare;
+    const info: models.ParticipantRTInfo = {
+      isMuted: mute,
+      isDeafened: deafen,
+      isCameraShare: false,
+      isScreenShare: isSharing,
+    };
+    listenerApi.dispatch(
+      pushUserParticipantRTInfo({
+        groupId: groupId.toString(),
+        roomId: roomId.toString(),
+        userId: userId.toString(),
+        info,
+      })
+    );
   },
 });
 

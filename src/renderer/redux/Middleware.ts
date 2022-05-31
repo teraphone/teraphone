@@ -1,11 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 import { createListenerMiddleware } from '@reduxjs/toolkit';
-import { onValue, ref } from 'firebase/database';
+import { onValue, ref, remove, update } from 'firebase/database';
 import {
   addParticipantRTListener,
   addOnlineRTListener,
   setParticipantsGroup,
   setOnlineGroup,
   unknownParticipant,
+  pushUserParticipantRTInfo,
+  clearUserParticipantRTInfo,
+  pushUserOnlineRTInfo,
+  clearUserOnlineRTInfo,
 } from './ArtySlice';
 import * as models from '../models/models';
 import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
@@ -53,6 +59,52 @@ listenerMiddleware.startListening({
         getRoomUserInfo({ client, groupId, roomId, userId })
       );
     });
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: pushUserParticipantRTInfo,
+  effect: (action, _listenerApi) => {
+    const { groupId, roomId, userId, info } = action.payload;
+    const nodeRef = ref(
+      database,
+      `participants/${groupId}/${roomId}/${userId}`
+    );
+    console.log('pushing Participants RT node:', nodeRef, info);
+    update(nodeRef, info); // await?
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: clearUserParticipantRTInfo,
+  effect: (action, _listenerApi) => {
+    const { groupId, roomId, userId } = action.payload;
+    const nodeRef = ref(
+      database,
+      `participants/${groupId}/${roomId}/${userId}`
+    );
+    console.log('clearing Participants RT node:', nodeRef);
+    remove(nodeRef); // await?
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: pushUserOnlineRTInfo,
+  effect: (action, _listenerApi) => {
+    const { groupId, userId } = action.payload;
+    const nodeRef = ref(database, `online/${groupId}`);
+    console.log('pushing Online RT node:', nodeRef, userId);
+    update(nodeRef, { [userId]: true }); // await?
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: clearUserOnlineRTInfo,
+  effect: (action, _listenerApi) => {
+    const { groupId, userId } = action.payload;
+    const nodeRef = ref(database, `online/${groupId}/${userId}`);
+    console.log('clearing Online RT node:', nodeRef);
+    remove(nodeRef); // await?
   },
 });
 

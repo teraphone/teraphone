@@ -50,6 +50,7 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: unknownParticipant,
   effect: (action, listenerApi) => {
+    console.log('unknownParticipant', action.payload);
     const { client, groupId, userId } = action.payload;
     listenerApi.dispatch(getGroupUserInfo({ client, groupId, userId }));
     const state = listenerApi.getState() as RootState;

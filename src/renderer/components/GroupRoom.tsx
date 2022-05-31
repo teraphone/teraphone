@@ -54,54 +54,6 @@ function GroupRoom(props: {
     return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
   }, [roomInfo.room.name]);
 
-  const pushUserRTInfo = React.useCallback(
-    (isMuted: boolean, isDeafened: boolean, isScreenShare: boolean) => {
-      const nodeRef = child(roomRTRef, `${appUser.id}`);
-      const info = {
-        isMuted,
-        isDeafened,
-        isCameraShare: false,
-        isScreenShare,
-      };
-      console.log('pushing RT node:', nodeRef, info);
-      update(nodeRef, info);
-    },
-    [appUser.id, roomRTRef]
-  );
-
-  React.useEffect(() => {
-    console.log(
-      roomInfo.room.name,
-      'thisRoom',
-      thisRoom,
-      'mute',
-      mute,
-      'deafen',
-      deafen,
-      'isScreenSharing',
-      isScreenSharing
-    );
-    if (thisRoom) {
-      pushUserRTInfo(mute, deafen, isScreenSharing);
-    }
-  }, [
-    roomInfo.room.name,
-    deafen,
-    isScreenSharing,
-    mute,
-    pushUserRTInfo,
-    thisRoom,
-  ]);
-
-  const removeUserRTInfo = React.useCallback(() => {
-    const nodeRef = ref(
-      database,
-      `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
-    );
-    console.log('removing RT node:', nodeRef);
-    remove(nodeRef);
-  }, [appUser.id, currentRoom.groupId, currentRoom.roomId]);
-
   const connectRoom = React.useCallback(() => {
     const connectConfig: Livekit.ConnectOptions = {
       autoSubscribe: false,
@@ -124,9 +76,6 @@ function GroupRoom(props: {
     connect(url, roomInfo.token, connectConfig)
       .then((livekitRoom) => {
         console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
-        if (livekitRoom) {
-          pushUserRTInfo(mute, deafen, isScreenSharing);
-        }
         livekitRoom?.localParticipant.setMicrophoneEnabled(true);
         return true;
       })
@@ -135,16 +84,12 @@ function GroupRoom(props: {
       });
   }, [
     connect,
-    deafen,
     dispatch,
     groupInfo.group.name,
-    mute,
-    pushUserRTInfo,
     roomInfo.room.group_id,
     roomInfo.room.id,
     roomInfo.room.name,
     roomInfo.token,
-    isScreenSharing,
   ]);
 
   const handleClick = React.useCallback(() => {
@@ -157,7 +102,6 @@ function GroupRoom(props: {
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${roomInfo.room.id}`
         );
         room?.disconnect();
-        removeUserRTInfo();
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);
@@ -175,14 +119,7 @@ function GroupRoom(props: {
         connectRoom();
       }
     }
-  }, [
-    connectRoom,
-    connectionStatus,
-    currentRoom.roomId,
-    removeUserRTInfo,
-    room,
-    roomInfo,
-  ]);
+  }, [connectRoom, connectionStatus, currentRoom.roomId, room, roomInfo]);
 
   return (
     <>

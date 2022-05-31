@@ -47,14 +47,6 @@ const Home = () => {
     [appUser.id]
   );
 
-  const clearUserRTInfo = React.useCallback(() => {
-    const nodeRef = ref(
-      database,
-      `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
-    );
-    return remove(nodeRef);
-  }, [appUser.id, currentRoom.groupId, currentRoom.roomId]);
-
   React.useEffect(() => {
     console.log('useEffect -> dispatch getWorld');
     dispatch(getWorld(axiosPrivate))
@@ -108,13 +100,12 @@ const Home = () => {
     if (connectionStatus !== ConnectionStatus.Disconnected) {
       room?.disconnect();
     }
-    clearUserRTInfo();
     groups.forEach((groupInfo) => {
       const { group } = groupInfo;
       const groupId = group.id.toString();
       setOnlineStatus(groupId, false);
     });
-  }, [clearUserRTInfo, connectionStatus, groups, room, setOnlineStatus]);
+  }, [connectionStatus, groups, room, setOnlineStatus]);
 
   React.useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);

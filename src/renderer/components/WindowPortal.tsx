@@ -16,6 +16,7 @@ function WindowPortal(props: {
   children: JSX.Element;
   onClose: () => void;
 }) {
+  const [isMounted, setIsMounted] = React.useState(false);
   const { id, title, width, height, children, onClose } = props;
   const containerRef = React.useRef(document.createElement('div'));
   const windowRef = React.useRef<Window | null>(null);
@@ -25,28 +26,32 @@ function WindowPortal(props: {
 
   React.useEffect(() => {
     console.log('WindowPortal Mounted', title);
+    setIsMounted(true);
     return () => {
+      setIsMounted(false);
       console.log('WindowPortal Unmounted', title);
       windowRef?.current?.close();
     };
   }, [title]);
 
   React.useEffect(() => {
-    windowRef.current = window.open(
-      'about:blank',
-      id,
-      `width=${width},height=${height},title=${title}`
-    );
+    if (isMounted) {
+      windowRef.current = window.open(
+        'about:blank',
+        id,
+        `width=${width},height=${height},title=${title}`
+      );
 
-    if (windowRef.current) {
-      windowRef.current.document.body.appendChild(containerRef.current);
-      windowRef.current.document.body.style.margin = '0';
-      windowRef.current.onunload = () => {
-        onClose();
-        windowRef?.current?.close();
-      };
+      if (windowRef.current) {
+        windowRef.current.document.body.appendChild(containerRef.current);
+        windowRef.current.document.body.style.margin = '0';
+        windowRef.current.onunload = () => {
+          onClose();
+          windowRef?.current?.close();
+        };
+      }
     }
-  }, [height, onClose, id, width, title]);
+  }, [height, onClose, id, width, title, isMounted]);
 
   return (
     <Portal container={containerRef.current}>

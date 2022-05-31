@@ -34,6 +34,7 @@ export interface MainVideoViewProps {
 }
 
 function MainVideoView(props: MainVideoViewProps) {
+  const [isMounted, setIsMounted] = React.useState(false);
   const { setIsPopout, videoItems } = props;
   const [focus, setFocus] = React.useState('');
   const [isFocusView, setIsFocusView] = React.useState(false);
@@ -54,11 +55,22 @@ function MainVideoView(props: MainVideoViewProps) {
   const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    if (focus !== '' && !videoItems[focus]) {
-      setIsFocusView(false);
-      setFocus('');
+    console.log('MainVideoView Mounted');
+    setIsMounted(true);
+    return () => {
+      setIsMounted(false);
+      console.log('MainVideoView Unmounted');
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (isMounted) {
+      if (focus !== '' && !videoItems[focus]) {
+        setIsFocusView(false);
+        setFocus('');
+      }
     }
-  }, [focus, videoItems]);
+  }, [focus, isMounted, videoItems]);
 
   const handleVideoClickEvent = React.useCallback(
     (sid: string) =>
@@ -80,22 +92,18 @@ function MainVideoView(props: MainVideoViewProps) {
   }, []);
 
   React.useEffect(() => {
-    if (thisWindow) {
-      thisWindow.addEventListener('keydown', escKeydownHandler);
-    }
-    return () => {
+    if (isMounted) {
       if (thisWindow) {
-        thisWindow.removeEventListener('keydown', escKeydownHandler);
+        thisWindow.addEventListener('keydown', escKeydownHandler);
       }
-    };
-  }, [escKeydownHandler, thisWindow]);
-
-  React.useEffect(() => {
-    console.log('MainVideoView Mounted');
-    return () => {
-      console.log('MainVideoView Unmounted');
-    };
-  }, []);
+      return () => {
+        if (thisWindow) {
+          thisWindow.removeEventListener('keydown', escKeydownHandler);
+        }
+      };
+    }
+    return () => {};
+  }, [escKeydownHandler, isMounted, thisWindow]);
 
   const gridBoxStyle: React.CSSProperties = {
     background: 'black',

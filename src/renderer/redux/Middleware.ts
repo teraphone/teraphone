@@ -12,6 +12,8 @@ import {
   clearUserParticipantRTInfo,
   pushUserOnlineRTInfo,
   clearUserOnlineRTInfo,
+  signedIn,
+  signedOut,
 } from './ArtySlice';
 import * as models from '../models/models';
 import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
@@ -200,6 +202,44 @@ listenerMiddleware.startListening({
         info,
       })
     );
+  },
+});
+
+// on signedIn, push UserOnlineRTInfo
+listenerMiddleware.startListening({
+  actionCreator: signedIn,
+  effect: (_action, listenerApi) => {
+    const state = listenerApi.getState() as RootState;
+    const { groups: groupsInfo } = state.world;
+    const { id: userId } = state.appUser.appUser;
+    groupsInfo.forEach((groupInfo) => {
+      const { id: groupId } = groupInfo.group;
+      listenerApi.dispatch(
+        pushUserOnlineRTInfo({
+          groupId: groupId.toString(),
+          userId: userId.toString(),
+        })
+      );
+    });
+  },
+});
+
+// on signedOut, clear UserOnlineRTInfo
+listenerMiddleware.startListening({
+  actionCreator: signedOut,
+  effect: (_action, listenerApi) => {
+    const state = listenerApi.getState() as RootState;
+    const { groups: groupsInfo } = state.world;
+    const { id: userId } = state.appUser.appUser;
+    groupsInfo.forEach((groupInfo) => {
+      const { id: groupId } = groupInfo.group;
+      listenerApi.dispatch(
+        clearUserOnlineRTInfo({
+          groupId: groupId.toString(),
+          userId: userId.toString(),
+        })
+      );
+    });
   },
 });
 

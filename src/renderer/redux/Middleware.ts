@@ -17,6 +17,7 @@ import * as models from '../models/models';
 import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
 import type { RootState } from './store';
 import { database } from './Firebase';
+import { ConnectionStatus, setConnectionStatus } from './ConnectionStatusSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -105,6 +106,41 @@ listenerMiddleware.startListening({
     const nodeRef = ref(database, `online/${groupId}/${userId}`);
     console.log('clearing Online RT node:', nodeRef);
     remove(nodeRef); // await?
+  },
+});
+
+listenerMiddleware.startListening({
+  actionCreator: setConnectionStatus,
+  effect: (action, listenerApi) => {
+    const connectionStatus = action.payload;
+    const state = listenerApi.getState() as RootState;
+    const { appUser, currentRoom, mute, screenShare } = state;
+    const { groupId, roomId } = currentRoom.currentRoom;
+    const { id: userId } = appUser.appUser;
+    if (connectionStatus === ConnectionStatus.Connected) {
+      const info: models.ParticipantRTInfo = {
+        isMuted: mute.mute,
+        isDeafened: mute.deafen,
+        isCameraShare: false,
+        isScreenShare: screenShare.isSharing,
+      };
+      listenerApi.dispatch(
+        pushUserParticipantRTInfo({
+          groupId: groupId.toString(),
+          roomId: roomId.toString(),
+          userId: userId.toString(),
+          info,
+        })
+      );
+    } else {
+      listenerApi.dispatch(
+        clearUserParticipantRTInfo({
+          groupId: groupId.toString(),
+          roomId: roomId.toString(),
+          userId: userId.toString(),
+        })
+      );
+    }
   },
 });
 

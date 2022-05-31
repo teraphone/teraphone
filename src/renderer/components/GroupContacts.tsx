@@ -26,9 +26,10 @@ function GroupContacts(props: GroupContactsProps) {
   const onlineGroup = online[group.id];
   const dispatch = useAppDispatch();
   const axiosPrivate = useAxiosPrivate();
-  const [usersObj, setUsersObj] = React.useState(
-    {} as { [id: number]: models.GroupUserInfo }
-  );
+  const [usersObj, setUsersObj] = React.useState<{
+    [id: number]: models.GroupUserInfo;
+  }>(users.reduce((acc, user) => ({ ...acc, [user.user_id]: user }), {}));
+
   const [onlineOpen, setOnlineOpen] = React.useState(true);
   const [offlineOpen, setOfflineOpen] = React.useState(false);
 

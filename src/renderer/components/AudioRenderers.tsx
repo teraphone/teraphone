@@ -2,8 +2,8 @@
 import * as React from 'react';
 import useRoom from '../hooks/useRoom';
 import { useAppSelector } from '../redux/hooks';
-import { selectMute, selectDeafen } from '../redux/MuteSlice';
-import AudioRenderer from './AudioRenderer';
+import { selectMute } from '../redux/MuteSlice';
+import ParticipantAudioRenderer from './ParticipantAudioRenderer';
 
 function AudioRenderers() {
   React.useEffect(() => {
@@ -11,11 +11,9 @@ function AudioRenderers() {
     return () => console.log('AudioRenderers Unmounted');
   }, []);
 
-  const { room } = useRoom();
+  const { room, participants } = useRoom();
   const mute = useAppSelector(selectMute);
-  const deafen = useAppSelector(selectDeafen);
   const localParticipant = room?.localParticipant;
-  const remoteParticipants = room?.participants;
 
   React.useEffect(() => {
     if (localParticipant) {
@@ -38,25 +36,14 @@ function AudioRenderers() {
   }
 
   const renderers: React.ReactNode[] = [];
-  if (remoteParticipants) {
-    remoteParticipants.forEach((remoteParticipant) => {
-      remoteParticipant.audioTracks.forEach((remoteTrackPub) => {
-        remoteTrackPub.setSubscribed(true);
-        const remoteAudioTrack = remoteTrackPub?.track;
-        if (remoteAudioTrack) {
-          const volume = deafen ? 0 : 1;
-          renderers.push(
-            <AudioRenderer
-              key={remoteTrackPub.trackSid}
-              track={remoteAudioTrack}
-              isLocal={false}
-              volume={volume}
-            />
-          );
-        }
-      });
-    });
-  }
+  participants.slice(1).forEach((participant) => {
+    renderers.push(
+      <ParticipantAudioRenderer
+        key={participant.sid}
+        participant={participant}
+      />
+    );
+  });
 
   return <div>{renderers}</div>;
 }

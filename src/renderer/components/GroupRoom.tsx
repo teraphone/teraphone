@@ -18,7 +18,11 @@ import {
 } from '../redux/ConnectionStatusSlice';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import PeekRoomParticipants from './PeekRoomParticipants';
-import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
+import {
+  CurrentRoomState,
+  selectCurrentRoom,
+  setCurrentRoom,
+} from '../redux/CurrentRoomSlice';
 import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
 
 function GroupRoom(props: {
@@ -32,8 +36,22 @@ function GroupRoom(props: {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const dispatch = useAppDispatch();
-  const thisRoom =
-    currentRoom.roomId === roomInfo.room.id &&
+  const thisRoom: CurrentRoomState = React.useMemo(
+    () => ({
+      roomId: roomInfo.room.id,
+      roomName: roomInfo.room.name,
+      groupId: roomInfo.room.group_id,
+      groupName: groupInfo.group.name,
+    }),
+    [
+      groupInfo.group.name,
+      roomInfo.room.group_id,
+      roomInfo.room.id,
+      roomInfo.room.name,
+    ]
+  );
+  const isThisRoomConnected =
+    currentRoom.roomId === thisRoom.roomId &&
     connectionStatus === ConnectionStatus.Connected;
   const isVideoWindowOpen = useAppSelector(selectWindowOpen);
 
@@ -52,14 +70,7 @@ function GroupRoom(props: {
       video: false,
     };
     // set current room to this room
-    dispatch(
-      setCurrentRoom({
-        roomId: roomInfo.room.id,
-        roomName: roomInfo.room.name,
-        groupId: roomInfo.room.group_id,
-        groupName: groupInfo.group.name,
-      })
-    );
+    dispatch(setCurrentRoom(thisRoom));
     // connect to room
     connect(url, roomInfo.token, connectConfig)
       .then((livekitRoom) => {
@@ -70,44 +81,43 @@ function GroupRoom(props: {
       .catch(() => {
         return false;
       });
-  }, [
-    connect,
-    dispatch,
-    groupInfo.group.name,
-    roomInfo.room.group_id,
-    roomInfo.room.id,
-    roomInfo.room.name,
-    roomInfo.token,
-  ]);
+  }, [connect, dispatch, roomInfo.room.id, roomInfo.token, thisRoom]);
 
   const handleClick = React.useCallback(() => {
-    console.log(`clicked room ${roomInfo.room.id}`, roomInfo);
+    console.log(`clicked room ${thisRoom.roomId}`, roomInfo);
 
     // if changing rooms: disconnect first, then connect
-    if (currentRoom.roomId !== roomInfo.room.id) {
+    if (currentRoom.roomId !== thisRoom.roomId) {
       if (connectionStatus === ConnectionStatus.Connected) {
         console.log(
-          `disconnecting from room ${currentRoom.roomId} and connecting to room ${roomInfo.room.id}`
+          `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
         );
         room?.disconnect();
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);
       } else {
-        console.log(`connecting to room ${roomInfo.room.id}`);
+        console.log(`connecting to room ${thisRoom.roomId}`);
         connectRoom();
       }
-    } else if (currentRoom.roomId === roomInfo.room.id) {
+    } else if (currentRoom.roomId === thisRoom.roomId) {
       if (connectionStatus === ConnectionStatus.Connected) {
-        console.log(`already connected to room ${roomInfo.room.id}`);
+        console.log(`already connected to room ${thisRoom.roomId}`);
       } else if (connectionStatus === ConnectionStatus.Connecting) {
-        console.log(`already connecting to room ${roomInfo.room.id}`);
+        console.log(`already connecting to room ${thisRoom.roomId}`);
       } else {
-        console.log(`connecting to room ${roomInfo.room.id}`);
+        console.log(`connecting to room ${thisRoom.roomId}`);
         connectRoom();
       }
     }
-  }, [connectRoom, connectionStatus, currentRoom.roomId, room, roomInfo]);
+  }, [
+    connectRoom,
+    connectionStatus,
+    currentRoom.roomId,
+    room,
+    roomInfo,
+    thisRoom.roomId,
+  ]);
 
   return (
     <>
@@ -121,7 +131,7 @@ function GroupRoom(props: {
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.name} />
-        {thisRoom &&
+        {isThisRoomConnected &&
           (!isVideoWindowOpen ? (
             <Tooltip title="Open Video Streams" placement="top" arrow>
               <IconButton
@@ -168,7 +178,7 @@ function GroupRoom(props: {
             </Tooltip>
           ))}
       </ListItemButton>
-      {thisRoom ? (
+      {isThisRoomConnected ? (
         <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />
       ) : (
         <PeekRoomParticipants roomInfo={roomInfo} usersObj={usersObj} />

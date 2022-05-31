@@ -1,16 +1,11 @@
 /* eslint-disable no-console */
 import Box from '@mui/material/Box';
 import * as React from 'react';
-import { ref, remove, update, child } from 'firebase/database';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import GroupTabs from './GroupTabs';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { getWorld, selectGroups } from '../redux/WorldSlice';
-import { database } from '../redux/Firebase';
-import {
-  addParticipantRTListener,
-  addOnlineRTListener,
-} from '../redux/ArtySlice';
+import { getWorld } from '../redux/WorldSlice';
+import { signedIn, signedOut } from '../redux/ArtySlice';
 import * as models from '../models/models';
 import useRoom from '../hooks/useRoom';
 import {
@@ -18,7 +13,6 @@ import {
   selectConnectionStatus,
   setConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
-import { selectAppUser } from '../redux/AppUserSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
 import VideoViews from './VideoViews';
 
@@ -31,19 +25,6 @@ const Home = () => {
   const dispatch = useAppDispatch();
   const { isConnecting, error, room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const { appUser } = useAppSelector(selectAppUser);
-  const groups = useAppSelector(selectGroups);
-
-  const setOnlineStatus = React.useCallback(
-    (groupId: string, isOnline: boolean) => {
-      const nodeRef = ref(database, `online/${groupId}`);
-      if (isOnline) {
-        return update(nodeRef, { [appUser.id]: true });
-      }
-      return remove(child(nodeRef, `${appUser.id}`));
-    },
-    [appUser.id]
-  );
 
   React.useEffect(() => {
     console.log('useEffect -> dispatch getWorld');
@@ -52,26 +33,16 @@ const Home = () => {
         console.log('dispatch getWorld -> then', response);
         return response.payload as models.GroupsInfo;
       })
-      .then((groupsInfo) => {
-        groupsInfo.forEach((groupInfo) => {
-          const groupId = groupInfo.group.id.toString();
-          console.log('addParticipantRTListener', groupId);
-          dispatch(
-            addParticipantRTListener({
-              groupId,
-            })
-          );
-          console.log('addOnlineRTListener', groupId);
-          dispatch(addOnlineRTListener({ groupId }));
-          setOnlineStatus(groupId, true);
-        });
+      .then(() => {
+        dispatch(signedIn);
+        console.log('dispatch signedIn');
         return true;
       })
       .catch((err) => {
         console.log('dispatch getWorld -> error', err);
         return false;
       });
-  }, [axiosPrivate, dispatch, setOnlineStatus]);
+  }, [axiosPrivate, dispatch]);
 
   React.useEffect(() => {
     console.log('Home Mounted');
@@ -98,12 +69,9 @@ const Home = () => {
     if (connectionStatus !== ConnectionStatus.Disconnected) {
       room?.disconnect();
     }
-    groups.forEach((groupInfo) => {
-      const { group } = groupInfo;
-      const groupId = group.id.toString();
-      setOnlineStatus(groupId, false);
-    });
-  }, [connectionStatus, groups, room, setOnlineStatus]);
+    dispatch(signedOut);
+    console.log('dispatch signedOut');
+  }, [connectionStatus, dispatch, room]);
 
   React.useEffect(() => {
     window.addEventListener('beforeunload', handleBeforeUnload);

@@ -109,8 +109,23 @@ listenerMiddleware.startListening({
   },
 });
 
+// on connectionStatus change, push/clear UserParticipantRTInfo
 listenerMiddleware.startListening({
-  actionCreator: setConnectionStatus,
+  predicate: (_action, currentState, previousState) => {
+    const { connectionStatus: currentConnectionStatus } = (
+      currentState as RootState
+    ).connectionStatus;
+    const { connectionStatus: previousConnectionStatus } = (
+      previousState as RootState
+    ).connectionStatus;
+    const case1 =
+      currentConnectionStatus === ConnectionStatus.Connected &&
+      previousConnectionStatus !== ConnectionStatus.Connected;
+    const case2 =
+      currentConnectionStatus !== ConnectionStatus.Connected &&
+      previousConnectionStatus === ConnectionStatus.Connected;
+    return case1 || case2;
+  },
   effect: (action, listenerApi) => {
     const connectionStatus = action.payload;
     const state = listenerApi.getState() as RootState;
@@ -145,6 +160,7 @@ listenerMiddleware.startListening({
   },
 });
 
+// on mute/deafen/screenShare change, pushUserParticipantRTInfo if connected
 listenerMiddleware.startListening({
   predicate: (_action, currentState, previousState) => {
     const { mute: currentMute, deafen: currentDeafen } = (

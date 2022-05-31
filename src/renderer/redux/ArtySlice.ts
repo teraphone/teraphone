@@ -98,3 +98,48 @@ export type UnknownParticipantPayload = {
 export const unknownParticipant = createAction<UnknownParticipantPayload>(
   'arty/unknownParticipant'
 );
+
+export const SignedIn = createAction('arty/SignedIn');
+
+export const SignedOut = createAction('arty/SignedOut');
+
+export type PushUserParticipantRTInfoPayload = {
+  groupId: string;
+  roomId: string;
+  userId: string;
+  info: models.ParticipantRTInfo;
+};
+
+export const pushUserParticipantRTInfo =
+  createAction<PushUserParticipantRTInfoPayload>(
+    'arty/pushUserParticipantRTInfo'
+  );
+
+export type ClearUserParticipantRTInfoPayload = {
+  groupId: string;
+  roomId: string;
+  userId: string;
+};
+
+export const clearUserParticipantRTInfo =
+  createAction<ClearUserParticipantRTInfoPayload>(
+    'arty/clearUserParticipantRTInfo'
+  );
+
+export type PushUserOnlineRTInfo = {
+  groupId: string;
+  userId: string;
+};
+
+export const pushUserOnlineRTInfo = createAction<PushUserOnlineRTInfo>(
+  'arty/pushUserOnlineRTInfo'
+);
+
+export type ClearUserOnlineRTInfo = {
+  groupId: string;
+  userId: string;
+};
+
+export const clearUserOnlineRTInfo = createAction<ClearUserOnlineRTInfo>(
+  'arty/clearUserOnlineRTInfo'
+);

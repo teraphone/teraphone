@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import { Action, AnyAction, createListenerMiddleware } from '@reduxjs/toolkit';
+import { createListenerMiddleware } from '@reduxjs/toolkit';
 import { onValue, ref, remove, update } from 'firebase/database';
 import {
   addParticipantRTListener,
@@ -17,7 +17,7 @@ import * as models from '../models/models';
 import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
 import type { RootState } from './store';
 import { database } from './Firebase';
-import { ConnectionStatus, setConnectionStatus } from './ConnectionStatusSlice';
+import { ConnectionStatus } from './ConnectionStatusSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 

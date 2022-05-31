@@ -4,7 +4,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as Livekit from 'livekit-client';
-import { remove, update, child, ref } from 'firebase/database';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -17,14 +16,10 @@ import {
   ConnectionStatus,
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
-import { database } from '../redux/Firebase';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { selectAppUser } from '../redux/AppUserSlice';
 import PeekRoomParticipants from './PeekRoomParticipants';
-import { selectMute, selectDeafen } from '../redux/MuteSlice';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
-import { selectIsSharing } from '../redux/ScreenShareSlice';
 
 function GroupRoom(props: {
   groupInfo: models.GroupInfo;
@@ -32,18 +27,11 @@ function GroupRoom(props: {
   usersObj: { [id: number]: models.GroupUserInfo };
 }) {
   const { groupInfo, roomInfo, usersObj } = props;
-  const groupId = roomInfo.room.group_id;
-  const { id: roomId } = roomInfo.room;
   const url = 'wss://demo.dally.app';
   const { connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const { appUser } = useAppSelector(selectAppUser);
-  const roomRTRef = ref(database, `participants/${groupId}/${roomId}`);
-  const mute = useAppSelector(selectMute);
-  const deafen = useAppSelector(selectDeafen);
   const dispatch = useAppDispatch();
-  const isScreenSharing = useAppSelector(selectIsSharing);
   const thisRoom =
     currentRoom.roomId === roomInfo.room.id &&
     connectionStatus === ConnectionStatus.Connected;

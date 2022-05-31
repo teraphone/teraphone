@@ -18,7 +18,6 @@ import {
   selectConnectionStatus,
   setConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
-import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
 import VideoViews from './VideoViews';
@@ -31,7 +30,6 @@ const Home = () => {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { isConnecting, error, room } = useRoom();
-  const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const { appUser } = useAppSelector(selectAppUser);
   const groups = useAppSelector(selectGroups);

@@ -76,14 +76,14 @@ export type AddParticipantRTListenerPayload = {
   groupId: string;
 };
 
-export type AddOnlineRTListenerPayload = {
-  groupId: string;
-};
-
 export const addParticipantRTListener =
   createAction<AddParticipantRTListenerPayload>(
     'arty/addParticipantRTListener'
   );
+
+export type AddOnlineRTListenerPayload = {
+  groupId: string;
+};
 
 export const addOnlineRTListener = createAction<AddOnlineRTListenerPayload>(
   'arty/addOnlineRTListener'

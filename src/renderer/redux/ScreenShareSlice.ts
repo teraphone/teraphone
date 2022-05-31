@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
+import type { SerializedDesktopCapturerSource } from '../global';
 
 export type ScreenSource = {
-  [id: string]: true;
+  [id: string]: SerializedDesktopCapturerSource;
 };
 
 type ScreenShareState = {
@@ -18,6 +19,13 @@ const initialState: ScreenShareState = {
   pickerVisible: false,
   isSharing: false,
 };
+
+export function validDataURL(dataURL: string | null) {
+  if (dataURL === null) {
+    return false;
+  }
+  return dataURL.split(',')[1].length > 0;
+}
 
 export const screenShareSlice = createSlice({
   name: 'screenShare',

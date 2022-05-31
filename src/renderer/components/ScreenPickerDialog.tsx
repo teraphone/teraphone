@@ -20,16 +20,10 @@ import {
   selectWindows,
   selectPickerVisible,
   ScreenSource,
+  validDataURL,
 } from '../redux/ScreenShareSlice';
 import { SerializedDesktopCapturerSource } from '../global';
 import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
-
-function validDataURL(dataURL: string | null) {
-  if (dataURL === null) {
-    return false;
-  }
-  return dataURL.split(',')[1].length > 0;
-}
 
 function ScreenPickerItem(props: {
   source: SerializedDesktopCapturerSource;
@@ -46,9 +40,9 @@ function ScreenPickerItem(props: {
       if (target) {
         return rest;
       }
-      return { ...prev, [id]: true };
+      return { ...prev, [id]: source };
     });
-  }, [id, setSelected]);
+  }, [id, setSelected, source]);
 
   return (
     <ImageListItem key={id}>

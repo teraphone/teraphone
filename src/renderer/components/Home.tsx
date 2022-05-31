@@ -15,6 +15,7 @@ import {
 } from '../redux/ConnectionStatusSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
 import VideoViews from './VideoViews';
+import AudioRenderers from './AudioRenderers';
 
 const Home = () => {
   React.useEffect(() => {
@@ -91,6 +92,7 @@ const Home = () => {
         <GroupTabs />
         <ScreenPickerDialog />
         <VideoViews />
+        <AudioRenderers />
       </Box>
     </div>
   );

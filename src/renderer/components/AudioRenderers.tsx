@@ -14,44 +14,49 @@ function AudioRenderers() {
   const { room } = useRoom();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
+  const localParticipant = room?.localParticipant;
+  const remoteParticipants = room?.participants;
+
+  React.useEffect(() => {
+    if (localParticipant) {
+      localParticipant.audioTracks.forEach((localTrackPub) => {
+        const localAudioTrack = localTrackPub.track;
+        if (!localAudioTrack) {
+          return;
+        }
+        if (mute) {
+          localAudioTrack.mute().catch(console.error);
+        } else {
+          localAudioTrack.unmute().catch(console.error);
+        }
+      });
+    }
+  }, [localParticipant, mute]);
 
   if (!room) {
     return null;
   }
 
-  const { localParticipant, participants: remoteParticipants } = room;
-  if (localParticipant) {
-    localParticipant.audioTracks.forEach((localTrackPub) => {
-      const localAudioTrack = localTrackPub.track;
-      if (!localAudioTrack) {
-        return;
-      }
-      if (mute) {
-        localAudioTrack?.mute();
-      } else {
-        localAudioTrack?.unmute();
-      }
+  const renderers: React.ReactNode[] = [];
+  if (remoteParticipants) {
+    remoteParticipants.forEach((remoteParticipant) => {
+      remoteParticipant.audioTracks.forEach((remoteTrackPub) => {
+        remoteTrackPub.setSubscribed(true);
+        const remoteAudioTrack = remoteTrackPub?.track;
+        if (remoteAudioTrack) {
+          const volume = deafen ? 0 : 1;
+          renderers.push(
+            <AudioRenderer
+              key={remoteTrackPub.trackSid}
+              track={remoteAudioTrack}
+              isLocal={false}
+              volume={volume}
+            />
+          );
+        }
+      });
     });
   }
-
-  const renderers: React.ReactNode[] = [];
-  remoteParticipants.forEach((remoteParticipant) => {
-    remoteParticipant.audioTracks.forEach((remoteTrackPub) => {
-      remoteTrackPub.setSubscribed(true);
-      const remoteAudioTrack = remoteTrackPub?.track;
-      if (remoteAudioTrack) {
-        const volume = deafen ? 0 : 1;
-        renderers.push(
-          <AudioRenderer
-            key={remoteTrackPub.trackSid}
-            track={remoteAudioTrack}
-            isLocal={false}
-            volume={volume}
-          />
-        );
-      }
-    });
-  });
 
   return <div>{renderers}</div>;
 }

@@ -205,7 +205,7 @@ listenerMiddleware.startListening({
   },
 });
 
-// on signedIn, push UserOnlineRTInfo
+// on signedIn, push UserOnlineRTInfo, add Participant and Online RTListeners
 listenerMiddleware.startListening({
   actionCreator: signedIn,
   effect: (_action, listenerApi) => {
@@ -214,6 +214,16 @@ listenerMiddleware.startListening({
     const { id: userId } = state.appUser.appUser;
     groupsInfo.forEach((groupInfo) => {
       const { id: groupId } = groupInfo.group;
+      listenerApi.dispatch(
+        addParticipantRTListener({
+          groupId: groupId.toString(),
+        })
+      );
+      listenerApi.dispatch(
+        addOnlineRTListener({
+          groupId: groupId.toString(),
+        })
+      );
       listenerApi.dispatch(
         pushUserOnlineRTInfo({
           groupId: groupId.toString(),

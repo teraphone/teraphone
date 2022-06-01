@@ -1,26 +1,26 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
+
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
-import CircularProgress from '@mui/material/CircularProgress';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-import Tooltip from '@mui/material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { ref, remove } from 'firebase/database';
 import * as React from 'react';
 import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
-import { database } from '../redux/Firebase';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import { selectAppUser } from '../redux/AppUserSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
@@ -180,11 +180,6 @@ function CurentRoomControls() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const { appUser } = useAppSelector(selectAppUser);
-  const userRTRef = ref(
-    database,
-    `participants/${currentRoom.groupId}/${currentRoom.roomId}/${appUser.id}`
-  );
   const debug = true;
 
   const handleShareCameraClick = React.useCallback(() => {
@@ -197,8 +192,7 @@ function CurentRoomControls() {
 
   const handleDisconnectClick = React.useCallback(() => {
     room?.disconnect();
-    remove(userRTRef);
-  }, [room, userRTRef]);
+  }, [room]);
 
   const handleInfoClick = React.useCallback(() => {
     console.log('room', room);

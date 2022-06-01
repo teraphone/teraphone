@@ -2,17 +2,15 @@
 /* eslint-disable no-console */
 import {
   Box,
-  Avatar,
   IconButton,
   Tooltip,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemText,
   ListItemIcon,
-  Typography,
   CircularProgress,
   Stack,
+  Button,
 } from '@mui/material';
 
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
@@ -22,6 +20,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import * as React from 'react';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
@@ -32,67 +31,13 @@ import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
 
-const StatusConnected = () => {
-  return (
-    <Typography variant="body1" sx={{ color: 'success.light' }}>
-      <SignalCellularAltIcon
-        fontSize="medium"
-        sx={{
-          mb: -0.5,
-
-          color: 'success.light',
-        }}
-      />
-      {' Voice Connected'}
-    </Typography>
-  );
-};
-
-const StatusConnecting = () => {
-  return (
-    <Typography variant="body1" sx={{ color: 'warning.light' }}>
-      <CircularProgress size={16} sx={{ mx: 0.5, color: 'warning.light' }} />
-      {'  Voice Connecting'}
-    </Typography>
-  );
-};
-
-const StatusError = () => {
-  return (
-    <Typography variant="body1" sx={{ color: 'error.light' }}>
-      <ErrorOutlineIcon
-        fontSize="medium"
-        sx={{
-          mb: -0.5,
-
-          color: 'error.light',
-        }}
-      />
-      {' Error Connecting'}
-    </Typography>
-  );
-};
-
-const Status = (props: { status: ConnectionStatus }) => {
-  const { status } = props;
-  switch (status) {
-    case ConnectionStatus.Connected: {
-      return <StatusConnected />;
-    }
-    case ConnectionStatus.Connecting: {
-      return <StatusConnecting />;
-    }
-    case ConnectionStatus.Error: {
-      return <StatusError />;
-    }
-    case ConnectionStatus.Reconnecting: {
-      return <StatusConnecting />;
-    }
-    default: {
-      return <></>;
-    }
-  }
-};
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#000',
+    },
+  },
+});
 
 const ShareCameraButton = (props: {
   status: ConnectionStatus;
@@ -102,15 +47,20 @@ const ShareCameraButton = (props: {
   return (
     <Tooltip title="Share Camera" placement="top" arrow>
       <span>
-        <IconButton
-          color="primary"
-          aria-label="disconnect"
-          component="span"
-          onClick={onClick}
-          disabled
-        >
-          <VideoCameraFrontIcon />
-        </IconButton>
+        <ThemeProvider theme={theme}>
+          <Button
+            size="small"
+            fullWidth
+            disabled
+            variant="contained"
+            startIcon={<VideoCameraFrontIcon />}
+            disableElevation
+            onClick={onClick}
+            sx={{ px: 4, backgroundColor: 'black' }}
+          >
+            Camera
+          </Button>
+        </ThemeProvider>
       </span>
     </Tooltip>
   );
@@ -124,15 +74,19 @@ const ShareScreenButton = (props: {
   return (
     <Tooltip title="Share Screen" placement="top" arrow>
       <span>
-        <IconButton
-          color="primary"
-          aria-label="disconnect"
-          component="span"
-          onClick={onClick}
-          disabled={status !== ConnectionStatus.Connected}
-        >
-          <ScreenShareIcon />
-        </IconButton>
+        <ThemeProvider theme={theme}>
+          <Button
+            size="small"
+            variant="contained"
+            startIcon={<ScreenShareIcon />}
+            disableElevation
+            onClick={onClick}
+            sx={{ px: 4, backgroundColor: 'black' }}
+            disabled={status !== ConnectionStatus.Connected}
+          >
+            Screen
+          </Button>
+        </ThemeProvider>
       </span>
     </Tooltip>
   );
@@ -174,7 +128,7 @@ const InfoButton = (props: {
           onClick={onClick}
           disabled={status !== ConnectionStatus.Connected}
         >
-          <InfoIcon />
+          <InfoIcon sx={{ color: 'black' }} />
         </IconButton>
       </span>
     </Tooltip>
@@ -243,29 +197,38 @@ function CurentRoomControls() {
   return (
     <>
       {connectionStatus !== ConnectionStatus.Disconnected && (
-        <Box sx={{}}>
+        <Box
+          sx={{
+            m: '2px',
+            backgroundColor: '#f8f8f8',
+          }}
+        >
           <List
             dense
             sx={{
               boxSizing: 'border-box',
-              mx: '2px',
+              p: 0,
             }}
           >
             <ListItem
               disableGutters
               disablePadding
               sx={{
-                // pl: '0px',
-                // pr: '40px',
                 py: '2px',
-                my: '2px',
-                backgroundColor: '#f8f8f8',
               }}
               secondaryAction={
-                <DisconnectButton
-                  status={connectionStatus}
-                  onClick={handleDisconnectClick}
-                />
+                <>
+                  {debug && (
+                    <InfoButton
+                      status={connectionStatus}
+                      onClick={handleInfoClick}
+                    />
+                  )}
+                  <DisconnectButton
+                    status={connectionStatus}
+                    onClick={handleDisconnectClick}
+                  />
+                </>
               }
             >
               <ListItemIcon
@@ -287,17 +250,21 @@ function CurentRoomControls() {
                 secondary={secondaryStatusText}
               />
             </ListItem>
+            <ListItem
+              sx={{ px: 0, textAlign: 'center', justifyContent: 'center' }}
+            >
+              <Stack direction="row" spacing={1}>
+                <ShareCameraButton
+                  status={connectionStatus}
+                  onClick={handleShareCameraClick}
+                />
+                <ShareScreenButton
+                  status={connectionStatus}
+                  onClick={handleShareScreenClick}
+                />
+              </Stack>
+            </ListItem>
           </List>
-          <Stack direction="row" spacing={2}>
-            <ShareCameraButton
-              status={connectionStatus}
-              onClick={handleShareCameraClick}
-            />
-            <ShareScreenButton
-              status={connectionStatus}
-              onClick={handleShareScreenClick}
-            />
-          </Stack>
         </Box>
       )}
     </>

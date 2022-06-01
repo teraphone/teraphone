@@ -40,8 +40,6 @@ function ScreenShareBanner(props: {
       disableGutters
       disablePadding
       sx={{
-        pl: '0px',
-        pr: '40px',
         py: '2px',
         my: '2px',
         backgroundColor: '#f8f8f8',
@@ -130,6 +128,7 @@ function ScreenShareBanners() {
       sx={{
         boxSizing: 'border-box',
         mx: '2px',
+        py: 0,
       }}
     >
       {screenBanners}

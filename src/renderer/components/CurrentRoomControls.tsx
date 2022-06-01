@@ -2,10 +2,17 @@
 /* eslint-disable no-console */
 import {
   Box,
+  Avatar,
   IconButton,
   Tooltip,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemIcon,
   Typography,
   CircularProgress,
+  Stack,
 } from '@mui/material';
 
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
@@ -140,13 +147,12 @@ const DisconnectButton = (props: {
     <Tooltip title="Disconnect" placement="top" arrow>
       <span>
         <IconButton
-          color="primary"
           aria-label="disconnect"
           component="span"
           onClick={onClick}
           disabled={status !== ConnectionStatus.Connected}
         >
-          <LogoutIcon />
+          <LogoutIcon sx={{ color: 'black' }} />
         </IconButton>
       </span>
     </Tooltip>
@@ -198,14 +204,91 @@ function CurentRoomControls() {
     console.log('room', room);
   }, [room]);
 
+  let statusColor: string;
+  let primaryStatusText: string;
+  let icon: React.ReactElement;
+
+  switch (connectionStatus) {
+    case ConnectionStatus.Connected:
+      primaryStatusText = 'Voice Connected';
+      statusColor = 'success.light';
+      icon = (
+        <SignalCellularAltIcon fontSize="medium" sx={{ color: statusColor }} />
+      );
+      break;
+    case ConnectionStatus.Connecting:
+      primaryStatusText = 'Voice Connecting';
+      statusColor = 'warning.light';
+      icon = <CircularProgress size={16} sx={{ color: statusColor }} />;
+      break;
+    case ConnectionStatus.Error:
+      primaryStatusText = 'Error Connecting';
+      statusColor = 'error.light';
+      icon = <ErrorOutlineIcon fontSize="medium" sx={{ color: statusColor }} />;
+      break;
+    case ConnectionStatus.Reconnecting:
+      primaryStatusText = 'Voice Connecting';
+      statusColor = 'warning.light';
+      icon = <CircularProgress size={16} sx={{ color: statusColor }} />;
+      break;
+    default: {
+      primaryStatusText = 'Voice Disconnected';
+      statusColor = 'common.black';
+      icon = <></>;
+    }
+  }
+
+  const secondaryStatusText = `${currentRoom.groupName} / ${currentRoom.roomName}`;
+
   return (
     <>
       {connectionStatus !== ConnectionStatus.Disconnected && (
         <Box sx={{}}>
-          <Status status={connectionStatus} />
-
-          <Typography variant="body2">{`${currentRoom.groupName} / ${currentRoom.roomName}`}</Typography>
-          <Box>
+          <List
+            dense
+            sx={{
+              boxSizing: 'border-box',
+              mx: '2px',
+            }}
+          >
+            <ListItem
+              disableGutters
+              disablePadding
+              sx={{
+                // pl: '0px',
+                // pr: '40px',
+                py: '2px',
+                my: '2px',
+                backgroundColor: '#f8f8f8',
+              }}
+              secondaryAction={
+                <DisconnectButton
+                  status={connectionStatus}
+                  onClick={handleDisconnectClick}
+                />
+              }
+            >
+              <ListItemIcon
+                sx={{
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={primaryStatusText}
+                primaryTypographyProps={{
+                  variant: 'body1',
+                  sx: {
+                    color: statusColor,
+                  },
+                }}
+                secondary={secondaryStatusText}
+              />
+            </ListItem>
+          </List>
+          <Stack direction="row" spacing={2}>
             <ShareCameraButton
               status={connectionStatus}
               onClick={handleShareCameraClick}
@@ -214,14 +297,7 @@ function CurentRoomControls() {
               status={connectionStatus}
               onClick={handleShareScreenClick}
             />
-            <DisconnectButton
-              status={connectionStatus}
-              onClick={handleDisconnectClick}
-            />
-            {debug && (
-              <InfoButton status={connectionStatus} onClick={handleInfoClick} />
-            )}
-          </Box>
+          </Stack>
         </Box>
       )}
     </>

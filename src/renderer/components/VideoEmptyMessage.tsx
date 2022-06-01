@@ -2,7 +2,6 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 export interface VideoEmptyMessageProps {
   message: string;
@@ -10,47 +9,37 @@ export interface VideoEmptyMessageProps {
   buttonAction: () => void | undefined;
 }
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#000',
-    },
-  },
-});
-
 function VideoEmptyMessage(props: VideoEmptyMessageProps) {
   const { message, buttonText, buttonAction } = props;
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box
+    <Box
+      sx={{
+        textAlign: 'center',
+        pt: '30%',
+      }}
+    >
+      <Typography
         sx={{
-          textAlign: 'center',
-          pt: '30%',
+          color: 'primary',
         }}
+        variant="body1"
       >
-        <Typography
+        {message}
+      </Typography>
+      {buttonText && (
+        <Button
           sx={{
-            color: 'primary',
+            mt: '20',
           }}
-          variant="body1"
+          color="primary"
+          variant="outlined"
+          onClick={buttonAction}
         >
-          {message}
-        </Typography>
-        {buttonText && (
-          <Button
-            sx={{
-              mt: '20',
-            }}
-            color="primary"
-            variant="outlined"
-            onClick={buttonAction}
-          >
-            {buttonText}
-          </Button>
-        )}
-      </Box>
-    </ThemeProvider>
+          {buttonText}
+        </Button>
+      )}
+    </Box>
   );
 }
 

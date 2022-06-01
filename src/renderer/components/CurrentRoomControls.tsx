@@ -20,7 +20,6 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import * as React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
@@ -31,14 +30,6 @@ import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#000',
-    },
-  },
-});
-
 const ShareCameraButton = (props: {
   status: ConnectionStatus;
   onClick: () => void;
@@ -47,20 +38,18 @@ const ShareCameraButton = (props: {
   return (
     <Tooltip title="Share Camera" placement="top" arrow>
       <span>
-        <ThemeProvider theme={theme}>
-          <Button
-            size="small"
-            fullWidth
-            disabled
-            variant="contained"
-            startIcon={<VideoCameraFrontIcon />}
-            disableElevation
-            onClick={onClick}
-            sx={{ px: 4, backgroundColor: 'black' }}
-          >
-            Camera
-          </Button>
-        </ThemeProvider>
+        <Button
+          size="small"
+          fullWidth
+          disabled
+          variant="contained"
+          startIcon={<VideoCameraFrontIcon />}
+          disableElevation
+          onClick={onClick}
+          sx={{ px: 4, backgroundColor: 'black' }}
+        >
+          Camera
+        </Button>
       </span>
     </Tooltip>
   );
@@ -74,19 +63,17 @@ const ShareScreenButton = (props: {
   return (
     <Tooltip title="Share Screen" placement="top" arrow>
       <span>
-        <ThemeProvider theme={theme}>
-          <Button
-            size="small"
-            variant="contained"
-            startIcon={<ScreenShareIcon />}
-            disableElevation
-            onClick={onClick}
-            sx={{ px: 4, backgroundColor: 'black' }}
-            disabled={status !== ConnectionStatus.Connected}
-          >
-            Screen
-          </Button>
-        </ThemeProvider>
+        <Button
+          size="small"
+          variant="contained"
+          startIcon={<ScreenShareIcon />}
+          disableElevation
+          onClick={onClick}
+          sx={{ px: 4, backgroundColor: 'black' }}
+          disabled={status !== ConnectionStatus.Connected}
+        >
+          Screen
+        </Button>
       </span>
     </Tooltip>
   );

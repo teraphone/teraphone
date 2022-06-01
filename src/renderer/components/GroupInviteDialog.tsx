@@ -40,7 +40,9 @@ function GroupInviteDialog(props: GroupIniviteDialogProps) {
       <DialogTitle>Invite to {groupInfo.group.name}</DialogTitle>
       <DialogContent>
         <Box textAlign="center" sx={{ pb: 2 }}>
-          <Button onClick={getInviteCode}>Generate New Code</Button>
+          <Button variant="contained" onClick={getInviteCode}>
+            Generate New Code
+          </Button>
         </Box>
         <TextField
           id="invite-code"

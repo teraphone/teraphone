@@ -51,7 +51,7 @@ function ScreenPickerItem(props: {
           p: 0,
           m: 0,
           border: 3,
-          borderColor: checked ? 'primary.main' : 'transparent',
+          borderColor: checked ? 'error.light' : 'transparent',
           backgroundColor: '#000',
           alignSelf: 'center',
           boxShadow: 0,

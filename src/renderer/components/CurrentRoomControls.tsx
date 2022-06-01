@@ -127,7 +127,7 @@ function CurentRoomControls() {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
-  const debug = true;
+  const debug = false;
 
   const handleShareCameraClick = React.useCallback(() => {
     console.log('handleShareCameraClick');

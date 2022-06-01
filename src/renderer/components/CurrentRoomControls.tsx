@@ -61,7 +61,7 @@ const ShareScreenButton = (props: {
 }) => {
   const { status, onClick } = props;
   return (
-    <Tooltip title="Share Screen" placement="top" arrow>
+    <Tooltip title="Share Screens" placement="top" arrow>
       <span>
         <Button
           size="small"
@@ -72,7 +72,7 @@ const ShareScreenButton = (props: {
           sx={{ px: 4, backgroundColor: 'black' }}
           disabled={status !== ConnectionStatus.Connected}
         >
-          Screen
+          Screens
         </Button>
       </span>
     </Tooltip>

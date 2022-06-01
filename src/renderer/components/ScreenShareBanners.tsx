@@ -41,6 +41,7 @@ function ScreenShareBanner(props: {
       disablePadding
       sx={{
         py: '2px',
+        pr: '40px',
         my: '2px',
         backgroundColor: '#f8f8f8',
       }}

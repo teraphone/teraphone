@@ -44,7 +44,21 @@ function ScreenShareBanners() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
 
-  return null;
+  const screenBanners = Object.entries(screens).map(([id, source]) => (
+    <ScreenShareBanner key={id} source={source} setSources={setScreens} />
+  ));
+
+  const windowBanners = Object.entries(windows).map(([id, source]) => (
+    <ScreenShareBanner key={id} source={source} setSources={setWindows} />
+  ));
+
+  return (
+    <Box>
+      {screenBanners}
+      {windowBanners}
+    </Box>
+  );
 }
 
 export default ScreenShareBanners;
+// todo: finish this

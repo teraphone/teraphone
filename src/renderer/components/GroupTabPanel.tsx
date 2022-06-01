@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Box from '@mui/material/Box';
 import * as React from 'react';
 import * as models from '../models/models';
@@ -6,6 +7,7 @@ import GroupMenu from './GroupMenu';
 import BottomControls from './BottomControls';
 import CurrentRoomControls from './CurrentRoomControls';
 import GroupContacts from './GroupContacts';
+import ScreenShareBanners from './ScreenShareBanners';
 
 interface GroupTabPanelProps {
   index: number;
@@ -50,6 +52,7 @@ function GroupTabPanel(props: GroupTabPanelProps) {
                 backgroundColor: 'background.paper',
               }}
             >
+              <ScreenShareBanners />
               <CurrentRoomControls />
               <BottomControls />
             </Box>

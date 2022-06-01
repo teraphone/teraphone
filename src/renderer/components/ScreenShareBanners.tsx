@@ -4,7 +4,6 @@ import {
   Avatar,
   IconButton,
   Tooltip,
-  Typography,
   List,
   ListItem,
   ListItemAvatar,
@@ -17,7 +16,6 @@ import {
   removeWindow,
   selectScreens,
   selectWindows,
-  ScreenSource,
   validDataURL,
 } from '../redux/ScreenShareSlice';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -141,4 +139,3 @@ function ScreenShareBanners() {
 }
 
 export default ScreenShareBanners;
-// todo: finish this

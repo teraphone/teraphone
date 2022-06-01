@@ -10,7 +10,7 @@ import {
   ListItemText,
 } from '@mui/material';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import StopScreenShareIcon from '@mui/icons-material/StopScreenShare';
+import CloseIcon from '@mui/icons-material/Close';
 import {
   removeScreen,
   removeWindow,
@@ -58,7 +58,7 @@ function ScreenShareBanner(props: {
               component="span"
               onClick={handleClose}
             >
-              <StopScreenShareIcon
+              <CloseIcon
                 sx={{
                   color: 'black',
                 }}

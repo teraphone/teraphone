@@ -165,7 +165,7 @@ function GroupContacts(props: GroupContactsProps) {
         </ListItemButton>
         <Collapse in={onlineOpen} timeout="auto" unmountOnExit>
           <List disablePadding>
-            {thisContact}
+            {/* {thisContact} */}
             {onlineContacts}
           </List>
         </Collapse>

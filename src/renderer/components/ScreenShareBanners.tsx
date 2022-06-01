@@ -13,12 +13,10 @@ import {
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare';
 import {
-  setScreens,
-  setWindows,
-  setPickerVisible,
+  removeScreen,
+  removeWindow,
   selectScreens,
   selectWindows,
-  selectPickerVisible,
   ScreenSource,
   validDataURL,
 } from '../redux/ScreenShareSlice';
@@ -27,12 +25,17 @@ import { SerializedDesktopCapturerSource } from '../global';
 
 function ScreenShareBanner(props: {
   source: SerializedDesktopCapturerSource;
-  setSources: ActionCreatorWithPayload<ScreenSource, string>;
+  removeSource: ActionCreatorWithPayload<string, string>;
 }) {
-  const { source, setSources } = props;
+  const { source, removeSource } = props;
   const { id, name, appIconDataURL } = source;
+  const dispatch = useAppDispatch();
   const isValidIcon = appIconDataURL ? validDataURL(appIconDataURL) : false;
   const avatarDim = '24px';
+
+  const handleClose = React.useCallback(() => {
+    dispatch(removeSource(id));
+  }, [dispatch, id, removeSource]);
 
   return (
     <ListItem
@@ -56,7 +59,7 @@ function ScreenShareBanner(props: {
               size="small"
               aria-label="stop-sharing"
               component="span"
-              onClick={() => console.log('clicked', id)}
+              onClick={handleClose}
             >
               <StopScreenShareIcon
                 sx={{
@@ -116,11 +119,11 @@ function ScreenShareBanners() {
   const windows = useAppSelector(selectWindows);
 
   const screenBanners = Object.entries(screens).map(([id, source]) => (
-    <ScreenShareBanner key={id} source={source} setSources={setScreens} />
+    <ScreenShareBanner key={id} source={source} removeSource={removeScreen} />
   ));
 
   const windowBanners = Object.entries(windows).map(([id, source]) => (
-    <ScreenShareBanner key={id} source={source} setSources={setWindows} />
+    <ScreenShareBanner key={id} source={source} removeSource={removeWindow} />
   ));
 
   return (

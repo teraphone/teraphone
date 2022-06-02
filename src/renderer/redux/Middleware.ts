@@ -1,7 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import { createListenerMiddleware } from '@reduxjs/toolkit';
-import { onValue, ref, remove, update } from 'firebase/database';
+import {
+  onValue,
+  ref,
+  remove,
+  update,
+  onDisconnect,
+  child,
+} from 'firebase/database';
 import {
   addParticipantRTListener,
   addOnlineRTListener,
@@ -76,6 +83,7 @@ listenerMiddleware.startListening({
     );
     console.log('pushing Participants RT node:', nodeRef, info);
     update(nodeRef, info); // await?
+    onDisconnect(nodeRef).remove();
   },
 });
 
@@ -99,6 +107,7 @@ listenerMiddleware.startListening({
     const nodeRef = ref(database, `online/${groupId}`);
     console.log('pushing Online RT node:', nodeRef, userId);
     update(nodeRef, { [userId]: true }); // await?
+    onDisconnect(child(nodeRef, userId)).remove();
   },
 });
 

@@ -54,11 +54,13 @@ function WindowPortal(props: {
   }, [height, onClose, id, width, title, isMounted]);
 
   return (
-    <Portal container={containerRef.current}>
-      <ChildWindowContext.Provider key={id} value={windowRef}>
-        <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
-      </ChildWindowContext.Provider>
-    </Portal>
+    isMounted && (
+      <Portal container={containerRef.current}>
+        <ChildWindowContext.Provider key={id} value={windowRef}>
+          <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
+        </ChildWindowContext.Provider>
+      </Portal>
+    )
   );
 }
 

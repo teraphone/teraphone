@@ -31,7 +31,7 @@ function GroupRoom(props: {
   usersObj: { [id: number]: models.GroupUserInfo };
 }) {
   const { groupInfo, roomInfo, usersObj } = props;
-  const url = 'wss://demo.dally.app';
+  const url = 'wss://sfu-demo.teraphone.app';
   const { connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);

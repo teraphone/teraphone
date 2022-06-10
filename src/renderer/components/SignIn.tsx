@@ -183,7 +183,14 @@ function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="/">Forgot password?</Link>
+              <Link
+                to="/"
+                onClick={() =>
+                  window.open('https://teraphone.app/forgot-password', '_blank')
+                }
+              >
+                Forgot password?
+              </Link>
             </Grid>
             <Grid item>
               {/* eslint-disable-next-line react/no-unescaped-entities */}

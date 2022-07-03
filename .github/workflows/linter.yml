@@ -1,0 +1,23 @@
+name: Lint
+
+on:
+  push:
+    branches-ignore: [main]
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repo
+      - name: Checkout
+        uses: actions/checkout@v3
+      # Install Node.js (supports annotating ESLint errors on commits and pull requests)
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.15.1
+      # Install dependencies
+      - name: Install
+        run: npm ci
+      # Run ESLint
+      - name: Lint
+        run: npm run lint

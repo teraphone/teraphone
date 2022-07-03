@@ -1,0 +1,1044 @@
+{
+	"info": {
+		"_postman_id": "d21b57b4-0ebc-4b52-8edb-832f0f4ad6f7",
+		"name": "api.teraphone.app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21763387"
+	},
+	"item": [
+		{
+			"name": "v1/public",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/public",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"public"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/public/signup",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Lonnie Collins\",\n    \"email\": \"lonnie-collins@teraphone.app\",\n    \"password\": \"office4demo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/public/signup",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"public",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/public/signup-with-invite",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"David Wurtz\",\n    \"email\": \"dw@gmail.com\",\n    \"password\": \"pw\",\n    \"invite_code\": \"9601247253695940\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/public/signup-with-invite",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"public",
+						"signup-with-invite"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/public/login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"awefawef\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/public/login",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"public",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/auth",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/auth",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"lone-star\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"lone-star-v2-asdf\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/2",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"2"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/5",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"5"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/users",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user_id\": 14\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/3/users",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"3",
+						"users"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/users",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/users/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/6/users/11",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"6",
+						"users",
+						"11"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/users/:id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"group_role_id\": 6\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/users/12",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"users",
+						"12"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/users/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"group_role_id\": 4\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/users/10",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"users",
+						"10"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/invites",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/invites",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"invites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/invites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/6/invites",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"6",
+						"invites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/invites/:id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/6/invites/4",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"6",
+						"invites",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/invites/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/6/invites/2",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"6",
+						"invites",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"dave's temp room\",\n    \"capacity\": 8,\n    \"room_type_id\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms/1",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms/:id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms/3",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms/:id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"the-clubhouse\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms/1",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms/:id/users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms/1/users",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms",
+						"1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms/:id/users/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms/1/users",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms",
+						"1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/groups/:id/rooms/:id/users/:id",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"room_role_id\": 7,\n    \"can_see\": true,\n    \"can_join\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/groups/1/rooms/1/users/2",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"groups",
+						"1",
+						"rooms",
+						"1",
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/invites",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"invite_code\": \"3906769155647379\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/invites",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"invites"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/roomservice/rooms",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/roomservice/rooms",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"roomservice",
+						"rooms"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/roomservice/rooms/:group_id/:room_id/join",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/roomservice/rooms/1/4/join",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"roomservice",
+						"rooms",
+						"1",
+						"4",
+						"join"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/roomservice/rooms/:group_id/:room_id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/roomservice/rooms/1/1",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"roomservice",
+						"rooms",
+						"1",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "v1/private/world",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{deployment}}.{{domain}}/v1/private/world",
+					"protocol": "https",
+					"host": [
+						"{{deployment}}",
+						"{{domain}}"
+					],
+					"path": [
+						"v1",
+						"private",
+						"world"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmF0aW9uIjoxNjU2NTQ1MTQ3LCJpZCI6MTN9.fd2JA6RT15psEt5mZcD4A8xlv1LNn9OTP-X2y6cWb9Q",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "deployment",
+			"value": "api"
+		},
+		{
+			"key": "domain",
+			"value": "teraphone.app",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,420 @@
+openapi: 3.0.0
+info:
+  title: api.teraphone.app
+  version: 1.0.0
+servers:
+  - url: https://{{deployment}}.{{domain}}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+paths:
+  /v1/public:
+    get:
+      tags:
+        - default
+      summary: v1/public
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private:
+    get:
+      tags:
+        - default
+      summary: v1/private
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/public/signup:
+    post:
+      tags:
+        - default
+      summary: v1/public/signup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: Lonnie Collins
+                email: lonnie-collins@teraphone.app
+                password: office4demo
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/public/signup-with-invite:
+    post:
+      tags:
+        - default
+      summary: v1/public/signup-with-invite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: David Wurtz
+                email: dw@gmail.com
+                password: pw
+                invite_code: '9601247253695940'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/public/login:
+    post:
+      tags:
+        - default
+      summary: v1/public/login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                email: test1@gmail.com
+                password: awefawef
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/auth:
+    get:
+      tags:
+        - default
+      summary: v1/private/auth
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups:
+    post:
+      tags:
+        - default
+      summary: v1/private/groups
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: lone-star
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - default
+      summary: v1/private/groups
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/2:
+    patch:
+      tags:
+        - default
+      summary: v1/private/groups/:id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: lone-star-v2-asdf
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/5:
+    delete:
+      tags:
+        - default
+      summary: v1/private/groups/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/3/users:
+    post:
+      tags:
+        - default
+      summary: v1/private/groups/:id/users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                user_id: 14
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/users:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/users
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/6/users/11:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/users/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/users/12:
+    patch:
+      tags:
+        - default
+      summary: v1/private/groups/:id/users/:id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                group_role_id: 6
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/users/10:
+    delete:
+      tags:
+        - default
+      summary: v1/private/groups/:id/users/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/invites:
+    post:
+      tags:
+        - default
+      summary: v1/private/groups/:id/invites
+      requestBody:
+        content: {}
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/6/invites:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/invites
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/6/invites/4:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/invites/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/6/invites/2:
+    delete:
+      tags:
+        - default
+      summary: v1/private/groups/:id/invites/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/rooms:
+    post:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: dave's temp room
+                capacity: 8
+                room_type_id: 1
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/rooms/1:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    patch:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms/:id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                name: the-clubhouse
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/rooms/3:
+    delete:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/rooms/1/users:
+    get:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms/:id/users/:id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/groups/1/rooms/1/users/2:
+    patch:
+      tags:
+        - default
+      summary: v1/private/groups/:id/rooms/:id/users/:id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                room_role_id: 7
+                can_see: true
+                can_join: true
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/invites:
+    post:
+      tags:
+        - default
+      summary: v1/private/invites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                invite_code: '3906769155647379'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/roomservice/rooms:
+    get:
+      tags:
+        - default
+      summary: v1/roomservice/rooms
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/roomservice/rooms/1/4/join:
+    get:
+      tags:
+        - default
+      summary: v1/roomservice/rooms/:group_id/:room_id/join
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/roomservice/rooms/1/1:
+    get:
+      tags:
+        - default
+      summary: v1/roomservice/rooms/:group_id/:room_id
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /v1/private/world:
+    get:
+      tags:
+        - default
+      summary: v1/private/world
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

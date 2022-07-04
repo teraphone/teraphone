@@ -63,7 +63,7 @@ function SignIn() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
@@ -76,37 +76,29 @@ function SignIn() {
       email: data.get('email') as string,
       password: data.get('password') as string,
     };
-    axios
-      .post('/v1/public/login', request)
-      .then((response) => {
-        console.log(response);
-        const {
-          token,
-          expiration,
-          firebase_auth_token: fbToken,
-          user,
-        } = response.data;
-        dispatch(setAuth({ token, expiration }));
-        console.log('auth', auth);
-        dispatch(setAppUser(user));
-        return fbToken;
-      })
-      .then((fbToken) => {
-        const userCredential = signIn(fbToken);
-        return userCredential;
-      })
-      .then((userCredential) => {
-        console.log('userCredential', userCredential);
-        setSubmitError(false);
-        navigate('/home');
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error.response.data);
-        setSubmitError(true);
-        return false;
-      });
+
+    try {
+      setSubmitError(false);
+      const response = await axios.post('/v1/public/login', request);
+      console.log(response);
+      const {
+        token,
+        expiration,
+        firebase_auth_token: fbToken,
+        user,
+      } = response.data;
+      dispatch(setAuth({ token, expiration }));
+      console.log('auth', auth);
+      dispatch(setAppUser(user));
+      const userCredential = await signIn(fbToken);
+      console.log('userCredential', userCredential);
+      navigate('/home');
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.response.data);
+      setSubmitError(true);
+      return false;
+    }
   };
 
   const SubmitError = () => {

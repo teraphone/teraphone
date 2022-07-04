@@ -13,11 +13,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator';
+import axiosPackage, { AxiosError } from 'axios';
 import axios from '../api/axios';
 import { signIn } from '../redux/Firebase';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setAppUser } from '../redux/AppUserSlice';
 import { setAuth, selectAuth } from '../redux/AuthSlice';
+
+const { isAxiosError } = axiosPackage;
 
 type SignInRequest = {
   email: string;
@@ -66,7 +69,6 @@ function SignIn() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
     console.log({
       email: data.get('email'),
       password: data.get('password'),
@@ -93,11 +95,19 @@ function SignIn() {
       const userCredential = await signIn(fbToken);
       console.log('userCredential', userCredential);
       navigate('/home');
-    } catch (error) {
-      console.log(error);
-      setErrorMessage(error.response.data);
+    } catch (e) {
+      const defaultMessage = 'An error occured attempting to sign in';
+      let message;
+      if (isAxiosError(e)) {
+        const error = e as AxiosError;
+        message = error.response?.data ?? error.message ?? defaultMessage;
+      } else {
+        const error = e as Error;
+        message = error.message ?? defaultMessage;
+      }
+      console.warn(message);
+      setErrorMessage(message);
       setSubmitError(true);
-      return false;
     }
   };
 

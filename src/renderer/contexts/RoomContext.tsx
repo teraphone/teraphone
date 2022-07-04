@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import * as React from 'react';
 import { useRoom, RoomState } from 'livekit-react';
 
@@ -8,7 +10,7 @@ export const RoomProvider: React.FC = ({ children }) => {
   React.useEffect(() => {
     console.log('RoomProvider Mounted', roomState);
     return () => console.log('RoomProvider Unmounted');
-  }, []);
+  }, [roomState]);
   return (
     <RoomContext.Provider value={roomState}>{children}</RoomContext.Provider>
   );

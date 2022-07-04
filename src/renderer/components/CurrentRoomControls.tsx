@@ -31,16 +31,17 @@ import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
 
 const ShareCameraButton = (props: {
-  status: ConnectionStatus;
+  // status: ConnectionStatus;
   onClick: () => void;
 }) => {
-  const { status, onClick } = props;
+  const { /* status, */ onClick } = props;
   return (
     <Tooltip title="Share Camera" placement="top" arrow>
       <span>
         <Button
           size="small"
           fullWidth
+          // disabled={status !== ConnectionStatus.Connected}
           disabled
           variant="contained"
           startIcon={<VideoCameraFrontIcon />}
@@ -242,7 +243,7 @@ function CurentRoomControls() {
             >
               <Stack direction="row" spacing={1}>
                 <ShareCameraButton
-                  status={connectionStatus}
+                  // status={connectionStatus}
                   onClick={handleShareCameraClick}
                 />
                 <ShareScreenButton

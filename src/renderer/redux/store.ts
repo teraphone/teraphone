@@ -6,7 +6,7 @@ import muteReducer from './MuteSlice';
 import currentRoomReducer from './CurrentRoomSlice';
 import connectionStatusReducer from './ConnectionStatusSlice';
 import worldReducer from './WorldSlice';
-import artyReducer, { addParticipantRTListener } from './ArtySlice';
+import artyReducer /* , { addParticipantRTListener } */ from './ArtySlice';
 import screenShareReducer from './ScreenShareSlice';
 import videoViewReducer from './VideoViewSlice';
 

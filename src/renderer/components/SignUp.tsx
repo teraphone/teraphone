@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -40,6 +40,7 @@ function SignUp() {
   const [inviteCodeError, setInviteCodeError] = React.useState(false);
   const [inviteCodeHelperText, setInviteCodeHelperText] = React.useState('');
   const [inviteCodeValid, setInviteCodeValid] = React.useState(false);
+  const [isSigningUp, setIsSigningUp] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
@@ -116,6 +117,7 @@ function SignUp() {
     };
     try {
       setSubmitError(false);
+      setIsSigningUp(true);
       const response = await axios.post(
         '/v1/public/signup-with-invite',
         request
@@ -145,6 +147,7 @@ function SignUp() {
       setErrorMessage(message);
       setSubmitError(true);
     }
+    setIsSigningUp(false);
   };
 
   const SubmitError = () => {
@@ -230,17 +233,18 @@ function SignUp() {
               />
             </Grid>
           </Grid>
-          <Button
+          <LoadingButton
             disabled={
               !(nameValid && emailValid && passwordValid && inviteCodeValid)
             }
-            type="submit"
             fullWidth
-            variant="contained"
+            loading={isSigningUp}
             sx={{ mt: 3, mb: 2 }}
+            type="submit"
+            variant="contained"
           >
             Sign Up
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link to="/signin">Already have an account? Sign in</Link>

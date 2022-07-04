@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 // import FormControlLabel from '@mui/material/FormControlLabel';
@@ -34,6 +34,7 @@ function SignIn() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordHelperText, setPasswordHelperText] = React.useState('');
   const [passwordValid, setPasswordValid] = React.useState(false);
+  const [isSigningIn, setIsSigningIn] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
@@ -81,6 +82,7 @@ function SignIn() {
 
     try {
       setSubmitError(false);
+      setIsSigningIn(true);
       const response = await axios.post('/v1/public/login', request);
       console.log(response);
       const {
@@ -109,6 +111,7 @@ function SignIn() {
       setErrorMessage(message);
       setSubmitError(true);
     }
+    setIsSigningIn(false);
   };
 
   const SubmitError = () => {
@@ -174,15 +177,16 @@ function SignIn() {
               label="Remember me"
               name="remember"
             /> */}
-          <Button
+          <LoadingButton
             disabled={!(emailValid && passwordValid)}
-            type="submit"
             fullWidth
-            variant="contained"
+            loading={isSigningIn}
             sx={{ mt: 3, mb: 2 }}
+            type="submit"
+            variant="contained"
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container>
             <Grid item xs>
               <Link

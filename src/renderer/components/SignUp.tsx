@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -153,10 +154,8 @@ function SignUp() {
   const SubmitError = () => {
     if (submitError) {
       return (
-        <Box mt={5}>
-          <Typography variant="body1" color="error" align="center">
-            {errorMessage}
-          </Typography>
+        <Box component={Alert} severity="error" sx={{ width: '100%' }} mt={4}>
+          {errorMessage}
         </Box>
       );
     }

@@ -96,7 +96,7 @@ function SignUp() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -111,35 +111,28 @@ function SignUp() {
       password: data.get('password') as string,
       invite_code: data.get('invite_code') as string,
     };
-    axios
-      .post('/v1/public/signup-with-invite', request)
-      .then((response) => {
-        const {
-          token,
-          expiration,
-          firebase_auth_token: fbToken,
-          user,
-        } = response.data;
-        dispatch(setAuth({ token, expiration }));
-        dispatch(setAppUser(user));
-        return fbToken;
-      })
-      .then((fbToken) => {
-        const userCredential = signIn(fbToken);
-        return userCredential;
-      })
-      .then((userCredential) => {
-        console.log('userCredential', userCredential);
-        setSubmitError(false);
-        navigate('/home');
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error.response.data);
-        setSubmitError(true);
-        return false;
-      });
+    try {
+      setSubmitError(false);
+      const response = await axios.post(
+        '/v1/public/signup-with-invite',
+        request
+      );
+      const {
+        token,
+        expiration,
+        firebase_auth_token: fbToken,
+        user,
+      } = response.data;
+      dispatch(setAuth({ token, expiration }));
+      dispatch(setAppUser(user));
+      const userCredential = await signIn(fbToken);
+      console.log('userCredential', userCredential);
+      navigate('/home');
+    } catch (error) {
+      console.log(error);
+      setErrorMessage(error.response.data);
+      setSubmitError(true);
+    }
   };
 
   const SubmitError = () => {

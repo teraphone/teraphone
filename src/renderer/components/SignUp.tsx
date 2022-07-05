@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
@@ -11,11 +12,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator';
+import axiosPackage, { AxiosError } from 'axios';
 import axios from '../api/axios';
 import { signIn } from '../redux/Firebase';
 import { useAppDispatch } from '../redux/hooks';
 import { setAppUser } from '../redux/AppUserSlice';
 import { setAuth } from '../redux/AuthSlice';
+
+const { isAxiosError } = axiosPackage;
 
 type SignUpWithInviteRequest = {
   name: string;
@@ -37,6 +41,7 @@ function SignUp() {
   const [inviteCodeError, setInviteCodeError] = React.useState(false);
   const [inviteCodeHelperText, setInviteCodeHelperText] = React.useState('');
   const [inviteCodeValid, setInviteCodeValid] = React.useState(false);
+  const [isSigningUp, setIsSigningUp] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
@@ -96,7 +101,7 @@ function SignUp() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -111,44 +116,46 @@ function SignUp() {
       password: data.get('password') as string,
       invite_code: data.get('invite_code') as string,
     };
-    axios
-      .post('/v1/public/signup-with-invite', request)
-      .then((response) => {
-        const {
-          token,
-          expiration,
-          firebase_auth_token: fbToken,
-          user,
-        } = response.data;
-        dispatch(setAuth({ token, expiration }));
-        dispatch(setAppUser(user));
-        return fbToken;
-      })
-      .then((fbToken) => {
-        const userCredential = signIn(fbToken);
-        return userCredential;
-      })
-      .then((userCredential) => {
-        console.log('userCredential', userCredential);
-        setSubmitError(false);
-        navigate('/home');
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error.response.data);
-        setSubmitError(true);
-        return false;
-      });
+    try {
+      setSubmitError(false);
+      setIsSigningUp(true);
+      const response = await axios.post(
+        '/v1/public/signup-with-invite',
+        request
+      );
+      const {
+        token,
+        expiration,
+        firebase_auth_token: fbToken,
+        user,
+      } = response.data;
+      dispatch(setAuth({ token, expiration }));
+      dispatch(setAppUser(user));
+      const userCredential = await signIn(fbToken);
+      console.log('userCredential', userCredential);
+      navigate('/home');
+    } catch (e) {
+      const defaultMessage = 'An error occured attempting to sign up';
+      let message;
+      if (isAxiosError(e)) {
+        const error = e as AxiosError;
+        message = error.response?.data ?? error.message ?? defaultMessage;
+      } else {
+        const error = e as Error;
+        message = error.message ?? defaultMessage;
+      }
+      console.warn(message);
+      setErrorMessage(message);
+      setSubmitError(true);
+    }
+    setIsSigningUp(false);
   };
 
   const SubmitError = () => {
     if (submitError) {
       return (
-        <Box mt={5}>
-          <Typography variant="body1" color="error" align="center">
-            {errorMessage}
-          </Typography>
+        <Box component={Alert} severity="error" sx={{ width: '100%' }} mt={4}>
+          {errorMessage}
         </Box>
       );
     }
@@ -225,17 +232,18 @@ function SignUp() {
               />
             </Grid>
           </Grid>
-          <Button
+          <LoadingButton
             disabled={
               !(nameValid && emailValid && passwordValid && inviteCodeValid)
             }
-            type="submit"
             fullWidth
-            variant="contained"
+            loading={isSigningUp}
             sx={{ mt: 3, mb: 2 }}
+            type="submit"
+            variant="contained"
           >
             Sign Up
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link to="/signin">Already have an account? Sign in</Link>

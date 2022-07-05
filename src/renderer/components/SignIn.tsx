@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 // import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,11 +14,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import validator from 'validator';
+import axiosPackage, { AxiosError } from 'axios';
 import axios from '../api/axios';
 import { signIn } from '../redux/Firebase';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setAppUser } from '../redux/AppUserSlice';
 import { setAuth, selectAuth } from '../redux/AuthSlice';
+
+const { isAxiosError } = axiosPackage;
 
 type SignInRequest = {
   email: string;
@@ -31,6 +35,7 @@ function SignIn() {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordHelperText, setPasswordHelperText] = React.useState('');
   const [passwordValid, setPasswordValid] = React.useState(false);
+  const [isSigningIn, setIsSigningIn] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const navigate = useNavigate();
@@ -63,10 +68,9 @@ function SignIn() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
     console.log({
       email: data.get('email'),
       password: data.get('password'),
@@ -76,46 +80,46 @@ function SignIn() {
       email: data.get('email') as string,
       password: data.get('password') as string,
     };
-    axios
-      .post('/v1/public/login', request)
-      .then((response) => {
-        console.log(response);
-        const {
-          token,
-          expiration,
-          firebase_auth_token: fbToken,
-          user,
-        } = response.data;
-        dispatch(setAuth({ token, expiration }));
-        console.log('auth', auth);
-        dispatch(setAppUser(user));
-        return fbToken;
-      })
-      .then((fbToken) => {
-        const userCredential = signIn(fbToken);
-        return userCredential;
-      })
-      .then((userCredential) => {
-        console.log('userCredential', userCredential);
-        setSubmitError(false);
-        navigate('/home');
-        return true;
-      })
-      .catch((error) => {
-        console.log(error);
-        setErrorMessage(error.response.data);
-        setSubmitError(true);
-        return false;
-      });
+
+    try {
+      setSubmitError(false);
+      setIsSigningIn(true);
+      const response = await axios.post('/v1/public/login', request);
+      console.log(response);
+      const {
+        token,
+        expiration,
+        firebase_auth_token: fbToken,
+        user,
+      } = response.data;
+      dispatch(setAuth({ token, expiration }));
+      console.log('auth', auth);
+      dispatch(setAppUser(user));
+      const userCredential = await signIn(fbToken);
+      console.log('userCredential', userCredential);
+      navigate('/home');
+    } catch (e) {
+      const defaultMessage = 'An error occured attempting to sign in';
+      let message;
+      if (isAxiosError(e)) {
+        const error = e as AxiosError;
+        message = error.response?.data ?? error.message ?? defaultMessage;
+      } else {
+        const error = e as Error;
+        message = error.message ?? defaultMessage;
+      }
+      console.warn(message);
+      setErrorMessage(message);
+      setSubmitError(true);
+    }
+    setIsSigningIn(false);
   };
 
   const SubmitError = () => {
     if (submitError) {
       return (
-        <Box mt={5}>
-          <Typography variant="body1" color="error" align="center">
-            {errorMessage}
-          </Typography>
+        <Box component={Alert} severity="error" sx={{ width: '100%' }} mt={4}>
+          {errorMessage}
         </Box>
       );
     }
@@ -172,15 +176,16 @@ function SignIn() {
               label="Remember me"
               name="remember"
             /> */}
-          <Button
+          <LoadingButton
             disabled={!(emailValid && passwordValid)}
-            type="submit"
             fullWidth
-            variant="contained"
+            loading={isSigningIn}
             sx={{ mt: 3, mb: 2 }}
+            type="submit"
+            variant="contained"
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container>
             <Grid item xs>
               <Link

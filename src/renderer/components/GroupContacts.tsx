@@ -63,7 +63,7 @@ function GroupContacts(props: GroupContactsProps) {
     }
   }, [axiosPrivate, dispatch, group.id, onlineGroup, usersObj]);
 
-  let thisUser = {} as models.GroupUserInfo;
+  // let thisUser = {} as models.GroupUserInfo;
   const onlineUsers = [] as models.GroupUserInfo[];
   const offlineUsers = [] as models.GroupUserInfo[];
 
@@ -71,7 +71,7 @@ function GroupContacts(props: GroupContactsProps) {
     .sort((a, b) => (a.name > b.name ? 1 : -1))
     .forEach((user) => {
       if (user.user_id === appUser.id) {
-        thisUser = user;
+        // thisUser = user;
       } else if (onlineGroup && onlineGroup[user.user_id]) {
         onlineUsers.push(user);
       } else {
@@ -79,22 +79,22 @@ function GroupContacts(props: GroupContactsProps) {
       }
     });
 
-  const thisContact = (
-    <ListItemButton dense component="li" key={thisUser.user_id}>
-      <ListItemIcon>
-        <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
-          {thisUser.name[0]}
-        </Avatar>
-      </ListItemIcon>
-      <ListItemText
-        primary={thisUser.name}
-        primaryTypographyProps={{
-          variant: 'body2',
-          noWrap: true,
-        }}
-      />
-    </ListItemButton>
-  );
+  // const thisContact = (
+  //   <ListItemButton dense component="li" key={thisUser.user_id}>
+  //     <ListItemIcon>
+  //       <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
+  //         {thisUser.name[0]}
+  //       </Avatar>
+  //     </ListItemIcon>
+  //     <ListItemText
+  //       primary={thisUser.name}
+  //       primaryTypographyProps={{
+  //         variant: 'body2',
+  //         noWrap: true,
+  //       }}
+  //     />
+  //   </ListItemButton>
+  // );
 
   const onlineContacts = onlineUsers.map((user) => {
     const { user_id: userId, name } = user;

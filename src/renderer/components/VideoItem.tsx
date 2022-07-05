@@ -1,11 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/require-default-props */
-import { Property } from 'csstype';
-import {
-  Track,
-  RemoteTrackPublication,
-  LocalTrackPublication,
-} from 'livekit-client';
+
+import { RemoteTrackPublication, LocalTrackPublication } from 'livekit-client';
 import * as React from 'react';
 
 export interface VideoItemProps {
@@ -45,15 +41,18 @@ const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
     return () => {};
   }, [videoTrack, videoTrack.track]);
 
-  const handleLoadedMetadata = React.useCallback((event: Event) => {
-    // console.log('VideoRenderer.handleLoadedMetadata', event);
-    const target = event.target as HTMLVideoElement;
-    // console.log(
-    //   'Video loaded metadata h w:',
-    //   target.videoHeight,
-    //   target.videoWidth
-    // );
-  }, []);
+  const handleLoadedMetadata = React.useCallback(
+    (/* event: Event */) => {
+      // console.log('VideoRenderer.handleLoadedMetadata', event);
+      // const target = event.target as HTMLVideoElement;
+      // console.log(
+      //   'Video loaded metadata h w:',
+      //   target.videoHeight,
+      //   target.videoWidth
+      // );
+    },
+    []
+  );
 
   React.useEffect(() => {
     const videoEl = videoRef.current;

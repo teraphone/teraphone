@@ -53,15 +53,13 @@ function WindowPortal(props: {
     }
   }, [height, onClose, id, width, title, isMounted]);
 
-  return (
-    isMounted && (
-      <Portal container={containerRef.current}>
-        <ChildWindowContext.Provider key={id} value={windowRef}>
-          <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
-        </ChildWindowContext.Provider>
-      </Portal>
-    )
-  );
+  return isMounted ? (
+    <Portal container={containerRef.current}>
+      <ChildWindowContext.Provider key={id} value={windowRef}>
+        <CacheProvider value={cacheRef.current}>{children}</CacheProvider>
+      </ChildWindowContext.Provider>
+    </Portal>
+  ) : null;
 }
 
 export default WindowPortal;

@@ -25,6 +25,7 @@ import {
   toggleDeafen,
 } from '../redux/MuteSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
+import { gravatarUrl } from '../helpers/gravatar';
 
 const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
   const { mute, onClick } = props;
@@ -188,7 +189,10 @@ function BottomControls() {
               justifyContent: 'center',
             }}
           >
-            <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
+            <Avatar
+              src={gravatarUrl(appUser.email)}
+              sx={{ width: 20, height: 20, fontSize: 14 }}
+            >
               {appUser.name[0]}
             </Avatar>
           </ListItemIcon>

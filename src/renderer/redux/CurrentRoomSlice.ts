@@ -10,10 +10,17 @@ export type CurrentRoomState = {
 
 type CurrentRoom = {
   currentRoom: CurrentRoomState;
+  previousRoom: CurrentRoomState;
 };
 
 const initialState: CurrentRoom = {
   currentRoom: {
+    roomId: 0,
+    roomName: '',
+    groupId: 0,
+    groupName: '',
+  },
+  previousRoom: {
     roomId: 0,
     roomName: '',
     groupId: 0,
@@ -28,10 +35,13 @@ export const currentRoomSlice = createSlice({
     setCurrentRoom: (state, action: PayloadAction<CurrentRoomState>) => {
       state.currentRoom = action.payload;
     },
+    setPreviousRoom: (state, action: PayloadAction<CurrentRoomState>) => {
+      state.previousRoom = action.payload;
+    },
   },
 });
 
-export const { setCurrentRoom } = currentRoomSlice.actions;
+export const { setCurrentRoom, setPreviousRoom } = currentRoomSlice.actions;
 
 export const selectCurrentRoom = (state: RootState) => state.currentRoom;
 

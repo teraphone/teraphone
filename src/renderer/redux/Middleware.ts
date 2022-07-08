@@ -22,6 +22,7 @@ import {
   signedIn,
   signedOut,
 } from './ArtySlice';
+import { setCurrentRoom, setPreviousRoom } from './CurrentRoomSlice';
 import * as models from '../models/models';
 import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
 import type { RootState } from './store';
@@ -121,6 +122,16 @@ listenerMiddleware.startListening({
   },
 });
 
+// on currentRoom change, set previousRoom to currentRoom
+listenerMiddleware.startListening({
+  actionCreator: setCurrentRoom,
+  effect: (_action, listenerApi) => {
+    const { currentRoom } = (listenerApi.getOriginalState() as RootState)
+      .currentRoom;
+    listenerApi.dispatch(setPreviousRoom({ ...currentRoom }));
+  },
+});
+
 // on connectionStatus change, push/clear UserParticipantRTInfo
 listenerMiddleware.startListening({
   predicate: (_action, currentState, previousState) => {
@@ -142,32 +153,47 @@ listenerMiddleware.startListening({
     const connectionStatus = action.payload;
     const state = listenerApi.getState() as RootState;
     const { groupId, roomId } = state.currentRoom.currentRoom;
+    const { groupId: previousGroupId, roomId: previousRoomId } =
+      state.currentRoom.previousRoom;
     const { id: userId } = state.appUser.appUser;
     const { mute, deafen } = state.mute;
     const { isSharing } = state.screenShare;
-    if (connectionStatus === ConnectionStatus.Connected) {
-      const info: models.ParticipantRTInfo = {
-        isMuted: mute,
-        isDeafened: deafen,
-        isCameraShare: false,
-        isScreenShare: isSharing,
-      };
-      listenerApi.dispatch(
-        pushUserParticipantRTInfo({
-          groupId: groupId.toString(),
-          roomId: roomId.toString(),
-          userId: userId.toString(),
-          info,
-        })
-      );
-    } else {
-      listenerApi.dispatch(
-        clearUserParticipantRTInfo({
-          groupId: groupId.toString(),
-          roomId: roomId.toString(),
-          userId: userId.toString(),
-        })
-      );
+    const info: models.ParticipantRTInfo = {
+      isMuted: mute,
+      isDeafened: deafen,
+      isCameraShare: false,
+      isScreenShare: isSharing,
+    };
+    switch (connectionStatus) {
+      case ConnectionStatus.Connected:
+        listenerApi.dispatch(
+          pushUserParticipantRTInfo({
+            groupId: groupId.toString(),
+            roomId: roomId.toString(),
+            userId: userId.toString(),
+            info,
+          })
+        );
+        break;
+
+      case ConnectionStatus.Connecting:
+        listenerApi.dispatch(
+          clearUserParticipantRTInfo({
+            groupId: previousGroupId.toString(),
+            roomId: previousRoomId.toString(),
+            userId: userId.toString(),
+          })
+        );
+        break;
+
+      default:
+        listenerApi.dispatch(
+          clearUserParticipantRTInfo({
+            groupId: groupId.toString(),
+            roomId: roomId.toString(),
+            userId: userId.toString(),
+          })
+        );
     }
   },
 });

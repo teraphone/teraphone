@@ -5,7 +5,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
 import { Participant } from 'livekit-client';
-import { useParticipant } from 'livekit-react';
+import { useParticipant } from '@livekit/react-core';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';

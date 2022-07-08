@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { useParticipant } from 'livekit-react';
+import { useParticipant } from '@livekit/react-core';
 import { Participant, RemoteTrackPublication } from 'livekit-client';
 import AudioRenderer from './AudioRenderer';
 import { useAppSelector } from '../redux/hooks';

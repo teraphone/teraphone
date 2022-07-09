@@ -15,6 +15,10 @@ const theme = createTheme({
   },
 });
 
+// FIXME: Remove this after verifying test works in CI
+let test = 42;
+test = 'This should fail the TypeScript check';
+
 export default function App() {
   return (
     <ThemeProvider theme={theme}>

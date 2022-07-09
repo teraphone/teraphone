@@ -87,7 +87,7 @@ function GroupRoom(props: {
     }
   }, [connect, dispatch, roomInfo.room.id, roomInfo.token, thisRoom]);
 
-  const handleClick = React.useCallback(() => {
+  const handleClick = React.useCallback(async () => {
     console.log(`clicked room ${thisRoom.roomId}`, roomInfo);
 
     // if changing rooms: disconnect first, then connect
@@ -96,7 +96,7 @@ function GroupRoom(props: {
         console.log(
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
         );
-        room?.disconnect();
+        await room?.disconnect();
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);

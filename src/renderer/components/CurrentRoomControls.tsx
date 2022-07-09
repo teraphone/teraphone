@@ -94,7 +94,7 @@ const DisconnectButton = (props: {
           onClick={onClick}
           disabled={status !== ConnectionStatus.Connected}
         >
-          <LogoutIcon sx={{ color: 'black' }} />
+          <LogoutIcon />
         </IconButton>
       </span>
     </Tooltip>

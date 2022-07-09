@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { RoomConnectOptions } from 'livekit-client';
+import { RoomConnectOptions, ConnectionState } from 'livekit-client';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -60,25 +60,34 @@ function GroupRoom(props: {
     return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
   }, [roomInfo.room.name]);
 
-  const connectRoom = React.useCallback(() => {
+  const connectRoom = React.useCallback(async () => {
     const roomConnectOptions: RoomConnectOptions = {
       autoSubscribe: false,
     };
     // set current room to this room
     dispatch(setCurrentRoom(thisRoom));
     // connect to room
-    connect(url, roomInfo.token, roomConnectOptions)
-      .then((livekitRoom) => {
-        console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
-        livekitRoom?.localParticipant.setMicrophoneEnabled(true);
-        return true;
-      })
-      .catch(() => {
-        return false;
-      });
+    try {
+      const livekitRoom = await connect(
+        url,
+        roomInfo.token,
+        roomConnectOptions
+      );
+      if (
+        livekitRoom?.state !==
+        (ConnectionStatus.Connected as unknown as ConnectionState)
+      ) {
+        console.log('livekitRoom:', livekitRoom);
+        throw Error(`Could not connect to room ${roomInfo.room.id}`);
+      }
+      console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
+      livekitRoom?.localParticipant.setMicrophoneEnabled(true);
+    } catch (error) {
+      console.error(error);
+    }
   }, [connect, dispatch, roomInfo.room.id, roomInfo.token, thisRoom]);
 
-  const handleClick = React.useCallback(() => {
+  const handleClick = React.useCallback(async () => {
     console.log(`clicked room ${thisRoom.roomId}`, roomInfo);
 
     // if changing rooms: disconnect first, then connect
@@ -87,7 +96,7 @@ function GroupRoom(props: {
         console.log(
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
         );
-        room?.disconnect();
+        await room?.disconnect();
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);

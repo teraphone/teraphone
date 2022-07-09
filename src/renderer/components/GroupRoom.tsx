@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import * as Livekit from 'livekit-client';
+import { RoomConnectOptions } from 'livekit-client';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -61,18 +61,13 @@ function GroupRoom(props: {
   }, [roomInfo.room.name]);
 
   const connectRoom = React.useCallback(() => {
-    const connectConfig: Livekit.ConnectOptions = {
+    const roomConnectOptions: RoomConnectOptions = {
       autoSubscribe: false,
-      adaptiveStream: { pixelDensity: 'screen' },
-      autoManageVideo: true,
-      dynacast: false,
-      audio: true,
-      video: false,
     };
     // set current room to this room
     dispatch(setCurrentRoom(thisRoom));
     // connect to room
-    connect(url, roomInfo.token, connectConfig)
+    connect(url, roomInfo.token, roomConnectOptions)
       .then((livekitRoom) => {
         console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
         livekitRoom?.localParticipant.setMicrophoneEnabled(true);

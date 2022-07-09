@@ -275,11 +275,11 @@ function VideoViews() {
 
   React.useEffect(() => {
     if (room) {
-      room.on(RoomEvent.TrackPublished, handleTrackPublished);
-      room.on(RoomEvent.TrackUnpublished, handleTrackUnpublished);
-      room.on(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
-      room.on(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
-      room.on(RoomEvent.Disconnected, handleDisconnected);
+      room.once(RoomEvent.TrackPublished, handleTrackPublished);
+      room.once(RoomEvent.TrackUnpublished, handleTrackUnpublished);
+      room.once(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
+      room.once(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
+      room.once(RoomEvent.Disconnected, handleDisconnected);
       return () => {
         room.off(RoomEvent.TrackPublished, handleTrackPublished);
         room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);

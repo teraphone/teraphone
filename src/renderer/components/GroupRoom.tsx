@@ -60,22 +60,24 @@ function GroupRoom(props: {
     return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
   }, [roomInfo.room.name]);
 
-  const connectRoom = React.useCallback(() => {
+  const connectRoom = React.useCallback(async () => {
     const roomConnectOptions: RoomConnectOptions = {
       autoSubscribe: false,
     };
     // set current room to this room
     dispatch(setCurrentRoom(thisRoom));
     // connect to room
-    connect(url, roomInfo.token, roomConnectOptions)
-      .then((livekitRoom) => {
-        console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
-        livekitRoom?.localParticipant.setMicrophoneEnabled(true);
-        return true;
-      })
-      .catch(() => {
-        return false;
-      });
+    try {
+      const livekitRoom = await connect(
+        url,
+        roomInfo.token,
+        roomConnectOptions
+      );
+      console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
+      livekitRoom?.localParticipant.setMicrophoneEnabled(true);
+    } catch (error) {
+      console.error(error);
+    }
   }, [connect, dispatch, roomInfo.room.id, roomInfo.token, thisRoom]);
 
   const handleClick = React.useCallback(() => {

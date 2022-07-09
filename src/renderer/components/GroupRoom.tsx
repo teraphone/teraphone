@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { RoomConnectOptions } from 'livekit-client';
+import { RoomConnectOptions, ConnectionState } from 'livekit-client';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -73,6 +73,13 @@ function GroupRoom(props: {
         roomInfo.token,
         roomConnectOptions
       );
+      if (
+        livekitRoom?.state !==
+        (ConnectionStatus.Connected as unknown as ConnectionState)
+      ) {
+        console.log('livekitRoom:', livekitRoom);
+        throw Error(`Could not connect to room ${roomInfo.room.id}`);
+      }
       console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
       livekitRoom?.localParticipant.setMicrophoneEnabled(true);
     } catch (error) {

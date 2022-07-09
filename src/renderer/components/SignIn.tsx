@@ -111,8 +111,8 @@ function SignIn() {
       console.warn(message);
       setErrorMessage(message);
       setSubmitError(true);
+      setIsSigningIn(false);
     }
-    setIsSigningIn(false);
   };
 
   const SubmitError = () => {

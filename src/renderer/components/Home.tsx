@@ -24,7 +24,7 @@ const Home = () => {
   }, []);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
-  const { isConnecting, error, room } = useRoom();
+  const { connectionState, error, isConnecting, room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
 
   React.useEffect(() => {
@@ -52,18 +52,14 @@ const Home = () => {
 
   React.useEffect(() => {
     console.log('useEffect -> setConnectionStatus');
-    if (error) {
+    if (!isConnecting && error) {
       dispatch(setConnectionStatus(ConnectionStatus.Error));
-    } else if (isConnecting) {
-      dispatch(setConnectionStatus(ConnectionStatus.Connecting));
-    } else if (room && room.state === 'connected') {
-      dispatch(setConnectionStatus(ConnectionStatus.Connected));
-    } else if (room && room.state === 'reconnecting') {
-      dispatch(setConnectionStatus(ConnectionStatus.Reconnecting));
     } else {
-      dispatch(setConnectionStatus(ConnectionStatus.Disconnected));
+      dispatch(
+        setConnectionStatus(connectionState as unknown as ConnectionStatus)
+      );
     }
-  }, [dispatch, error, isConnecting, room]);
+  }, [dispatch, error, connectionState, isConnecting]);
 
   const handleBeforeUnload = React.useCallback(() => {
     console.log('handling window unloaded event');

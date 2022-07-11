@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 
 import * as React from 'react';
-import { RoomOptions } from 'livekit-client';
 import { useRoom, RoomState } from '@livekit/react-core';
 
 const RoomContext = React.createContext({} as RoomState);

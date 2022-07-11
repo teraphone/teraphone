@@ -25,9 +25,17 @@ import {
   toggleDeafen,
 } from '../redux/MuteSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
+import {
+  ConnectionStatus,
+  selectConnectionStatus,
+} from '../redux/ConnectionStatusSlice';
 
 const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
   const { mute, onClick } = props;
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
+  const isDisabled =
+    connectionStatus === ConnectionStatus.Connecting ||
+    connectionStatus === ConnectionStatus.Reconnecting;
   if (mute) {
     return (
       <Tooltip title="Unmute" placement="top" arrow>
@@ -36,6 +44,7 @@ const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
           aria-label="unmute"
           component="span"
           onClick={onClick}
+          disabled={isDisabled}
         >
           <MicOffIcon />
         </IconButton>
@@ -49,6 +58,7 @@ const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
         aria-label="mute"
         component="span"
         onClick={onClick}
+        disabled={isDisabled}
       >
         <MicIcon />
       </IconButton>
@@ -58,6 +68,10 @@ const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
 
 const DeafenButton = (props: { deafen: boolean; onClick: () => void }) => {
   const { deafen, onClick } = props;
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
+  const isDisabled =
+    connectionStatus === ConnectionStatus.Connecting ||
+    connectionStatus === ConnectionStatus.Reconnecting;
   if (deafen) {
     return (
       <Tooltip title="Undeafen" placement="top" arrow>
@@ -66,6 +80,7 @@ const DeafenButton = (props: { deafen: boolean; onClick: () => void }) => {
           aria-label="undeafen"
           component="span"
           onClick={onClick}
+          disabled={isDisabled}
         >
           <HeadsetOffIcon />
         </IconButton>
@@ -79,6 +94,7 @@ const DeafenButton = (props: { deafen: boolean; onClick: () => void }) => {
         aria-label="deafen"
         component="span"
         onClick={onClick}
+        disabled={isDisabled}
       >
         <HeadsetIcon />
       </IconButton>

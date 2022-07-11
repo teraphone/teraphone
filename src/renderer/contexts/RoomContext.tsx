@@ -7,11 +7,7 @@ import { useRoom, RoomState } from '@livekit/react-core';
 const RoomContext = React.createContext({} as RoomState);
 
 export const RoomProvider: React.FC = ({ children }) => {
-  const roomOptions: RoomOptions = {
-    adaptiveStream: { pixelDensity: 'screen' },
-    dynacast: false,
-  };
-  const roomState = useRoom(roomOptions);
+  const roomState = useRoom();
   React.useEffect(() => {
     console.log('RoomProvider Mounted', roomState);
     return () => console.log('RoomProvider Unmounted');

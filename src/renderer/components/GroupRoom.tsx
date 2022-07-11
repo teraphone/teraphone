@@ -24,6 +24,7 @@ import {
   setCurrentRoom,
 } from '../redux/CurrentRoomSlice';
 import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
+import { selectMute } from '../redux/MuteSlice';
 
 function GroupRoom(props: {
   groupInfo: models.GroupInfo;
@@ -54,6 +55,7 @@ function GroupRoom(props: {
     currentRoom.roomId === thisRoom.roomId &&
     connectionStatus === ConnectionStatus.Connected;
   const isVideoWindowOpen = useAppSelector(selectWindowOpen);
+  const mute = useAppSelector(selectMute);
 
   React.useEffect(() => {
     console.log('GroupRoom', roomInfo.room.name, 'Mounted');
@@ -81,11 +83,20 @@ function GroupRoom(props: {
         throw Error(`Could not connect to room ${roomInfo.room.id}`);
       }
       console.log(`connected to room ${roomInfo.room.id}`, livekitRoom);
-      livekitRoom?.localParticipant.setMicrophoneEnabled(true);
+      // publish mic
+      try {
+        const micPublication =
+          await livekitRoom?.localParticipant.setMicrophoneEnabled(true);
+        if (mute) {
+          micPublication?.audioTrack?.mute().catch(console.error);
+        }
+      } catch (error) {
+        console.error('publish mic error:', error);
+      }
     } catch (error) {
       console.error(error);
     }
-  }, [connect, dispatch, roomInfo.room.id, roomInfo.token, thisRoom]);
+  }, [connect, dispatch, mute, roomInfo.room.id, roomInfo.token, thisRoom]);
 
   const handleClick = React.useCallback(async () => {
     console.log(`clicked room ${thisRoom.roomId}`, roomInfo);

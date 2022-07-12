@@ -126,7 +126,7 @@ const InfoButton = (props: {
 function CurentRoomControls() {
   const dispatch = useAppDispatch();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { room } = useRoom();
+  const { room, disconnect } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const debug = false;
 
@@ -138,9 +138,9 @@ function CurentRoomControls() {
     dispatch(setPickerVisible(true));
   }, [dispatch]);
 
-  const handleDisconnectClick = React.useCallback(() => {
-    room?.disconnect();
-  }, [room]);
+  const handleDisconnectClick = React.useCallback(async () => {
+    await disconnect();
+  }, [disconnect]);
 
   const handleInfoClick = React.useCallback(() => {
     console.log('room', room);

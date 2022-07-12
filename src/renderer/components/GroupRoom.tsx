@@ -33,7 +33,7 @@ function GroupRoom(props: {
 }) {
   const { groupInfo, roomInfo, usersObj } = props;
   const url = 'wss://sfu-demo.teraphone.app';
-  const { connect, room } = useRoom();
+  const { disconnect, connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const dispatch = useAppDispatch();
@@ -107,13 +107,13 @@ function GroupRoom(props: {
         console.log(
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
         );
-        await room?.disconnect();
-        connectRoom();
+        await disconnect();
+        await connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);
       } else {
         console.log(`connecting to room ${thisRoom.roomId}`);
-        connectRoom();
+        await connectRoom();
       }
     } else if (currentRoom.roomId === thisRoom.roomId) {
       if (connectionStatus === ConnectionStatus.Connected) {
@@ -122,14 +122,14 @@ function GroupRoom(props: {
         console.log(`already connecting to room ${thisRoom.roomId}`);
       } else {
         console.log(`connecting to room ${thisRoom.roomId}`);
-        connectRoom();
+        await connectRoom();
       }
     }
   }, [
     connectRoom,
     connectionStatus,
     currentRoom.roomId,
-    room,
+    disconnect,
     roomInfo,
     thisRoom.roomId,
   ]);

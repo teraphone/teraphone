@@ -217,7 +217,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
           setConnectionState(state);
         };
 
-        room.once(RoomEvent.Disconnected, () => {
+        const onDisconnected = () => {
           console.log(RoomEvent.Disconnected);
           dispatch(setScreens({}));
           dispatch(setWindows({}));
@@ -232,12 +232,14 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
             .off(RoomEvent.LocalTrackUnpublished, onParticipantsChanged)
             .off(RoomEvent.AudioPlaybackStatusChanged, onParticipantsChanged)
             .off(RoomEvent.ConnectionStateChanged, onConnectionStateChanged)
+            .off(RoomEvent.Disconnected, onDisconnected)
             // extensions
             .off(RoomEvent.TrackPublished, handleTrackPublished)
             .off(RoomEvent.TrackUnpublished, handleTrackUnpublished)
             .off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed)
             .off(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
-        });
+        };
+
         room
           .on(RoomEvent.ParticipantConnected, onParticipantsChanged)
           .on(RoomEvent.ParticipantDisconnected, onParticipantsChanged)
@@ -249,6 +251,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
           // trigger a state change by re-sorting participants
           .on(RoomEvent.AudioPlaybackStatusChanged, onParticipantsChanged)
           .on(RoomEvent.ConnectionStateChanged, onConnectionStateChanged)
+          .on(RoomEvent.Disconnected, onDisconnected)
           // extensions
           .on(RoomEvent.TrackPublished, handleTrackPublished)
           .on(RoomEvent.TrackUnpublished, handleTrackUnpublished)

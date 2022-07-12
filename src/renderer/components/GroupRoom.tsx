@@ -33,7 +33,7 @@ function GroupRoom(props: {
 }) {
   const { groupInfo, roomInfo, usersObj } = props;
   const url = 'wss://sfu-demo.teraphone.app';
-  const { disconnect, connect, room } = useRoom();
+  const { disconnect, connect } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const dispatch = useAppDispatch();

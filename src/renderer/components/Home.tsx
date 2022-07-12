@@ -24,7 +24,7 @@ const Home = () => {
   }, []);
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
-  const { disconnect, connectionState, error, isConnecting, room } = useRoom();
+  const { disconnect, connectionState, error, isConnecting } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
 
   React.useEffect(() => {

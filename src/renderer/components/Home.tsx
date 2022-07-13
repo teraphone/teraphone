@@ -61,10 +61,10 @@ const Home = () => {
     }
   }, [dispatch, error, connectionState, isConnecting]);
 
-  const handleBeforeUnload = React.useCallback(() => {
+  const handleBeforeUnload = React.useCallback(async () => {
     console.log('handling window unloaded event');
     if (connectionStatus !== ConnectionStatus.Disconnected) {
-      room?.disconnect();
+      await room?.disconnect();
     }
     dispatch(signedOut);
     console.log('dispatch signedOut');

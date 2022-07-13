@@ -3,7 +3,11 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { RoomConnectOptions, ConnectionState } from 'livekit-client';
+import {
+  RoomConnectOptions,
+  ConnectionState,
+  LocalParticipant,
+} from 'livekit-client';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -107,7 +111,15 @@ function GroupRoom(props: {
         console.log(
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
         );
-        await room?.disconnect();
+        if (room) {
+          await room.disconnect();
+          room.localParticipant = new LocalParticipant(
+            room.localParticipant.sid,
+            room.localParticipant.identity,
+            room.localParticipant.engine,
+            room.options
+          );
+        }
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);

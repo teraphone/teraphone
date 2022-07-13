@@ -12,7 +12,7 @@ import {
   Stack,
   Button,
 } from '@mui/material';
-
+import { LocalParticipant } from 'livekit-client';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
@@ -138,8 +138,17 @@ function CurentRoomControls() {
     dispatch(setPickerVisible(true));
   }, [dispatch]);
 
-  const handleDisconnectClick = React.useCallback(() => {
-    room?.disconnect();
+  const handleDisconnectClick = React.useCallback(async () => {
+    if (!room) {
+      return;
+    }
+    await room.disconnect();
+    room.localParticipant = new LocalParticipant(
+      room.localParticipant.sid,
+      room.localParticipant.identity,
+      room.localParticipant.engine,
+      room.options
+    );
   }, [room]);
 
   const handleInfoClick = React.useCallback(() => {

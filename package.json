@@ -191,7 +191,6 @@
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.6.0",
     "@fontsource/roboto": "^4.5.3",
-    "@livekit/react-core": "^1.0.0",
     "@mui/icons-material": "^5.4.2",
     "@mui/lab": "^5.0.0-alpha.78",
     "@mui/material": "^5.4.2",

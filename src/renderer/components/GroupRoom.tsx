@@ -107,7 +107,9 @@ function GroupRoom(props: {
         console.log(
           `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
         );
-        await room?.disconnect();
+        if (room) {
+          await room.disconnect();
+        }
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);

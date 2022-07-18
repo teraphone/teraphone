@@ -1,29 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import * as React from 'react';
-import {
-  LocalParticipant,
-  LocalTrackPublication,
-  RemoteTrackPublication,
-  RemoteParticipant,
-  Track,
-  RoomEvent,
-  RoomState,
-} from 'livekit-client';
+import { ConnectionState } from 'livekit-client';
 import useRoom from '../hooks/useRoom';
+import useVideoItems from '../hooks/useVideoItems';
 import WindowPortal from './WindowPortal';
-import MainVideoView, { VideoItemsObject } from './MainVideoView';
+import MainVideoView from './MainVideoView';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
-import { selectGroup } from '../redux/WorldSlice';
 import { selectAppUser } from '../redux/AppUserSlice';
-import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import {
-  selectScreens,
-  selectWindows,
-  setScreens,
-  setWindows,
-} from '../redux/ScreenShareSlice';
+import { selectScreens, selectWindows } from '../redux/ScreenShareSlice';
 import { startStream } from '../lib/ExtendedLocalParticipant';
 import PopoutVideoView from './PopoutVideoView';
 
@@ -32,12 +18,10 @@ function VideoViews() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
   const videoViewWindowOpen = useAppSelector(selectWindowOpen);
-  const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { groupId } = currentRoom;
-  const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
   const { appUser } = useAppSelector(selectAppUser);
-  const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const { room } = useRoom();
+  const { videoItems, setVideoItems, setUpScreenTrack, takeDownScreenTrack } =
+    useVideoItems();
   const localParticipant = room?.localParticipant;
   const participants = room?.participants;
 
@@ -56,65 +40,15 @@ function VideoViews() {
     dispatch(setWindowOpen(false));
   }, [dispatch]);
 
-  const setUpScreenTrack = React.useCallback(
-    (
-      videoTrack: RemoteTrackPublication | LocalTrackPublication,
-      participant: RemoteParticipant | LocalParticipant
-    ) => {
-      const sid = videoTrack.trackSid;
-      if (videoItems[sid]) {
-        return;
-      }
-      const userId = participant.identity;
-      const user = groupInfo?.users.find(
-        (groupUser) => groupUser.user_id === +userId
-      );
-      const userName = user?.name || 'Unknown';
-      const isPopout = false;
-      const isLocal = participant.sid === localParticipant?.sid;
-      if (!isLocal && !videoTrack.isSubscribed) {
-        (videoTrack as RemoteTrackPublication).setSubscribed(true);
-      }
+  const setIsPopout = React.useCallback(
+    (sid: string, isPopout: boolean) => {
       setVideoItems((prev) => ({
         ...prev,
-        [sid]: { userName, isPopout, isLocal, videoTrack },
+        [sid]: { ...prev[sid], isPopout },
       }));
     },
-    [groupInfo?.users, localParticipant?.sid, videoItems]
+    [setVideoItems]
   );
-
-  const takeDownScreenTrack = React.useCallback(
-    (
-      videoTrack: RemoteTrackPublication | LocalTrackPublication,
-      _participant: RemoteParticipant | LocalParticipant
-    ) => {
-      setVideoItems((prev) => {
-        const { [videoTrack.trackSid]: removed, ...rest } = prev;
-        return rest;
-      });
-    },
-    []
-  );
-
-  const unShareScreen = React.useCallback(
-    (sourceId: string) => {
-      if (screens[sourceId]) {
-        const { [sourceId]: removed, ...rest } = screens;
-        dispatch(setScreens(rest));
-      } else if (windows[sourceId]) {
-        const { [sourceId]: removed, ...rest } = windows;
-        dispatch(setWindows(rest));
-      }
-    },
-    [dispatch, screens, windows]
-  );
-
-  const setIsPopout = React.useCallback((sid: string, isPopout: boolean) => {
-    setVideoItems((prev) => ({
-      ...prev,
-      [sid]: { ...prev[sid], isPopout },
-    }));
-  }, []);
 
   const sourceIsPublished = React.useCallback(
     (trySourceId: string) => {
@@ -149,7 +83,7 @@ function VideoViews() {
   React.useEffect(() => {
     // add local video tracks to videoItems
     const p: Array<Promise<void>> = [];
-    if (room?.state === RoomState.Connected) {
+    if (room?.state === ConnectionState.Connected) {
       if (Object.keys(screens).length > 0) {
         Object.entries(screens).forEach(([sourceId, _]) => {
           if (!sourceIsPublished(sourceId)) {
@@ -220,83 +154,6 @@ function VideoViews() {
       }
     }
   }, [localParticipant, screens, takeDownScreenTrack, windows]);
-
-  const handleTrackPublished = React.useCallback(
-    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
-      if (track.kind === 'video') {
-        setUpScreenTrack(track, participant);
-      }
-    },
-    [setUpScreenTrack]
-  );
-
-  const handleTrackUnpublished = React.useCallback(
-    (track: RemoteTrackPublication, participant: RemoteParticipant) => {
-      if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
-      }
-    },
-    [takeDownScreenTrack]
-  );
-
-  const handleTrackUnsubscribed = React.useCallback(
-    (
-      _: Track,
-      track: RemoteTrackPublication,
-      participant: RemoteParticipant
-    ) => {
-      console.log(RoomEvent.TrackUnsubscribed, _, track, participant);
-      if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
-      }
-    },
-    [takeDownScreenTrack]
-  );
-
-  const handleLocalTrackUnpublished = React.useCallback(
-    (track: LocalTrackPublication, participant: LocalParticipant) => {
-      console.log(RoomEvent.LocalTrackUnpublished, track, participant);
-      if (track.kind === 'video') {
-        const { trackName } = track;
-        const sourceId = trackName.split('/')[1];
-        unShareScreen(sourceId);
-        takeDownScreenTrack(track, participant);
-      }
-    },
-    [takeDownScreenTrack, unShareScreen]
-  );
-
-  const handleDisconnected = React.useCallback(() => {
-    console.log(RoomEvent.Disconnected);
-    dispatch(setScreens({}));
-    dispatch(setWindows({}));
-    dispatch(setWindowOpen(false));
-  }, [dispatch]);
-
-  React.useEffect(() => {
-    if (room) {
-      room.once(RoomEvent.TrackPublished, handleTrackPublished);
-      room.once(RoomEvent.TrackUnpublished, handleTrackUnpublished);
-      room.once(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
-      room.once(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
-      room.once(RoomEvent.Disconnected, handleDisconnected);
-      return () => {
-        room.off(RoomEvent.TrackPublished, handleTrackPublished);
-        room.off(RoomEvent.TrackUnpublished, handleTrackUnpublished);
-        room.off(RoomEvent.TrackUnsubscribed, handleTrackUnsubscribed);
-        room.off(RoomEvent.LocalTrackUnpublished, handleLocalTrackUnpublished);
-        room.off(RoomEvent.Disconnected, handleDisconnected);
-      };
-    }
-    return () => {};
-  }, [
-    handleTrackPublished,
-    handleTrackUnpublished,
-    handleTrackUnsubscribed,
-    handleLocalTrackUnpublished,
-    handleDisconnected,
-    room,
-  ]);
 
   const popoutWindowNodes = Object.entries(videoItems)
     .filter(([, videoItem]) => videoItem.isPopout)

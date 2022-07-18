@@ -12,7 +12,6 @@ import {
   Stack,
   Button,
 } from '@mui/material';
-
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
@@ -138,8 +137,11 @@ function CurentRoomControls() {
     dispatch(setPickerVisible(true));
   }, [dispatch]);
 
-  const handleDisconnectClick = React.useCallback(() => {
-    room?.disconnect();
+  const handleDisconnectClick = React.useCallback(async () => {
+    if (!room) {
+      return;
+    }
+    await room.disconnect();
   }, [room]);
 
   const handleInfoClick = React.useCallback(() => {

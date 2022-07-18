@@ -1,7 +1,11 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { useParticipant } from '@livekit/react-core';
-import { Participant, RemoteTrackPublication } from 'livekit-client';
+import {
+  Participant,
+  RemoteTrackPublication,
+  LocalParticipant,
+  Track,
+} from 'livekit-client';
 import AudioRenderer from './AudioRenderer';
 import { useAppSelector } from '../redux/hooks';
 import { selectDeafen } from '../redux/MuteSlice';
@@ -9,7 +13,8 @@ import { selectDeafen } from '../redux/MuteSlice';
 function ParticipantAudioRenderer(props: { participant: Participant }) {
   const [isMounted, setIsMounted] = React.useState(false);
   const { participant } = props;
-  const { isLocal, microphonePublication } = useParticipant(participant);
+  const isLocal = participant instanceof LocalParticipant;
+  const microphonePublication = participant.getTrack(Track.Source.Microphone);
   const deafen = useAppSelector(selectDeafen);
   const volume = deafen ? 0 : 1;
 

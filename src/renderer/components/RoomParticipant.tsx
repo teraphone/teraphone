@@ -4,8 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import * as React from 'react';
-import { Participant } from 'livekit-client';
-import { useParticipant } from '@livekit/react-core';
+import { Participant, ParticipantEvent } from 'livekit-client';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
@@ -21,17 +20,22 @@ function RoomParticipant(props: {
   const [isMounted, setIsMounted] = React.useState(false);
   const { userinfo, participant, isMuted, isDeafened, isScreenShare } = props;
   const { name } = userinfo;
+  const [isSpeaking, setIsSpeaking] = React.useState(false);
   const [speech, setSpeech] = React.useState('');
-  const { isSpeaking } = useParticipant(participant);
 
   React.useEffect(() => {
+    const onIsSpeakingChanged = () => {
+      setIsSpeaking(participant.isSpeaking);
+    };
+    participant.on(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
     console.log('RoomParticipant', name, 'Mounted');
     setIsMounted(true);
     return () => {
       setIsMounted(false);
+      participant.off(ParticipantEvent.IsSpeakingChanged, onIsSpeakingChanged);
       console.log('RoomParticipant', name, 'Unmounted');
     };
-  }, [name]);
+  }, [name, participant]);
 
   React.useEffect(() => {
     if (isMounted) {

@@ -113,12 +113,6 @@ function GroupRoom(props: {
         );
         if (room) {
           await room.disconnect();
-          room.localParticipant = new LocalParticipant(
-            room.localParticipant.sid,
-            room.localParticipant.identity,
-            room.localParticipant.engine,
-            room.options
-          );
         }
         connectRoom();
       } else if (connectionStatus === ConnectionStatus.Connecting) {

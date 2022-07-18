@@ -143,12 +143,6 @@ function CurentRoomControls() {
       return;
     }
     await room.disconnect();
-    room.localParticipant = new LocalParticipant(
-      room.localParticipant.sid,
-      room.localParticipant.identity,
-      room.localParticipant.engine,
-      room.options
-    );
   }, [room]);
 
   const handleInfoClick = React.useCallback(() => {

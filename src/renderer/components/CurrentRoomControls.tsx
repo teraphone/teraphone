@@ -12,7 +12,6 @@ import {
   Stack,
   Button,
 } from '@mui/material';
-import { LocalParticipant } from 'livekit-client';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';

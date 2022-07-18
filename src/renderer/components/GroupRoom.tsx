@@ -3,11 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import {
-  RoomConnectOptions,
-  ConnectionState,
-  LocalParticipant,
-} from 'livekit-client';
+import { RoomConnectOptions, ConnectionState } from 'livekit-client';
 import * as React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';

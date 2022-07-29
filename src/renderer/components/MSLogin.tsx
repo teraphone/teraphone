@@ -20,7 +20,7 @@ function MSLogin() {
   const [authPending, setAuthPending] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const [msAuth, setMSAuth] = React.useState<AuthenticationResult | null>(null);
+  // const [msAuth, setMSAuth] = React.useState<AuthenticationResult | null>(null);
   // const dispatch = useAppDispatch();
 
   const handleAuthClick = React.useCallback(async () => {
@@ -28,7 +28,7 @@ function MSLogin() {
     const authResult = await window.electron.ipcRenderer.auth();
     try {
       if (authResult) {
-        setMSAuth(authResult);
+        // setMSAuth(authResult);
         setAuthPending(false);
         setSubmitError(false);
         console.log('authResult', authResult);

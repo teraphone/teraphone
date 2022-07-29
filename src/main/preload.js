@@ -36,5 +36,16 @@ contextBridge.exposeInMainWorld('electron', {
         ipcRenderer.once(channel, (event, ...args) => func(...args));
       }
     },
+    login: async () => {
+      const accountInfo = await ipcRenderer.invoke('login');
+      return accountInfo;
+    },
+    auth: async () => {
+      const authResponse = await ipcRenderer.invoke('auth');
+      return authResponse;
+    },
+    logout: async () => {
+      await ipcRenderer.invoke('logout');
+    },
   },
 });

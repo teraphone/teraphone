@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -21,6 +21,7 @@ function MSLogin() {
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleAuthClick = React.useCallback(async () => {
     // todo: click auth button then close popup. why no error???
@@ -32,6 +33,7 @@ function MSLogin() {
         dispatch(setMSAuthResult(authResult));
         setAuthPending(false);
         setSubmitError(false);
+        navigate('/loading');
       } else {
         setAuthPending(false);
         setSubmitError(true);
@@ -45,7 +47,7 @@ function MSLogin() {
     }
 
     setAuthPending(false);
-  }, [dispatch]);
+  }, [dispatch, navigate]);
 
   const SubmitError = () => {
     if (submitError) {

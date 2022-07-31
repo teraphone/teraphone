@@ -24,20 +24,28 @@ function MSLogin() {
   // const dispatch = useAppDispatch();
 
   const handleAuthClick = React.useCallback(async () => {
-    setAuthPending(true);
-    const authResult = await window.electron.ipcRenderer.auth();
+    // todo: click auth button then close popup. why no error???
     try {
+      // setAuthPending(true);
+      const authResult = await window.electron.ipcRenderer.auth();
+      console.log('authResult', authResult);
       if (authResult) {
         // setMSAuth(authResult);
         setAuthPending(false);
         setSubmitError(false);
-        console.log('authResult', authResult);
+      } else {
+        setAuthPending(false);
+        setSubmitError(true);
+        setErrorMessage('Authentication failed');
       }
     } catch (error) {
+      console.log(error);
       setAuthPending(false);
       setSubmitError(true);
       setErrorMessage('Authentication failed');
     }
+
+    setAuthPending(false);
   }, []);
 
   const SubmitError = () => {

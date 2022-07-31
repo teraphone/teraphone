@@ -6,6 +6,10 @@ type AuthState = {
   token: string;
   expiration: number;
   msAuthResult: AuthenticationResult;
+  accessToken: string;
+  accessTokenExpiration: number;
+  refreshToken: string;
+  refreshTokenExpiration: number;
 };
 
 type Auth = {
@@ -17,6 +21,10 @@ const initialState: Auth = {
     token: '',
     expiration: 0,
     msAuthResult: {} as AuthenticationResult,
+    accessToken: '',
+    accessTokenExpiration: 0,
+    refreshToken: '',
+    refreshTokenExpiration: 0,
   },
 };
 

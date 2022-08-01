@@ -38,10 +38,29 @@ export const authSlice = createSlice({
     setMSAuthResult: (state, action: PayloadAction<AuthenticationResult>) => {
       state.auth.msAuthResult = action.payload;
     },
+    setAccessToken: (state, action: PayloadAction<string>) => {
+      state.auth.accessToken = action.payload;
+    },
+    setAccessTokenExpiration: (state, action: PayloadAction<number>) => {
+      state.auth.accessTokenExpiration = action.payload;
+    },
+    setRefreshToken: (state, action: PayloadAction<string>) => {
+      state.auth.refreshToken = action.payload;
+    },
+    setRefreshTokenExpiration: (state, action: PayloadAction<number>) => {
+      state.auth.refreshTokenExpiration = action.payload;
+    },
   },
 });
 
-export const { setAuth, setMSAuthResult } = authSlice.actions;
+export const {
+  setAuth,
+  setMSAuthResult,
+  setAccessToken,
+  setAccessTokenExpiration,
+  setRefreshToken,
+  setRefreshTokenExpiration,
+} = authSlice.actions;
 
 export const selectAuth = (state: RootState) => state.auth;
 

@@ -33,14 +33,14 @@ const Loading = () => {
   const handleLogin = React.useCallback(async () => {
     let success = false;
     const params: RequestInit = {
-      body: JSON.stringify({ msAuthToken: msAuthResult.accessToken }),
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${msAuthResult.accessToken}`,
-        medhot: 'GET',
       },
+      body: JSON.stringify({ msAccessToken: msAuthResult.accessToken }),
     };
     try {
+      console.log('login with params', params);
       const response = await window.fetch(
         'https://api-dev.teraphone.app/v1/public/login',
         params
@@ -57,6 +57,7 @@ const Loading = () => {
           dispatch(setUserLicense(data.license));
           // todo: make sure we're not forgetting anything here. see SignIn.tsx
           success = true;
+          console.log('login successful');
         } catch (e) {
           console.error(e);
         }

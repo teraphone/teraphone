@@ -101,6 +101,8 @@ function MSLogin() {
               >
                 Terms of Service
               </Link>
+            </Grid>
+            <Grid item>
               <Link
                 to="/"
                 onClick={() =>
@@ -109,10 +111,6 @@ function MSLogin() {
               >
                 Privacy Policy
               </Link>
-            </Grid>
-            <Grid item>
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
-              <Link to="/signup">Don't have an account? Sign Up</Link>
             </Grid>
           </Grid>
         </Box>

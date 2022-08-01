@@ -55,6 +55,7 @@ const Loading = () => {
           await signIn(data.firebaseAuthToken);
           dispatch(setTenantUser(data.user));
           dispatch(setUserLicense(data.license));
+          // todo: make sure we're not forgetting anything here. see SignIn.tsx
           success = true;
         } catch (e) {
           console.error(e);

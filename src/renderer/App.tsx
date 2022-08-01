@@ -6,6 +6,7 @@ import Loading from './components/Loading';
 import Home from './components/Home';
 import { RoomProvider } from './contexts/RoomContext';
 import { store } from './redux/store';
+import LicenseCheck from './components/LicenseCheck';
 
 const theme = createTheme({
   palette: {
@@ -24,7 +25,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<MSLogin />} />
               <Route path="/loading" element={<Loading />} />
-              <Route path="/license-check" element={<Loading />} />
+              <Route path="/license-check" element={<LicenseCheck />} />
               <Route path="/home" element={<Home />} />
             </Routes>
           </Router>

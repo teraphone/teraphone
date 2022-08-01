@@ -24,6 +24,7 @@ export default function App() {
             <Routes>
               <Route path="/" element={<MSLogin />} />
               <Route path="/loading" element={<Loading />} />
+              <Route path="/license-check" element={<Loading />} />
               <Route path="/home" element={<Home />} />
             </Routes>
           </Router>

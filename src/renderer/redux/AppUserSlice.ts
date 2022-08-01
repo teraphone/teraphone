@@ -36,7 +36,8 @@ export const appUserSlice = createSlice({
   },
 });
 
-export const { setAppUser, setTenantUser } = appUserSlice.actions;
+export const { setAppUser, setTenantUser, setUserLicense } =
+  appUserSlice.actions;
 
 export const selectAppUser = (state: RootState) => state.appUser;
 

@@ -12,7 +12,7 @@ const LicenseCheck = () => {
   const userLicense = useAppSelector(selectUserLicense);
   const isLicenseActive = userLicense.licenseStatus === LicenseStatus.active;
   const isTrialActive = userLicense.trialActivated;
-  const isTrialExpired = Date.parse(userLicense.trialExpiresAt) > Date.now();
+  const isTrialExpired = Date.now() > Date.parse(userLicense.trialExpiresAt);
   const [canStartTrial, setCanStartTrial] = React.useState(false);
   const [pending, setPending] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
@@ -20,15 +20,19 @@ const LicenseCheck = () => {
 
   React.useEffect(() => {
     if (isLicenseActive) {
+      console.log('license is active, redirecting to home');
       navigate('/home');
     }
     if (isTrialActive && !isTrialExpired) {
+      console.log('trial is active, redirecting to home');
       navigate('/home');
     }
     if (isTrialActive && isTrialExpired) {
+      console.log('trial is expired, redirecting to trial-expired');
       navigate('/trial-expired'); // todo: create this page
     }
     if (!isTrialActive) {
+      console.log('trial is not active, start trial?');
       setCanStartTrial(true);
     }
   }, [isLicenseActive, isTrialActive, isTrialExpired, navigate]);

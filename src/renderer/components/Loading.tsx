@@ -29,7 +29,6 @@ const Loading = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const msAuthResult = useAppSelector(selectMSAuthResult);
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   const handleLogin = React.useCallback(async () => {
     let success = false;
@@ -72,15 +71,12 @@ const Loading = () => {
     handleLogin()
       .then((success) => {
         if (success) {
-          // if no license, trial expired: navigate to request license expired page
-          // if no license, trial active: navigate to home view
-          // if no license, trial inactive: navigate to trial start page
-          // if license, navigate to home view
+          navigate('/license-check');
         }
         return true;
       })
       .catch(console.error);
-  }, [handleLogin]);
+  }, [handleLogin, navigate]);
 
   return (
     <Container component="main" maxWidth="xs">

@@ -37,7 +37,7 @@ const LicenseCheck = () => {
     }
     if (isTrialActive && isTrialExpired) {
       console.log('trial is expired, redirecting to trial-expired');
-      navigate('/trial-expired'); // todo: create this page
+      navigate('/trial-expired');
     }
     if (!isTrialActive) {
       console.log('trial is not active, start trial?');
@@ -108,7 +108,7 @@ const LicenseCheck = () => {
             variant="contained"
             onClick={handleStartTrial}
           >
-            Authenticate with Microsoft
+            Begin 30-Day Free Trial
           </LoadingButton>
         )}
         <SubmitError />

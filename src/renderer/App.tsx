@@ -7,6 +7,7 @@ import Home from './components/Home';
 import { RoomProvider } from './contexts/RoomContext';
 import { store } from './redux/store';
 import LicenseCheck from './components/LicenseCheck';
+import TrialExpired from './components/TrialExpired';
 
 const theme = createTheme({
   palette: {
@@ -26,6 +27,7 @@ export default function App() {
               <Route path="/" element={<MSLogin />} />
               <Route path="/loading" element={<Loading />} />
               <Route path="/license-check" element={<LicenseCheck />} />
+              <Route path="/trial-expired" element={<TrialExpired />} />
               <Route path="/home" element={<Home />} />
             </Routes>
           </Router>

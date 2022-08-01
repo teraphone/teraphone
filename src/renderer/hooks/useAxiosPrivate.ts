@@ -1,7 +1,22 @@
+/* eslint-disable no-console */
 import * as React from 'react';
 import axios, { axiosPrivate } from '../api/axios';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setAuth, selectAuth } from '../redux/AuthSlice';
+import {
+  setAccessToken,
+  setAccessTokenExpiration,
+  setRefreshToken,
+  setRefreshTokenExpiration,
+  selectAuth,
+} from '../redux/AuthSlice';
+
+type UpdateAuthResponse = {
+  success: boolean;
+  accessToken: string;
+  accessTokenExpiration: number;
+  refreshToken: string;
+  refreshTokenExpiration: number;
+};
 
 const useAxiosPrivate = () => {
   const dispatch = useAppDispatch();
@@ -11,15 +26,31 @@ const useAxiosPrivate = () => {
     const refreshAuth = async () => {
       const config = {
         headers: {
-          Authorization: `Bearer ${auth.token}`,
+          Authorization: `Bearer ${auth.accessToken}`,
+        },
+        body: {
+          refreshToken: auth.refreshToken,
         },
       };
-      const response = await axios.get('/v1/private/auth', config);
-      const { token, expiration } = response.data;
-      dispatch(setAuth({ token, expiration }));
+      try {
+        const response = await axios.post('/v1/private/auth', config);
+        const {
+          accessToken,
+          accessTokenExpiration,
+          refreshToken,
+          refreshTokenExpiration,
+        } = response.data as UpdateAuthResponse;
+        dispatch(setAccessToken(accessToken));
+        dispatch(setAccessTokenExpiration(accessTokenExpiration));
+        dispatch(setRefreshToken(refreshToken));
+        dispatch(setRefreshTokenExpiration(refreshTokenExpiration));
+      } catch (error) {
+        console.log('error refreshing auth tokens', error);
+      }
     };
 
-    const isExpired = auth.expiration - Math.floor(Date.now() / 1000) < 0;
+    const isExpired =
+      auth.accessTokenExpiration - Math.floor(Date.now() / 1000) < 0;
     const expiresSoon =
       auth.expiration - Math.floor(Date.now() / 1000) < 3600 && !isExpired;
 
@@ -39,9 +70,8 @@ const useAxiosPrivate = () => {
         if (!config.headers) {
           config.headers = {};
         }
-        // eslint-disable-next-line no-console
         console.log(`updateAuthHeader, time: ${Math.floor(Date.now() / 1000)}`);
-        config.headers.Authorization = `Bearer ${auth.token}`;
+        config.headers.Authorization = `Bearer ${auth.accessToken}`;
 
         return config;
       },

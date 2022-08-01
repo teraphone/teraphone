@@ -3,12 +3,20 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Alert, Box, Container, CssBaseline, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { useAppSelector } from '../redux/hooks';
-import { selectUserLicense } from '../redux/AppUserSlice';
-import { LicenseStatus } from '../models/models';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { selectAuth } from '../redux/AuthSlice';
+import { selectUserLicense, setUserLicense } from '../redux/AppUserSlice';
+import { LicenseStatus, UserLicense } from '../models/models';
+
+type UpdateLicenseResponse = {
+  success: boolean;
+  license: UserLicense;
+};
 
 const LicenseCheck = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { auth } = useAppSelector(selectAuth);
   const userLicense = useAppSelector(selectUserLicense);
   const isLicenseActive = userLicense.licenseStatus === LicenseStatus.active;
   const isTrialActive = userLicense.trialActivated;
@@ -38,19 +46,35 @@ const LicenseCheck = () => {
   }, [isLicenseActive, isTrialActive, isTrialExpired, navigate]);
 
   const handleStartTrial = React.useCallback(async () => {
+    const params: RequestInit = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth.accessToken}`,
+      },
+    };
     setPending(true);
     try {
-      // todo: finish this...
-      // send request to start trial
-      // update license from response
-      // navigate to home
+      const response = await window.fetch(
+        'https://api-dev.teraphone.app/v1/private/license',
+        params
+      );
+      console.log('response', response);
+      if (response.ok) {
+        const data: UpdateLicenseResponse = await response.json();
+        dispatch(setUserLicense(data.license));
+      } else {
+        setPending(false);
+        setSubmitError(true);
+        setErrorMessage('Request failed: could not start trial.');
+      }
     } catch (error) {
       console.log(error);
       setPending(false);
       setSubmitError(true);
       setErrorMessage('Request failed: could not start trial.');
     }
-  }, []);
+  }, [auth.accessToken, dispatch]);
 
   const SubmitError = () => {
     if (submitError) {

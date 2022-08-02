@@ -14,19 +14,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import * as React from 'react';
 import * as models from '../models/models';
-import GroupInviteDialog from './GroupInviteDialog';
 
-function GroupMenu(props: { groupInfo: models.GroupInfo }) {
-  const { groupInfo } = props;
-  const [inviteDialogOpen, setInviteDialogOpen] = React.useState(false);
-
-  const handleInviteDialogClickOpen = () => {
-    setInviteDialogOpen(true);
-  };
-
-  const handleInviteDialogClose = () => {
-    setInviteDialogOpen(false);
-  };
+function TeamMenu(props: { teamInfo: models.TeamInfo }) {
+  const { teamInfo } = props;
 
   return (
     <Box
@@ -37,10 +27,10 @@ function GroupMenu(props: { groupInfo: models.GroupInfo }) {
     >
       <List
         component="nav"
-        aria-label="group-menu"
+        aria-label="team-menu"
         sx={{ height: '100%', p: 0 }}
       >
-        <PopupState variant="popover" popupId="group-popup-menu">
+        <PopupState variant="popover" popupId="team-popup-menu">
           {(popupState) => (
             <>
               <ListItem
@@ -64,7 +54,7 @@ function GroupMenu(props: { groupInfo: models.GroupInfo }) {
                       color: 'text.secondary',
                     }}
                   >
-                    {groupInfo.group.name}
+                    {teamInfo.team.displayName}
                   </Typography>
                 </ListItemText>
               </ListItem>
@@ -88,12 +78,10 @@ function GroupMenu(props: { groupInfo: models.GroupInfo }) {
                 }}
               >
                 <MenuItem
-                  onClick={() => {
-                    handleInviteDialogClickOpen();
-                    popupState.close();
-                  }}
-                  sx={{ width: 290 }}
+                  onClick={popupState.close}
+                  disabled
                   dense
+                  sx={{ width: 290 }}
                 >
                   <ListItemText>Invite People</ListItemText>
                   <PersonAddIcon sx={{ fontSize: 20 }} />
@@ -115,13 +103,8 @@ function GroupMenu(props: { groupInfo: models.GroupInfo }) {
           )}
         </PopupState>
       </List>
-      <GroupInviteDialog
-        groupInfo={groupInfo}
-        open={inviteDialogOpen}
-        onClose={handleInviteDialogClose}
-      />
     </Box>
   );
 }
 
-export default React.memo(GroupMenu);
+export default React.memo(TeamMenu);

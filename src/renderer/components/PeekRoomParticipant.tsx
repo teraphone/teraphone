@@ -10,13 +10,13 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import * as models from '../models/models';
 
 function PeekRoomParticipant(props: {
-  userinfo: models.GroupUserInfo;
+  user: models.TenantUser;
   isMuted: boolean;
   isDeafened: boolean;
   isScreenShare: boolean;
 }) {
-  const { userinfo, isMuted, isDeafened, isScreenShare } = props;
-  const { name } = userinfo;
+  const { user, isMuted, isDeafened, isScreenShare } = props;
+  const { name } = user;
 
   return (
     <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>

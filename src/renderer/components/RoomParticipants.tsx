@@ -10,40 +10,38 @@ import { selectRoomParticipants, unknownParticipant } from '../redux/ArtySlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 function RoomParticipants(props: {
-  roomInfo: models.RoomInfo;
-  usersObj: { [id: number]: models.GroupUserInfo };
+  roomInfo: models.RoomInfoType;
+  usersObj: { [oid: string]: models.TenantUser };
 }) {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { roomInfo, usersObj } = props;
-  const { group_id: groupId, id: roomId } = roomInfo.room;
+  const { teamId, id: roomId } = roomInfo.room;
   const { participants } = useRoom();
   const usersRTInfo = useAppSelector((state) =>
-    selectRoomParticipants(state, groupId.toString(), roomId.toString())
+    selectRoomParticipants(state, teamId, roomId)
   );
 
   React.useEffect(() => {
-    console.log('RoomParticipants', roomInfo.room.name, 'Mounted');
+    console.log('RoomParticipants', roomInfo.room.displayName, 'Mounted');
     return () =>
-      console.log('RoomParticipants', roomInfo.room.name, 'Unmounted');
+      console.log('RoomParticipants', roomInfo.room.displayName, 'Unmounted');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const participantItems = participants.map((participant: Participant) => {
     const userId = participant.identity;
-    let userInfo = {} as models.GroupUserInfo;
-    if (usersObj[+userId]) {
-      userInfo = usersObj[+userId] as models.GroupUserInfo;
+    let user = {} as models.TenantUser;
+    if (usersObj[userId]) {
+      user = usersObj[userId];
     } else {
-      userInfo = {
-        name: 'Unknown User',
-        user_id: +userId,
-      } as models.GroupUserInfo;
+      user.name = 'Unknown User';
+      user.oid = userId;
       dispatch(
         unknownParticipant({
           client: axiosPrivate,
-          groupId,
-          userId: +userId,
+          teamId,
+          userId,
         })
       );
     }
@@ -63,7 +61,7 @@ function RoomParticipants(props: {
     return (
       <RoomParticipant
         key={participant.sid}
-        userinfo={userInfo}
+        user={user}
         participant={participant}
         isMuted={isMuted}
         isDeafened={isDeafened}

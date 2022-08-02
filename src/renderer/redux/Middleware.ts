@@ -59,7 +59,7 @@ listenerMiddleware.startListening({
   actionCreator: unknownParticipant,
   effect: (action, listenerApi) => {
     console.log('unknownParticipant', action.payload);
-    const { client, teamId, userId } = action.payload;
+    const { client } = action.payload;
     listenerApi.dispatch(getWorld(client)); // todo: this is inefficient
   },
 });

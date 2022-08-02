@@ -32,7 +32,7 @@ const Home = () => {
     dispatch(getWorld(axiosPrivate))
       .then((response) => {
         console.log('dispatch getWorld -> then', response);
-        return response.payload as models.GroupsInfo;
+        return response.payload as models.TeamInfo[];
       })
       .then(() => {
         dispatch(signedIn);

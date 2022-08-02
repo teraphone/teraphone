@@ -228,7 +228,7 @@ export type ParticipantRTRooms = {
 };
 
 export type ParticipantRTGroups = {
-  [groupId: string]: ParticipantRTRooms;
+  [teamId: string]: ParticipantRTRooms;
 };
 
 export type OnlineRTUsers = {
@@ -236,5 +236,5 @@ export type OnlineRTUsers = {
 };
 
 export type OnlineRTGroups = {
-  [groupId: string]: OnlineRTUsers;
+  [teamId: string]: OnlineRTUsers;
 };

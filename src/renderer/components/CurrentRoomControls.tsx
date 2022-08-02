@@ -182,7 +182,7 @@ function CurentRoomControls() {
     }
   }
 
-  const secondaryStatusText = `${currentRoom.groupName} / ${currentRoom.roomName}`;
+  const secondaryStatusText = `${currentRoom.teamName} / ${currentRoom.roomName}`;
 
   return (
     <>

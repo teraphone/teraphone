@@ -8,30 +8,30 @@ import { selectRoomParticipants, unknownParticipant } from '../redux/ArtySlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 function PeakRoomParticipants(props: {
-  roomInfo: models.RoomInfo;
-  usersObj: { [id: number]: models.GroupUserInfo };
+  roomInfo: models.RoomInfoType;
+  usersObj: { [oid: string]: models.TenantUser };
 }) {
   const axiosPrivate = useAxiosPrivate();
   const dispatch = useAppDispatch();
   const { roomInfo, usersObj } = props;
-  const { group_id: groupId, id: roomId } = roomInfo.room;
+  const { teamId, id: roomId } = roomInfo.room;
   const usersRTInfo = useAppSelector((state) =>
-    selectRoomParticipants(state, groupId.toString(), roomId.toString())
+    selectRoomParticipants(state, teamId, roomId)
   );
   const roomParticipants: JSX.Element[] = [];
 
   Object.entries(usersRTInfo).map(([userId, participantRTInfo]) => {
-    let userInfo = {} as models.GroupUserInfo;
-    if (usersObj[+userId]) {
-      userInfo = usersObj[+userId] as models.GroupUserInfo;
+    let user = {} as models.TenantUser;
+    if (usersObj[userId]) {
+      user = usersObj[userId];
     } else {
-      userInfo.name = 'Unknown User';
-      userInfo.user_id = +userId;
+      user.name = 'Unknown User';
+      user.oid = userId;
       dispatch(
         unknownParticipant({
           client: axiosPrivate,
-          groupId,
-          userId: +userId,
+          teamId,
+          userId,
         })
       );
     }
@@ -39,7 +39,7 @@ function PeakRoomParticipants(props: {
     roomParticipants.push(
       <PeekRoomParticipant
         key={userId}
-        userinfo={userInfo}
+        user={user}
         isMuted={isMuted}
         isDeafened={isDeafened}
         isScreenShare={isScreenShare}

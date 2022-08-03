@@ -18,7 +18,7 @@ import {
 } from 'livekit-client';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
-import { selectGroup } from '../redux/WorldSlice';
+import { selectTeam } from '../redux/WorldSlice';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import {
   selectScreens,
@@ -84,8 +84,8 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
   const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { groupId } = currentRoom;
-  const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
+  const { teamId } = currentRoom;
+  const teamInfo = useAppSelector((state) => selectTeam(state, teamId));
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const localParticipant = room?.localParticipant;
 
@@ -99,9 +99,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
         return;
       }
       const userId = participant.identity;
-      const user = groupInfo?.users.find(
-        (groupUser) => groupUser.user_id === +userId
-      );
+      const user = teamInfo?.users.find((usr) => usr.oid === userId);
       const userName = user?.name || 'Unknown';
       const isPopout = false;
       const isLocal = participant.sid === localParticipant?.sid;
@@ -113,7 +111,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
         [sid]: { userName, isPopout, isLocal, videoTrack },
       }));
     },
-    [groupInfo?.users, localParticipant?.sid, videoItems]
+    [localParticipant?.sid, teamInfo?.users, videoItems]
   );
 
   const takeDownScreenTrack = React.useCallback(

@@ -18,7 +18,7 @@ function VideoViews() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
   const videoViewWindowOpen = useAppSelector(selectWindowOpen);
-  const { appUser } = useAppSelector(selectAppUser);
+  const { tenantUser } = useAppSelector(selectAppUser);
   const { room } = useRoom();
   const { videoItems, setVideoItems, setUpScreenTrack, takeDownScreenTrack } =
     useVideoItems();
@@ -88,11 +88,7 @@ function VideoViews() {
         Object.entries(screens).forEach(([sourceId, _]) => {
           if (!sourceIsPublished(sourceId)) {
             p.push(
-              startStream(
-                room.localParticipant,
-                appUser.id.toString(),
-                sourceId
-              )
+              startStream(room.localParticipant, tenantUser.oid, sourceId)
             );
           }
         });
@@ -102,11 +98,7 @@ function VideoViews() {
         Object.entries(windows).forEach(([sourceId, _]) => {
           if (!sourceIsPublished(sourceId)) {
             p.push(
-              startStream(
-                room.localParticipant,
-                appUser.id.toString(),
-                sourceId
-              )
+              startStream(room.localParticipant, tenantUser.oid, sourceId)
             );
           }
         });
@@ -130,7 +122,7 @@ function VideoViews() {
         return false;
       });
   }, [
-    appUser.id,
+    tenantUser.oid,
     localParticipant,
     room,
     screens,

@@ -56,6 +56,7 @@ class AuthProvider {
     const requestScopes = [
       'api://9ef60b2f-3246-4390-8e17-a57478e7ec45/User.Read',
       'User.Read',
+      'User.ReadBasic.All',
       'Team.ReadBasic.All',
       'openid',
       'profile',

@@ -11,15 +11,15 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import * as models from '../models/models';
 
 function RoomParticipant(props: {
-  userinfo: models.GroupUserInfo;
+  user: models.TenantUser;
   participant: Participant;
   isMuted: boolean;
   isDeafened: boolean;
   isScreenShare: boolean;
 }) {
   const [isMounted, setIsMounted] = React.useState(false);
-  const { userinfo, participant, isMuted, isDeafened, isScreenShare } = props;
-  const { name } = userinfo;
+  const { user, participant, isMuted, isDeafened, isScreenShare } = props;
+  const { name } = user;
   const [isSpeaking, setIsSpeaking] = React.useState(false);
   const [speech, setSpeech] = React.useState('');
 

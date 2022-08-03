@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -12,33 +12,42 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 // import { signIn } from '../redux/Firebase';
-// import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch } from '../redux/hooks';
 // import { setAppUser } from '../redux/AppUserSlice';
-// import { setAuth, selectAuth } from '../redux/AuthSlice';
+import { setMSAuthResult } from '../redux/AuthSlice';
 
 function MSLogin() {
   const [authPending, setAuthPending] = React.useState(false);
   const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  // const [msAuth, setMSAuth] = React.useState<AuthenticationResult | null>(null);
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleAuthClick = React.useCallback(async () => {
-    setAuthPending(true);
-    const authResult = await window.electron.ipcRenderer.auth();
+    // todo: click auth button then close popup. why no error???
     try {
+      // setAuthPending(true);
+      const authResult = await window.electron.ipcRenderer.auth();
+      console.log('authResult', authResult);
       if (authResult) {
-        // setMSAuth(authResult);
+        dispatch(setMSAuthResult(authResult));
         setAuthPending(false);
         setSubmitError(false);
-        console.log('authResult', authResult);
+        navigate('/loading');
+      } else {
+        setAuthPending(false);
+        setSubmitError(true);
+        setErrorMessage('Authentication failed');
       }
     } catch (error) {
+      console.log(error);
       setAuthPending(false);
       setSubmitError(true);
       setErrorMessage('Authentication failed');
     }
-  }, []);
+
+    setAuthPending(false);
+  }, [dispatch, navigate]);
 
   const SubmitError = () => {
     if (submitError) {
@@ -92,6 +101,8 @@ function MSLogin() {
               >
                 Terms of Service
               </Link>
+            </Grid>
+            <Grid item>
               <Link
                 to="/"
                 onClick={() =>
@@ -100,10 +111,6 @@ function MSLogin() {
               >
                 Privacy Policy
               </Link>
-            </Grid>
-            <Grid item>
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
-              <Link to="/signup">Don't have an account? Sign Up</Link>
             </Grid>
           </Grid>
         </Box>

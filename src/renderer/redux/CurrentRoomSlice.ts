@@ -2,10 +2,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 
 export type CurrentRoomState = {
-  roomId: number;
+  roomId: string;
   roomName: string;
-  groupId: number;
-  groupName: string;
+  teamId: string;
+  teamName: string;
 };
 
 type CurrentRoom = {
@@ -15,16 +15,16 @@ type CurrentRoom = {
 
 const initialState: CurrentRoom = {
   currentRoom: {
-    roomId: 0,
+    roomId: '',
     roomName: '',
-    groupId: 0,
-    groupName: '',
+    teamId: '',
+    teamName: '',
   },
   previousRoom: {
-    roomId: 0,
+    roomId: '',
     roomName: '',
-    groupId: 0,
-    groupName: '',
+    teamId: '',
+    teamName: '',
   },
 };
 

@@ -38,9 +38,9 @@ export type JoinLiveKitRoomResponse = {
 
 export function JoinLiveKitRoom(
   client: AxiosInstance,
-  group_id: number,
-  room_id: number
+  teamId: string,
+  roomId: string
 ) {
-  const url = `/v1/roomservice/rooms/${group_id}/${room_id}/join`;
+  const url = `/v1/roomservice/rooms/${teamId}/${roomId}/join`;
   return client.get(url);
 }

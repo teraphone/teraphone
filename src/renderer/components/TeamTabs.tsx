@@ -8,12 +8,11 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
-import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import * as models from '../models/models';
-import GroupTabPanel from './GroupTabPanel';
+import TeamTabPanel from './TeamTabPanel';
 import { useAppSelector } from '../redux/hooks';
-import { selectGroups } from '../redux/WorldSlice';
+import { selectTeams } from '../redux/WorldSlice';
 
 function a11yProps(index: number) {
   return {
@@ -22,58 +21,35 @@ function a11yProps(index: number) {
   };
 }
 
-function GroupTabs() {
+function TeamTabs() {
   const [value, setValue] = React.useState(0);
 
-  const groupsInfo = useAppSelector(selectGroups);
+  const teamsInfo = useAppSelector(selectTeams);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    if (newValue < groupsInfo.length) {
+    if (newValue < teamsInfo.length) {
       setValue(newValue);
     }
   };
 
-  function addGroupTab() {
-    const handleClick = () => {
-      alert('Not implemented yet.');
-    };
+  const tabs = teamsInfo.map((teamInfo: models.TeamInfo, index) => {
+    const { id, displayName } = teamInfo.team;
 
     return (
-      <Tooltip title="Add a Group" key="add-group" placement="right" arrow>
+      <Tooltip title={displayName} key={id} placement="right" arrow>
         <Tab
-          onClick={handleClick}
-          icon={
-            <Avatar>
-              <AddIcon />
-            </Avatar>
-          }
-          key="add-group"
-          aria-controls="vertical-tabpanel-add-group"
+          icon={<Avatar>{displayName[0]}</Avatar>}
+          key={id}
+          {...a11yProps(index)}
         />
       </Tooltip>
     );
-  }
-
-  const tabs = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
-    const { id, name } = groupInfo.group;
-
-    return (
-      <Tooltip title={name} key={id} placement="right" arrow>
-        <Tab icon={<Avatar>{name[0]}</Avatar>} key={id} {...a11yProps(index)} />
-      </Tooltip>
-    );
   });
-  tabs.push(addGroupTab());
 
-  const tabPanels = groupsInfo.map((groupInfo: models.GroupInfo, index) => {
-    const { id } = groupInfo.group;
+  const tabPanels = teamsInfo.map((teamInfo: models.TeamInfo, index) => {
+    const { id } = teamInfo.team;
     return (
-      <GroupTabPanel
-        key={id}
-        value={value}
-        index={index}
-        groupInfo={groupInfo}
-      />
+      <TeamTabPanel key={id} value={value} index={index} teamInfo={teamInfo} />
     );
   });
 
@@ -99,7 +75,7 @@ function GroupTabs() {
               color: 'text.secondary',
             }}
           >
-            Groups
+            Teams
           </Typography>
         </Box>
 
@@ -126,4 +102,4 @@ function GroupTabs() {
   );
 }
 
-export default React.memo(GroupTabs);
+export default React.memo(TeamTabs);

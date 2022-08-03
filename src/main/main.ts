@@ -22,6 +22,9 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import AuthProvider from './AuthProvider';
+
+const authProvider = new AuthProvider();
 
 export default class AppUpdater {
   constructor() {
@@ -54,6 +57,21 @@ ipcMain.handle('QUERY-SCREENS', async (_event, options) => {
     return { id, name, thumbnailDataURL, display_id, appIconDataURL };
   });
   return Promise.all(serializedSources);
+});
+
+// Handle ms auth calls
+ipcMain.handle('login', async () => {
+  const accountInfo = await authProvider.login();
+  return accountInfo;
+});
+
+ipcMain.handle('auth', async () => {
+  const authResponse = await authProvider.auth();
+  return authResponse;
+});
+
+ipcMain.handle('logout', async () => {
+  await authProvider.logout();
 });
 
 if (process.env.NODE_ENV === 'production') {

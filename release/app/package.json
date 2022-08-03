@@ -1,11 +1,11 @@
 {
   "name": "teraphone",
-  "version": "0.2.1",
+  "version": "0.2.2-demo",
   "description": "Voice chat and screen sharing for remote teams.",
   "main": "./dist/main/main.js",
   "author": {
     "name": "T E R A P H O N E",
-    "email": "davidjwurtz@gmail.com",
+    "email": "help@teraphone.app",
     "url": "https://teraphone.app"
   },
   "scripts": {

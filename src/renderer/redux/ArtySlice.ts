@@ -9,12 +9,12 @@ type ArtyState = {
 };
 
 export type SetParticipantsGroupPayload = {
-  groupId: string;
+  teamId: string;
   rooms: models.ParticipantRTRooms;
 };
 
 export type SetOnlineGroupPayload = {
-  groupId: string;
+  teamId: string;
   users: models.OnlineRTUsers;
 };
 
@@ -31,12 +31,12 @@ export const artySlice = createSlice({
       state,
       action: PayloadAction<SetParticipantsGroupPayload>
     ) => {
-      const { groupId, rooms } = action.payload;
-      state.participants[groupId] = rooms;
+      const { teamId, rooms } = action.payload;
+      state.participants[teamId] = rooms;
     },
     setOnlineGroup: (state, action: PayloadAction<SetOnlineGroupPayload>) => {
-      const { groupId, users } = action.payload;
-      state.online[groupId] = users;
+      const { teamId, users } = action.payload;
+      state.online[teamId] = users;
     },
   },
 });
@@ -49,23 +49,23 @@ export const selectOnline = (state: RootState) => state.arty.online;
 
 export const selectRoomParticipants = (
   state: RootState,
-  groupId: string,
+  teamId: string,
   roomId: string
 ) => {
-  if (groupId in state.arty.participants) {
+  if (teamId in state.arty.participants) {
     if (
-      state.arty.participants[groupId] !== null &&
-      roomId in state.arty.participants[groupId]
+      state.arty.participants[teamId] !== null &&
+      roomId in state.arty.participants[teamId]
     ) {
-      return state.arty.participants[groupId][roomId];
+      return state.arty.participants[teamId][roomId];
     }
   }
   return {} as models.ParticipantRTUsers;
 };
 
-export const selectGroupOnline = (state: RootState, groupId: string) => {
-  if (groupId in state.arty.online) {
-    return state.arty.online[groupId];
+export const selectGroupOnline = (state: RootState, teamId: string) => {
+  if (teamId in state.arty.online) {
+    return state.arty.online[teamId];
   }
   return {} as models.OnlineRTUsers;
 };
@@ -73,7 +73,7 @@ export const selectGroupOnline = (state: RootState, groupId: string) => {
 export default artySlice.reducer;
 
 export type AddParticipantRTListenerPayload = {
-  groupId: string;
+  teamId: string;
 };
 
 export const addParticipantRTListener =
@@ -82,7 +82,7 @@ export const addParticipantRTListener =
   );
 
 export type AddOnlineRTListenerPayload = {
-  groupId: string;
+  teamId: string;
 };
 
 export const addOnlineRTListener = createAction<AddOnlineRTListenerPayload>(
@@ -91,8 +91,8 @@ export const addOnlineRTListener = createAction<AddOnlineRTListenerPayload>(
 
 export type UnknownParticipantPayload = {
   client: AxiosInstance;
-  groupId: number;
-  userId: number;
+  teamId: string;
+  userId: string;
 };
 
 export const unknownParticipant = createAction<UnknownParticipantPayload>(
@@ -104,7 +104,7 @@ export const signedIn = createAction('arty/SignedIn');
 export const signedOut = createAction('arty/SignedOut');
 
 export type PushUserParticipantRTInfoPayload = {
-  groupId: string;
+  teamId: string;
   roomId: string;
   userId: string;
   info: models.ParticipantRTInfo;
@@ -116,7 +116,7 @@ export const pushUserParticipantRTInfo =
   );
 
 export type ClearUserParticipantRTInfoPayload = {
-  groupId: string;
+  teamId: string;
   roomId: string;
   userId: string;
 };
@@ -127,7 +127,7 @@ export const clearUserParticipantRTInfo =
   );
 
 export type PushUserOnlineRTInfo = {
-  groupId: string;
+  teamId: string;
   userId: string;
 };
 
@@ -136,7 +136,7 @@ export const pushUserOnlineRTInfo = createAction<PushUserOnlineRTInfo>(
 );
 
 export type ClearUserOnlineRTInfo = {
-  groupId: string;
+  teamId: string;
   userId: string;
 };
 

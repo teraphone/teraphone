@@ -14,21 +14,21 @@ import { selectAppUser } from '../redux/AppUserSlice';
 import { selectOnline, unknownParticipant } from '../redux/ArtySlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
-export interface GroupContactsProps {
-  groupInfo: models.GroupInfo;
+export interface TeamContactsProps {
+  teamInfo: models.TeamInfo;
 }
 
-function GroupContacts(props: GroupContactsProps) {
-  const { groupInfo } = props;
-  const { users, group } = groupInfo;
-  const { appUser } = useAppSelector(selectAppUser);
+function GroupContacts(props: TeamContactsProps) {
+  const { teamInfo } = props;
+  const { users, team } = teamInfo;
+  const { tenantUser } = useAppSelector(selectAppUser);
   const online = useAppSelector(selectOnline);
-  const onlineGroup = online[group.id];
+  const onlineTeam = online[team.id];
   const dispatch = useAppDispatch();
   const axiosPrivate = useAxiosPrivate();
   const [usersObj, setUsersObj] = React.useState<{
-    [id: number]: models.GroupUserInfo;
-  }>(users.reduce((acc, user) => ({ ...acc, [user.user_id]: user }), {}));
+    [oid: string]: models.TenantUser;
+  }>(users.reduce((acc, user) => ({ ...acc, [user.oid]: user }), {}));
 
   const [onlineOpen, setOnlineOpen] = React.useState(true);
   const [offlineOpen, setOfflineOpen] = React.useState(false);
@@ -43,36 +43,36 @@ function GroupContacts(props: GroupContactsProps) {
 
   React.useEffect(() => {
     setUsersObj(
-      users.reduce((acc, user) => ({ ...acc, [user.user_id]: user }), {})
+      users.reduce((acc, user) => ({ ...acc, [user.oid]: user }), {})
     );
   }, [users]);
 
   React.useEffect(() => {
-    if (onlineGroup) {
-      Object.entries(onlineGroup).forEach(([userId]) => {
-        if (!usersObj[+userId]) {
+    if (onlineTeam) {
+      Object.entries(onlineTeam).forEach(([userId]) => {
+        if (!usersObj[userId]) {
           dispatch(
             unknownParticipant({
               client: axiosPrivate,
-              groupId: group.id,
-              userId: +userId,
+              teamId: team.id,
+              userId,
             })
           );
         }
       });
     }
-  }, [axiosPrivate, dispatch, group.id, onlineGroup, usersObj]);
+  }, [axiosPrivate, dispatch, onlineTeam, team.id, usersObj]);
 
-  // let thisUser = {} as models.GroupUserInfo;
-  const onlineUsers = [] as models.GroupUserInfo[];
-  const offlineUsers = [] as models.GroupUserInfo[];
+  // let thisUser = {} as models.TenantUser;
+  const onlineUsers = [] as models.TenantUser[];
+  const offlineUsers = [] as models.TenantUser[];
 
   [...users]
     .sort((a, b) => (a.name > b.name ? 1 : -1))
     .forEach((user) => {
-      if (user.user_id === appUser.id) {
+      if (user.oid === tenantUser.oid) {
         // thisUser = user;
-      } else if (onlineGroup && onlineGroup[user.user_id]) {
+      } else if (onlineTeam && onlineTeam[user.oid]) {
         onlineUsers.push(user);
       } else {
         offlineUsers.push(user);
@@ -80,7 +80,7 @@ function GroupContacts(props: GroupContactsProps) {
     });
 
   // const thisContact = (
-  //   <ListItemButton dense component="li" key={thisUser.user_id}>
+  //   <ListItemButton dense component="li" key={thisUser.oid}>
   //     <ListItemIcon>
   //       <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
   //         {thisUser.name[0]}
@@ -97,7 +97,7 @@ function GroupContacts(props: GroupContactsProps) {
   // );
 
   const onlineContacts = onlineUsers.map((user) => {
-    const { user_id: userId, name } = user;
+    const { oid: userId, name } = user;
     return (
       <ListItemButton dense component="li" key={userId}>
         <ListItemIcon>
@@ -117,7 +117,7 @@ function GroupContacts(props: GroupContactsProps) {
   });
 
   const offlineContacts = offlineUsers.map((user) => {
-    const { user_id: userId, name } = user;
+    const { oid: userId, name } = user;
     return (
       <ListItemButton dense component="li" key={userId}>
         <ListItemIcon>
@@ -155,7 +155,7 @@ function GroupContacts(props: GroupContactsProps) {
         }}
       >
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Group Contacts
+          Team Contacts
         </Typography>
       </Box>
       <List disablePadding>

@@ -1,11 +1,13 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+import MSLogin from './components/MSLogin';
+import Loading from './components/Loading';
 import Home from './components/Home';
 import { RoomProvider } from './contexts/RoomContext';
 import { store } from './redux/store';
+import LicenseCheck from './components/LicenseCheck';
+import TrialExpired from './components/TrialExpired';
 
 const theme = createTheme({
   palette: {
@@ -22,9 +24,10 @@ export default function App() {
         <RoomProvider>
           <Router>
             <Routes>
-              <Route path="/" element={<SignIn />} />
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
+              <Route path="/" element={<MSLogin />} />
+              <Route path="/loading" element={<Loading />} />
+              <Route path="/license-check" element={<LicenseCheck />} />
+              <Route path="/trial-expired" element={<TrialExpired />} />
               <Route path="/home" element={<Home />} />
             </Routes>
           </Router>

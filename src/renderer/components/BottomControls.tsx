@@ -138,7 +138,7 @@ function BottomControls() {
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
-  const { appUser } = useAppSelector(selectAppUser);
+  const { tenantUser } = useAppSelector(selectAppUser);
   const debug = false;
 
   const handleMuteClick = React.useCallback(() => {
@@ -205,11 +205,11 @@ function BottomControls() {
             }}
           >
             <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
-              {appUser.name[0]}
+              {tenantUser.name[0]}
             </Avatar>
           </ListItemIcon>
           <ListItemText
-            primary={appUser.name}
+            primary={tenantUser.name}
             primaryTypographyProps={{
               variant: 'body2',
             }}

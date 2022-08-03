@@ -2,25 +2,25 @@
 import Box from '@mui/material/Box';
 import * as React from 'react';
 import * as models from '../models/models';
-import GroupRooms from './GroupRooms';
-import GroupMenu from './GroupMenu';
+import TeamRooms from './TeamRooms';
+import TeamMenu from './TeamMenu';
 import BottomControls from './BottomControls';
 import CurrentRoomControls from './CurrentRoomControls';
-import GroupContacts from './GroupContacts';
+import TeamContacts from './TeamContacts';
 import ScreenShareBanners from './ScreenShareBanners';
 
-interface GroupTabPanelProps {
+interface TeamTabPanelProps {
   index: number;
   value: number;
-  groupInfo: models.GroupInfo;
+  teamInfo: models.TeamInfo;
 }
 
-function GroupTabPanel(props: GroupTabPanelProps) {
-  const { index, value, groupInfo } = props;
+function TeamTabPanel(props: TeamTabPanelProps) {
+  const { index, value, teamInfo } = props;
 
   React.useEffect(() => {
-    console.log('GroupTabPanel', index, 'Rendered');
-    return () => console.log('GroupTabPanel', index, 'Unmounted');
+    console.log('TeamTabPanel', index, 'Rendered');
+    return () => console.log('TeamTabPanel', index, 'Unmounted');
   }, [index]);
 
   return (
@@ -39,10 +39,10 @@ function GroupTabPanel(props: GroupTabPanelProps) {
         >
           <Box sx={{ width: 310 }}>
             <Box>
-              <GroupMenu groupInfo={groupInfo} />
+              <TeamMenu teamInfo={teamInfo} />
             </Box>
             <Box>
-              <GroupRooms groupInfo={groupInfo} />
+              <TeamRooms teamInfo={teamInfo} />
             </Box>
             <Box
               sx={{
@@ -57,11 +57,11 @@ function GroupTabPanel(props: GroupTabPanelProps) {
               <BottomControls />
             </Box>
           </Box>
-          <GroupContacts groupInfo={groupInfo} />
+          <TeamContacts teamInfo={teamInfo} />
         </Box>
       )}
     </div>
   );
 }
 
-export default React.memo(GroupTabPanel);
+export default React.memo(TeamTabPanel);

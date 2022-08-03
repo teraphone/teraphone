@@ -24,7 +24,7 @@ import {
 } from './ArtySlice';
 import { setCurrentRoom, setPreviousRoom } from './CurrentRoomSlice';
 import * as models from '../models/models';
-import { getGroupUserInfo, getRoomUserInfo } from './WorldSlice';
+import { getWorld } from './WorldSlice';
 import type { RootState } from './store';
 import { database } from './Firebase';
 import { ConnectionStatus } from './ConnectionStatusSlice';
@@ -34,11 +34,11 @@ const listenerMiddleware = createListenerMiddleware();
 listenerMiddleware.startListening({
   actionCreator: addParticipantRTListener,
   effect: (action, listenerApi) => {
-    const { groupId } = action.payload;
-    const nodeRef = ref(database, `participants/${groupId}`);
+    const { teamId } = action.payload;
+    const nodeRef = ref(database, `participants/${teamId}`);
     onValue(nodeRef, (snapshot) => {
       const rooms = snapshot.val() as models.ParticipantRTRooms;
-      listenerApi.dispatch(setParticipantsGroup({ groupId, rooms }));
+      listenerApi.dispatch(setParticipantsGroup({ teamId, rooms }));
     });
   },
 });
@@ -46,11 +46,11 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: addOnlineRTListener,
   effect: (action, listenerApi) => {
-    const { groupId } = action.payload;
-    const nodeRef = ref(database, `online/${groupId}`);
+    const { teamId } = action.payload;
+    const nodeRef = ref(database, `online/${teamId}`);
     onValue(nodeRef, (snapshot) => {
       const users = snapshot.val() as models.OnlineRTUsers;
-      listenerApi.dispatch(setOnlineGroup({ groupId, users }));
+      listenerApi.dispatch(setOnlineGroup({ teamId, users }));
     });
   },
 });
@@ -59,29 +59,16 @@ listenerMiddleware.startListening({
   actionCreator: unknownParticipant,
   effect: (action, listenerApi) => {
     console.log('unknownParticipant', action.payload);
-    const { client, groupId, userId } = action.payload;
-    listenerApi.dispatch(getGroupUserInfo({ client, groupId, userId }));
-    const state = listenerApi.getState() as RootState;
-    const { rooms } = state.world.groups.find(
-      (groupInfo) => groupInfo.group.id === groupId
-    ) as models.GroupInfo;
-    rooms.forEach((roomInfo) => {
-      const { id: roomId } = roomInfo.room;
-      listenerApi.dispatch(
-        getRoomUserInfo({ client, groupId, roomId, userId })
-      );
-    });
+    const { client } = action.payload;
+    listenerApi.dispatch(getWorld(client)); // todo: this is inefficient
   },
 });
 
 listenerMiddleware.startListening({
   actionCreator: pushUserParticipantRTInfo,
   effect: (action, _listenerApi) => {
-    const { groupId, roomId, userId, info } = action.payload;
-    const nodeRef = ref(
-      database,
-      `participants/${groupId}/${roomId}/${userId}`
-    );
+    const { teamId, roomId, userId, info } = action.payload;
+    const nodeRef = ref(database, `participants/${teamId}/${roomId}/${userId}`);
     console.log('pushing Participants RT node:', nodeRef, info);
     update(nodeRef, info); // await?
     onDisconnect(nodeRef).remove();
@@ -91,11 +78,8 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: clearUserParticipantRTInfo,
   effect: (action, _listenerApi) => {
-    const { groupId, roomId, userId } = action.payload;
-    const nodeRef = ref(
-      database,
-      `participants/${groupId}/${roomId}/${userId}`
-    );
+    const { teamId, roomId, userId } = action.payload;
+    const nodeRef = ref(database, `participants/${teamId}/${roomId}/${userId}`);
     console.log('clearing Participants RT node:', nodeRef);
     remove(nodeRef); // await?
   },
@@ -104,8 +88,8 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: pushUserOnlineRTInfo,
   effect: (action, _listenerApi) => {
-    const { groupId, userId } = action.payload;
-    const nodeRef = ref(database, `online/${groupId}`);
+    const { teamId, userId } = action.payload;
+    const nodeRef = ref(database, `online/${teamId}`);
     console.log('pushing Online RT node:', nodeRef, userId);
     update(nodeRef, { [userId]: true }); // await?
     onDisconnect(child(nodeRef, userId)).remove();
@@ -115,8 +99,8 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: clearUserOnlineRTInfo,
   effect: (action, _listenerApi) => {
-    const { groupId, userId } = action.payload;
-    const nodeRef = ref(database, `online/${groupId}/${userId}`);
+    const { teamId, userId } = action.payload;
+    const nodeRef = ref(database, `online/${teamId}/${userId}`);
     console.log('clearing Online RT node:', nodeRef);
     remove(nodeRef); // await?
   },
@@ -152,10 +136,10 @@ listenerMiddleware.startListening({
   effect: (action, listenerApi) => {
     const connectionStatus = action.payload;
     const state = listenerApi.getState() as RootState;
-    const { groupId, roomId } = state.currentRoom.currentRoom;
-    const { groupId: previousGroupId, roomId: previousRoomId } =
+    const { teamId, roomId } = state.currentRoom.currentRoom;
+    const { teamId: previousTeamId, roomId: previousRoomId } =
       state.currentRoom.previousRoom;
-    const { id: userId } = state.appUser.appUser;
+    const { oid: userId } = state.appUser.tenantUser;
     const { mute, deafen } = state.mute;
     const { isSharing } = state.screenShare;
     const info: models.ParticipantRTInfo = {
@@ -168,9 +152,9 @@ listenerMiddleware.startListening({
       case ConnectionStatus.Connected:
         listenerApi.dispatch(
           pushUserParticipantRTInfo({
-            groupId: groupId.toString(),
-            roomId: roomId.toString(),
-            userId: userId.toString(),
+            teamId,
+            roomId,
+            userId,
             info,
           })
         );
@@ -179,9 +163,9 @@ listenerMiddleware.startListening({
       case ConnectionStatus.Connecting:
         listenerApi.dispatch(
           clearUserParticipantRTInfo({
-            groupId: previousGroupId.toString(),
-            roomId: previousRoomId.toString(),
-            userId: userId.toString(),
+            teamId: previousTeamId,
+            roomId: previousRoomId,
+            userId,
           })
         );
         break;
@@ -189,9 +173,9 @@ listenerMiddleware.startListening({
       default:
         listenerApi.dispatch(
           clearUserParticipantRTInfo({
-            groupId: groupId.toString(),
-            roomId: roomId.toString(),
-            userId: userId.toString(),
+            teamId,
+            roomId,
+            userId,
           })
         );
     }
@@ -220,8 +204,8 @@ listenerMiddleware.startListening({
   },
   effect: (_action, listenerApi) => {
     const state = listenerApi.getState() as RootState;
-    const { groupId, roomId } = state.currentRoom.currentRoom;
-    const { id: userId } = state.appUser.appUser;
+    const { teamId, roomId } = state.currentRoom.currentRoom;
+    const { oid: userId } = state.appUser.tenantUser;
     const { mute, deafen } = state.mute;
     const { isSharing } = state.screenShare;
     const info: models.ParticipantRTInfo = {
@@ -232,9 +216,9 @@ listenerMiddleware.startListening({
     };
     listenerApi.dispatch(
       pushUserParticipantRTInfo({
-        groupId: groupId.toString(),
-        roomId: roomId.toString(),
-        userId: userId.toString(),
+        teamId,
+        roomId,
+        userId,
         info,
       })
     );
@@ -246,24 +230,24 @@ listenerMiddleware.startListening({
   actionCreator: signedIn,
   effect: (_action, listenerApi) => {
     const state = listenerApi.getState() as RootState;
-    const { groups: groupsInfo } = state.world;
-    const { id: userId } = state.appUser.appUser;
-    groupsInfo.forEach((groupInfo) => {
-      const { id: groupId } = groupInfo.group;
+    const { teams } = state.world;
+    const { oid: userId } = state.appUser.tenantUser;
+    teams.forEach((teamInfo) => {
+      const { id: teamId } = teamInfo.team;
       listenerApi.dispatch(
         addParticipantRTListener({
-          groupId: groupId.toString(),
+          teamId,
         })
       );
       listenerApi.dispatch(
         addOnlineRTListener({
-          groupId: groupId.toString(),
+          teamId,
         })
       );
       listenerApi.dispatch(
         pushUserOnlineRTInfo({
-          groupId: groupId.toString(),
-          userId: userId.toString(),
+          teamId,
+          userId,
         })
       );
     });
@@ -275,14 +259,14 @@ listenerMiddleware.startListening({
   actionCreator: signedOut,
   effect: (_action, listenerApi) => {
     const state = listenerApi.getState() as RootState;
-    const { groups: groupsInfo } = state.world;
-    const { id: userId } = state.appUser.appUser;
-    groupsInfo.forEach((groupInfo) => {
-      const { id: groupId } = groupInfo.group;
+    const { teams } = state.world;
+    const { oid: userId } = state.appUser.tenantUser;
+    teams.forEach((teamInfo) => {
+      const { id: teamId } = teamInfo.team;
       listenerApi.dispatch(
         clearUserOnlineRTInfo({
-          groupId: groupId.toString(),
-          userId: userId.toString(),
+          teamId,
+          userId,
         })
       );
     });

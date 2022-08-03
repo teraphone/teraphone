@@ -26,12 +26,12 @@ import {
 import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
 import { selectMute } from '../redux/MuteSlice';
 
-function GroupRoom(props: {
-  groupInfo: models.GroupInfo;
-  roomInfo: models.RoomInfo;
-  usersObj: { [id: number]: models.GroupUserInfo };
+function TeamRoom(props: {
+  teamInfo: models.TeamInfo;
+  roomInfo: models.RoomInfoType;
+  usersObj: { [oid: string]: models.TenantUser };
 }) {
-  const { groupInfo, roomInfo, usersObj } = props;
+  const { teamInfo, roomInfo, usersObj } = props;
   const url = 'wss://sfu-demo.teraphone.app';
   const { connect, room } = useRoom();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
@@ -40,15 +40,15 @@ function GroupRoom(props: {
   const thisRoom: CurrentRoomState = React.useMemo(
     () => ({
       roomId: roomInfo.room.id,
-      roomName: roomInfo.room.name,
-      groupId: roomInfo.room.group_id,
-      groupName: groupInfo.group.name,
+      roomName: roomInfo.room.displayName,
+      teamId: roomInfo.room.teamId,
+      teamName: teamInfo.team.displayName,
     }),
     [
-      groupInfo.group.name,
-      roomInfo.room.group_id,
+      roomInfo.room.displayName,
       roomInfo.room.id,
-      roomInfo.room.name,
+      roomInfo.room.teamId,
+      teamInfo.team.displayName,
     ]
   );
   const isThisRoomConnected =
@@ -58,9 +58,10 @@ function GroupRoom(props: {
   const mute = useAppSelector(selectMute);
 
   React.useEffect(() => {
-    console.log('GroupRoom', roomInfo.room.name, 'Mounted');
-    return () => console.log('GroupRoom', roomInfo.room.name, 'Unmounted');
-  }, [roomInfo.room.name]);
+    console.log('TeamRoom', roomInfo.room.displayName, 'Mounted');
+    return () =>
+      console.log('TeamRoom', roomInfo.room.displayName, 'Unmounted');
+  }, [roomInfo.room.displayName]);
 
   const connectRoom = React.useCallback(async () => {
     const roomConnectOptions: RoomConnectOptions = {
@@ -72,7 +73,7 @@ function GroupRoom(props: {
     try {
       const livekitRoom = await connect(
         url,
-        roomInfo.token,
+        roomInfo.roomToken,
         roomConnectOptions
       );
       if (
@@ -96,7 +97,7 @@ function GroupRoom(props: {
     } catch (error) {
       console.error(error);
     }
-  }, [connect, dispatch, mute, roomInfo.room.id, roomInfo.token, thisRoom]);
+  }, [connect, dispatch, mute, roomInfo.room.id, roomInfo.roomToken, thisRoom]);
 
   const handleClick = React.useCallback(async () => {
     console.log(`clicked room ${thisRoom.roomId}`, roomInfo);
@@ -147,7 +148,7 @@ function GroupRoom(props: {
         <ListItemIcon>
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
-        <ListItemText primary={roomInfo.room.name} />
+        <ListItemText primary={roomInfo.room.displayName} />
         {isThisRoomConnected &&
           (!isVideoWindowOpen ? (
             <Tooltip title="Open Video Streams" placement="top" arrow>
@@ -204,7 +205,7 @@ function GroupRoom(props: {
   );
 }
 
-export default React.memo(GroupRoom);
+export default React.memo(TeamRoom);
 
 // todo: changing rooms rapidly can get you into a state where you're connected to multiple rooms.
 // need understand how this can happen and how to prevent it.

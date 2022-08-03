@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box';
 import * as React from 'react';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import GroupTabs from './GroupTabs';
+import TeamTabs from './TeamTabs';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { getWorld } from '../redux/WorldSlice';
 import { signedIn, signedOut } from '../redux/ArtySlice';
@@ -32,7 +32,7 @@ const Home = () => {
     dispatch(getWorld(axiosPrivate))
       .then((response) => {
         console.log('dispatch getWorld -> then', response);
-        return response.payload as models.GroupsInfo;
+        return response.payload as models.TeamInfo[];
       })
       .then(() => {
         dispatch(signedIn);
@@ -85,7 +85,7 @@ const Home = () => {
           height: '100vh',
         }}
       >
-        <GroupTabs />
+        <TeamTabs />
         <ScreenPickerDialog />
         <VideoViews />
         <AudioRenderers />

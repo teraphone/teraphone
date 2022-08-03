@@ -2,52 +2,21 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 import type { RootState } from './store';
 import * as models from '../models/models';
-import { GetWorld, GetGroupUser, GetRoomUser } from '../requests/requests';
+import { GetWorld } from '../requests/requests';
 
 type WorldState = {
-  groups: models.GroupsInfo;
+  teams: models.TeamInfo[];
 };
 
 const initialState: WorldState = {
-  groups: [] as models.GroupsInfo,
+  teams: [] as models.TeamInfo[],
 };
 
 export const getWorld = createAsyncThunk(
   'world/getWorld',
   async (client: AxiosInstance) => {
     const response = await GetWorld(client);
-    return response.data.groups_info as models.GroupsInfo;
-  }
-);
-
-type GetGroupUserInfoAsyncThunkArgs = {
-  client: AxiosInstance;
-  groupId: number;
-  userId: number;
-};
-
-export const getGroupUserInfo = createAsyncThunk(
-  'world/getGroupUserInfo',
-  async (args: GetGroupUserInfoAsyncThunkArgs) => {
-    const { client, groupId, userId } = args;
-    const response = await GetGroupUser(client, groupId, userId);
-    return response.data.group_user as models.GroupUserInfo;
-  }
-);
-
-type GetRoomUserInfoAsyncThunkArgs = {
-  client: AxiosInstance;
-  groupId: number;
-  roomId: number;
-  userId: number;
-};
-
-export const getRoomUserInfo = createAsyncThunk(
-  'world/getRoomUserInfo',
-  async (args: GetRoomUserInfoAsyncThunkArgs) => {
-    const { client, groupId, roomId, userId } = args;
-    const response = await GetRoomUser(client, groupId, roomId, userId);
-    return response.data.room_user as models.RoomUserInfo;
+    return response.data.teams as models.TeamInfo[];
   }
 );
 
@@ -55,67 +24,42 @@ export const worldSlice = createSlice({
   name: 'world',
   initialState,
   reducers: {
-    setGroups: (state, action: PayloadAction<models.GroupsInfo>) => {
-      state.groups = action.payload;
+    setTeams: (state, action: PayloadAction<models.TeamInfo[]>) => {
+      state.teams = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getWorld.fulfilled, (state, action) => {
-      state.groups = action.payload;
-    });
-
-    builder.addCase(getGroupUserInfo.fulfilled, (state, action) => {
-      const { groupId } = action.meta.arg;
-      state.groups = state.groups.map((groupInfo) => {
-        if (groupInfo.group.id === groupId) {
-          groupInfo.users.push(action.payload);
-        }
-        return groupInfo;
-      });
-    });
-
-    builder.addCase(getRoomUserInfo.fulfilled, (state, action) => {
-      const { groupId, roomId } = action.meta.arg;
-      state.groups = state.groups.map((groupInfo) => {
-        if (groupInfo.group.id === groupId) {
-          groupInfo.rooms = groupInfo.rooms.map((roomInfo) => {
-            if (roomInfo.room.id === roomId) {
-              roomInfo.users.push(action.payload);
-            }
-            return roomInfo;
-          });
-        }
-        return groupInfo;
-      });
+      state.teams = action.payload;
     });
   },
 });
 
-export const { setGroups } = worldSlice.actions;
+export const { setTeams } = worldSlice.actions;
 
-export const selectGroups = (state: RootState) => state.world.groups;
+export const selectTeams = (state: RootState) => state.world.teams;
 
-export const selectGroup = (state: RootState, group_id: number) => {
-  const groups = selectGroups(state);
-  const group = groups.find((groupInfo) => groupInfo.group.id === group_id);
-  return group;
+export const selectTeam = (state: RootState, teamId: string) => {
+  const teams = selectTeams(state);
+  const team = teams.find((teamInfo) => teamInfo.team.id === teamId);
+  return team;
 };
 
-export const selectRooms = (state: RootState, group_id: number) => {
-  const group = selectGroup(state, group_id);
-  if (group) {
-    return group.rooms;
+export const selectRooms = (state: RootState, teamId: string) => {
+  const teamInfo = selectTeam(state, teamId);
+  if (teamInfo) {
+    return teamInfo.rooms;
   }
-  return [] as models.RoomsInfo;
+  return [] as models.RoomInfoType[];
 };
 
 export const selectRoom = (
   state: RootState,
-  group_id: number,
-  room_id: number
+  teamId: string,
+  roomId: string
 ) => {
-  const rooms = selectRooms(state, group_id);
-  const room = rooms.find((roomInfo) => roomInfo.room.id === room_id);
+  const rooms = selectRooms(state, teamId);
+  const room = rooms.find((roomInfo) => roomInfo.room.id === roomId);
   return room;
 };
 

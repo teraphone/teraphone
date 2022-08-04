@@ -1,12 +1,19 @@
 /* eslint-disable no-console */
-
+import { RoomOptions } from 'livekit-client';
 import * as React from 'react';
 import { useRoomExtended, ExtendedRoomState } from '../lib/ExtendedUseRoom';
 
 const RoomContext = React.createContext({} as ExtendedRoomState);
 
 export const RoomProvider: React.FC = ({ children }) => {
-  const extendedRoomState = useRoomExtended();
+  const options: RoomOptions = {
+    adaptiveStream: {
+      pixelDensity: 1,
+      pauseVideoInBackground: true,
+    },
+    dynacast: true,
+  };
+  const extendedRoomState = useRoomExtended(options);
   return (
     <RoomContext.Provider value={extendedRoomState}>
       {children}

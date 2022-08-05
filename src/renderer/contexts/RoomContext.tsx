@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { RoomOptions } from 'livekit-client';
+// import { RoomOptions } from 'livekit-client';
 import * as React from 'react';
 import { useRoomExtended, ExtendedRoomState } from '../lib/ExtendedUseRoom';
 

@@ -222,6 +222,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
           dispatch(setScreens({}));
           dispatch(setWindows({}));
           dispatch(setWindowOpen(false));
+          setVideoItems({});
           room
             .off(RoomEvent.ParticipantConnected, onParticipantsChanged)
             .off(RoomEvent.ParticipantDisconnected, onParticipantsChanged)

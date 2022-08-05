@@ -99,7 +99,15 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
         return;
       }
       const userId = participant.identity;
+      if (!teamInfo) {
+        console.warn('teamInfo is null for teamId:', teamId);
+      }
       const user = teamInfo?.users.find((usr) => usr.oid === userId);
+      if (!user) {
+        console.warn(
+          `user not found for userId: ${userId}, in team: ${teamId}`
+        );
+      }
       const userName = user?.name || 'Unknown';
       const isPopout = false;
       const isLocal = participant.sid === localParticipant?.sid;
@@ -111,7 +119,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
         [sid]: { userName, isPopout, isLocal, videoTrack },
       }));
     },
-    [localParticipant?.sid, teamInfo?.users, videoItems]
+    [localParticipant?.sid, teamId, teamInfo, videoItems]
   );
 
   const takeDownScreenTrack = React.useCallback(

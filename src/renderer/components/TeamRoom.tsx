@@ -18,11 +18,7 @@ import {
 } from '../redux/ConnectionStatusSlice';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import PeekRoomParticipants from './PeekRoomParticipants';
-import {
-  CurrentRoomState,
-  selectCurrentRoom,
-  setCurrentRoom,
-} from '../redux/CurrentRoomSlice';
+import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
 import { selectMute } from '../redux/MuteSlice';
 
@@ -37,22 +33,9 @@ function TeamRoom(props: {
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const dispatch = useAppDispatch();
-  const thisRoom: CurrentRoomState = React.useMemo(
-    () => ({
-      roomId: roomInfo.room.id,
-      roomName: roomInfo.room.displayName,
-      teamId: roomInfo.room.teamId,
-      teamName: teamInfo.team.displayName,
-    }),
-    [
-      roomInfo.room.displayName,
-      roomInfo.room.id,
-      roomInfo.room.teamId,
-      teamInfo.team.displayName,
-    ]
-  );
+
   const isThisRoomConnected =
-    currentRoom.roomId === thisRoom.roomId &&
+    currentRoom.roomId === roomInfo.room.id &&
     connectionStatus === ConnectionStatus.Connected;
   const isVideoWindowOpen = useAppSelector(selectWindowOpen);
   const mute = useAppSelector(selectMute);
@@ -68,7 +51,14 @@ function TeamRoom(props: {
       autoSubscribe: true,
     };
     // set current room to this room
-    dispatch(setCurrentRoom(thisRoom));
+    dispatch(
+      setCurrentRoom({
+        roomId: roomInfo.room.id,
+        roomName: roomInfo.room.displayName,
+        teamId: roomInfo.room.teamId,
+        teamName: teamInfo.team.displayName,
+      })
+    );
     // connect to room
     try {
       const livekitRoom = await connect(
@@ -97,16 +87,25 @@ function TeamRoom(props: {
     } catch (error) {
       console.error(error);
     }
-  }, [connect, dispatch, mute, roomInfo.room.id, roomInfo.roomToken, thisRoom]);
+  }, [
+    connect,
+    dispatch,
+    mute,
+    roomInfo.room.displayName,
+    roomInfo.room.id,
+    roomInfo.room.teamId,
+    roomInfo.roomToken,
+    teamInfo.team.displayName,
+  ]);
 
   const handleClick = React.useCallback(async () => {
-    console.log(`clicked room ${thisRoom.roomId}`, roomInfo);
+    console.log(`clicked room ${roomInfo.room.id}`, roomInfo);
 
     // if changing rooms: disconnect first, then connect
-    if (currentRoom.roomId !== thisRoom.roomId) {
+    if (currentRoom.roomId !== roomInfo.room.id) {
       if (connectionStatus === ConnectionStatus.Connected) {
         console.log(
-          `disconnecting from room ${currentRoom.roomId} and connecting to room ${thisRoom.roomId}`
+          `disconnecting from room ${currentRoom.roomId} and connecting to room ${roomInfo.room.id}`
         );
         if (room) {
           await room.disconnect();
@@ -115,27 +114,20 @@ function TeamRoom(props: {
       } else if (connectionStatus === ConnectionStatus.Connecting) {
         console.log(`already trying to connect to room ${currentRoom.roomId}`);
       } else {
-        console.log(`connecting to room ${thisRoom.roomId}`);
+        console.log(`connecting to room ${roomInfo.room.id}`);
         connectRoom();
       }
-    } else if (currentRoom.roomId === thisRoom.roomId) {
+    } else if (currentRoom.roomId === roomInfo.room.id) {
       if (connectionStatus === ConnectionStatus.Connected) {
-        console.log(`already connected to room ${thisRoom.roomId}`);
+        console.log(`already connected to room ${roomInfo.room.id}`);
       } else if (connectionStatus === ConnectionStatus.Connecting) {
-        console.log(`already connecting to room ${thisRoom.roomId}`);
+        console.log(`already connecting to room ${roomInfo.room.id}`);
       } else {
-        console.log(`connecting to room ${thisRoom.roomId}`);
+        console.log(`connecting to room ${roomInfo.room.id}`);
         connectRoom();
       }
     }
-  }, [
-    connectRoom,
-    connectionStatus,
-    currentRoom.roomId,
-    room,
-    roomInfo,
-    thisRoom.roomId,
-  ]);
+  }, [connectRoom, connectionStatus, currentRoom.roomId, room, roomInfo]);
 
   return (
     <>

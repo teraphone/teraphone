@@ -197,7 +197,7 @@ function TeamRoom(props: {
   );
 }
 
-export default React.memo(TeamRoom);
+export default TeamRoom;
 
 // todo: changing rooms rapidly can get you into a state where you're connected to multiple rooms.
 // need understand how this can happen and how to prevent it.

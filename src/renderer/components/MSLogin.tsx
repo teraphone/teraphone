@@ -46,7 +46,7 @@ function MSLogin() {
       setErrorMessage('Authentication failed');
     }
 
-    setAuthPending(false);
+    // setAuthPending(false);
   }, [dispatch, navigate]);
 
   const SubmitError = () => {

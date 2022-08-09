@@ -6,7 +6,7 @@ import WindowPortal from './WindowPortal';
 import VideoItem from './VideoItem';
 import { useAppSelector } from '../redux/hooks';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import { selectTeam } from '../redux/WorldSlice';
+import { selectGroup } from '../redux/WorldSlice';
 
 export interface PopoutVideoViewProps {
   sid: string;
@@ -19,9 +19,9 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   const { isLocal, userId, videoTrack } = videoItem;
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const teamInfo = useAppSelector((state) =>
-    selectTeam(state, currentRoom.teamId)
+    selectGroup(state, currentRoom.groupId)
   );
-  let userName = teamInfo?.users.find((u) => u.oid === userId)?.name;
+  let userName = teamInfo?.users.find((u) => u.user_id === userId)?.name;
   if (!userName) {
     userName = 'Unknown';
   }

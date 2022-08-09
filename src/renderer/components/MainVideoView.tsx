@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
 import type { VideoItemsObject } from '../lib/ExtendedUseRoom';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import { selectTeam } from '../redux/WorldSlice';
+import { selectGroup } from '../redux/WorldSlice';
 
 export interface MainVideoViewProps {
   setIsPopout: (sid: string, isPopout: boolean) => void;
@@ -43,7 +43,7 @@ function MainVideoView(props: MainVideoViewProps) {
   const dispatch = useAppDispatch();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const teamInfo = useAppSelector((state) =>
-    selectTeam(state, currentRoom.teamId)
+    selectGroup(state, currentRoom.groupId)
   );
 
   React.useEffect(() => {
@@ -134,7 +134,7 @@ function MainVideoView(props: MainVideoViewProps) {
 
   const focusVideoItem = videoItems[focus];
   let focusUserName = teamInfo?.users.find(
-    (u) => u.oid === focusVideoItem?.userId
+    (u) => u.user_id === focusVideoItem?.userId
   )?.name;
   if (!focusUserName) {
     focusUserName = 'Unknown';
@@ -142,7 +142,7 @@ function MainVideoView(props: MainVideoViewProps) {
 
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userId, isPopout, isLocal, videoTrack } = videoItem;
-    let userName = teamInfo?.users.find((u) => u.oid === userId)?.name;
+    let userName = teamInfo?.users.find((u) => u.user_id === userId)?.name;
     if (!userName) {
       userName = 'Unknown';
     }

@@ -26,7 +26,7 @@ import {
 } from '../redux/ScreenShareSlice';
 
 export type VideoItemValue = {
-  userId: string;
+  userId: number;
   isPopout: boolean;
   isLocal: boolean;
   videoTrack: LocalTrackPublication | RemoteTrackPublication;
@@ -91,7 +91,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
     ) => {
       const sid = videoTrack.trackSid;
       if (!videoItems[sid]) {
-        const userId = participant.identity;
+        const userId = Number(participant.identity);
         const isPopout = false;
         const isLocal = participant.sid === localParticipant?.sid;
         if (!isLocal && !videoTrack.isSubscribed) {

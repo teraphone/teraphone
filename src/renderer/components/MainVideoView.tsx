@@ -1,11 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import * as React from 'react';
-import {
-  LocalTrackPublication,
-  RemoteTrackPublication,
-  Track,
-} from 'livekit-client';
+import { Track } from 'livekit-client';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import VideoItem from './VideoItem';
@@ -14,19 +10,11 @@ import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
 import VideoEmptyMessage from './VideoEmptyMessage';
-import { useAppDispatch } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
-
-export type VideoItemValue = {
-  userName: string;
-  isPopout: boolean;
-  isLocal: boolean;
-  videoTrack: LocalTrackPublication | RemoteTrackPublication;
-};
-
-export type VideoItemsObject = {
-  [sid: string]: VideoItemValue;
-};
+import type { VideoItemsObject } from '../lib/ExtendedUseRoom';
+import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
+import { selectTeam } from '../redux/WorldSlice';
 
 export interface MainVideoViewProps {
   setIsPopout: (sid: string, isPopout: boolean) => void;
@@ -53,6 +41,10 @@ function MainVideoView(props: MainVideoViewProps) {
     targetDoc: windowRef?.current?.document,
   });
   const dispatch = useAppDispatch();
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
+  const teamInfo = useAppSelector((state) =>
+    selectTeam(state, currentRoom.teamId)
+  );
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
@@ -141,9 +133,19 @@ function MainVideoView(props: MainVideoViewProps) {
   };
 
   const focusVideoItem = videoItems[focus];
+  let focusUserName = teamInfo?.users.find(
+    (u) => u.oid === focusVideoItem?.userId
+  )?.name;
+  if (!focusUserName) {
+    focusUserName = 'Unknown';
+  }
 
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
-    const { userName, isPopout, isLocal, videoTrack } = videoItem;
+    const { userId, isPopout, isLocal, videoTrack } = videoItem;
+    let userName = teamInfo?.users.find((u) => u.oid === userId)?.name;
+    if (!userName) {
+      userName = 'Unknown';
+    }
     if (videoTrack) {
       const isFocusItem = focus === sid;
       const sourceType = videoTrack.source;
@@ -223,7 +225,7 @@ function MainVideoView(props: MainVideoViewProps) {
       <VideoOverlay // attach to grid container (if focus view)
         sid={focus}
         isFocusItem
-        userName={focusVideoItem?.userName}
+        userName={focusUserName}
         isPopout={focusVideoItem?.isPopout}
         isLocal={focusVideoItem?.isLocal}
         sourceType={focusVideoItem?.videoTrack.source}

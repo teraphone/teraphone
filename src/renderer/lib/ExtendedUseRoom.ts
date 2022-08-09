@@ -18,8 +18,6 @@ import {
 } from 'livekit-client';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
-import { selectGroup } from '../redux/WorldSlice';
-import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import {
   selectScreens,
   selectWindows,
@@ -28,7 +26,7 @@ import {
 } from '../redux/ScreenShareSlice';
 
 export type VideoItemValue = {
-  userName: string;
+  userId: string;
   isPopout: boolean;
   isLocal: boolean;
   videoTrack: LocalTrackPublication | RemoteTrackPublication;
@@ -83,9 +81,6 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
   const dispatch = useAppDispatch();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
-  const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { groupId } = currentRoom;
-  const groupInfo = useAppSelector((state) => selectGroup(state, groupId));
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const localParticipant = room?.localParticipant;
 
@@ -95,14 +90,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
       participant: RemoteParticipant | LocalParticipant
     ) => {
       const sid = videoTrack.trackSid;
-      if (videoItems[sid]) {
-        return;
-      }
       const userId = participant.identity;
-      const user = groupInfo?.users.find(
-        (groupUser) => groupUser.user_id === +userId
-      );
-      const userName = user?.name || 'Unknown';
       const isPopout = false;
       const isLocal = participant.sid === localParticipant?.sid;
       if (!isLocal && !videoTrack.isSubscribed) {
@@ -110,10 +98,10 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
       }
       setVideoItems((prev) => ({
         ...prev,
-        [sid]: { userName, isPopout, isLocal, videoTrack },
+        [sid]: { userId, isPopout, isLocal, videoTrack },
       }));
     },
-    [groupInfo?.users, localParticipant?.sid, videoItems]
+    [localParticipant?.sid]
   );
 
   const takeDownScreenTrack = React.useCallback(

@@ -90,18 +90,20 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
       participant: RemoteParticipant | LocalParticipant
     ) => {
       const sid = videoTrack.trackSid;
-      const userId = participant.identity;
-      const isPopout = false;
-      const isLocal = participant.sid === localParticipant?.sid;
-      if (!isLocal && !videoTrack.isSubscribed) {
-        (videoTrack as RemoteTrackPublication).setSubscribed(true);
+      if (!videoItems[sid]) {
+        const userId = participant.identity;
+        const isPopout = false;
+        const isLocal = participant.sid === localParticipant?.sid;
+        if (!isLocal && !videoTrack.isSubscribed) {
+          (videoTrack as RemoteTrackPublication).setSubscribed(true);
+        }
+        setVideoItems((prev) => ({
+          ...prev,
+          [sid]: { userId, isPopout, isLocal, videoTrack },
+        }));
       }
-      setVideoItems((prev) => ({
-        ...prev,
-        [sid]: { userId, isPopout, isLocal, videoTrack },
-      }));
     },
-    [localParticipant?.sid]
+    [localParticipant?.sid, videoItems]
   );
 
   const takeDownScreenTrack = React.useCallback(

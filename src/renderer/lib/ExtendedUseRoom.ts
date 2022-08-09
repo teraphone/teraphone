@@ -18,8 +18,6 @@ import {
 } from 'livekit-client';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
-import { selectTeam } from '../redux/WorldSlice';
-import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import {
   selectScreens,
   selectWindows,
@@ -28,7 +26,7 @@ import {
 } from '../redux/ScreenShareSlice';
 
 export type VideoItemValue = {
-  userName: string;
+  userId: string;
   isPopout: boolean;
   isLocal: boolean;
   videoTrack: LocalTrackPublication | RemoteTrackPublication;
@@ -83,9 +81,6 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
   const dispatch = useAppDispatch();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
-  const { currentRoom } = useAppSelector(selectCurrentRoom);
-  const { teamId } = currentRoom;
-  const teamInfo = useAppSelector((state) => selectTeam(state, teamId));
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const localParticipant = room?.localParticipant;
 
@@ -95,23 +90,20 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
       participant: RemoteParticipant | LocalParticipant
     ) => {
       const sid = videoTrack.trackSid;
-      if (videoItems[sid]) {
-        return;
+      if (!videoItems[sid]) {
+        const userId = participant.identity;
+        const isPopout = false;
+        const isLocal = participant.sid === localParticipant?.sid;
+        if (!isLocal && !videoTrack.isSubscribed) {
+          (videoTrack as RemoteTrackPublication).setSubscribed(true);
+        }
+        setVideoItems((prev) => ({
+          ...prev,
+          [sid]: { userId, isPopout, isLocal, videoTrack },
+        }));
       }
-      const userId = participant.identity;
-      const user = teamInfo?.users.find((usr) => usr.oid === userId);
-      const userName = user?.name || 'Unknown';
-      const isPopout = false;
-      const isLocal = participant.sid === localParticipant?.sid;
-      if (!isLocal && !videoTrack.isSubscribed) {
-        (videoTrack as RemoteTrackPublication).setSubscribed(true);
-      }
-      setVideoItems((prev) => ({
-        ...prev,
-        [sid]: { userName, isPopout, isLocal, videoTrack },
-      }));
     },
-    [localParticipant?.sid, teamInfo?.users, videoItems]
+    [localParticipant?.sid, videoItems]
   );
 
   const takeDownScreenTrack = React.useCallback(

@@ -24,10 +24,7 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // ignoreActions: [addParticipantRTListener],
-        ignoreActions: true,
-      },
+      serializableCheck: false,
     }).prepend(listenerMiddleware.middleware),
 });
 

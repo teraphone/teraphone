@@ -110,8 +110,10 @@ function VideoViews() {
         // add local video tracks to videoItems
         if (localParticipant) {
           if (localParticipant?.videoTracks) {
-            localParticipant.videoTracks.forEach((videoTrack, _sid) => {
-              setUpScreenTrack(videoTrack, localParticipant);
+            localParticipant.videoTracks.forEach((videoTrack, sid) => {
+              if (!videoItems[sid]) {
+                setUpScreenTrack(videoTrack, localParticipant);
+              }
             });
           }
         }
@@ -129,6 +131,7 @@ function VideoViews() {
     setUpScreenTrack,
     sourceIsPublished,
     windows,
+    videoItems,
   ]);
 
   React.useEffect(() => {

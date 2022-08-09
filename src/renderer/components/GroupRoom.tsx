@@ -64,7 +64,7 @@ function GroupRoom(props: {
 
   const connectRoom = React.useCallback(async () => {
     const roomConnectOptions: RoomConnectOptions = {
-      autoSubscribe: false,
+      autoSubscribe: true,
     };
     // set current room to this room
     dispatch(setCurrentRoom(thisRoom));

@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import type { VideoItemValue } from './MainVideoView';
+import type { VideoItemValue } from '../lib/ExtendedUseRoom';
 import WindowPortal from './WindowPortal';
 import VideoItem from './VideoItem';
+import { useAppSelector } from '../redux/hooks';
+import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
+import { selectGroup } from '../redux/WorldSlice';
 
 export interface PopoutVideoViewProps {
   sid: string;
@@ -13,7 +16,16 @@ export interface PopoutVideoViewProps {
 
 function PopoutVideoView(props: PopoutVideoViewProps) {
   const { sid, videoItem, setIsPopout } = props;
-  const { isLocal, userName, videoTrack } = videoItem;
+  const { isLocal, userId, videoTrack } = videoItem;
+  const { currentRoom } = useAppSelector(selectCurrentRoom);
+  const teamInfo = useAppSelector((state) =>
+    selectGroup(state, currentRoom.groupId)
+  );
+  let userName = teamInfo?.users.find((u) => u.user_id === userId)?.name;
+  if (!userName) {
+    userName = 'Unknown';
+  }
+
   const title = isLocal
     ? `Your Screen - T E R A P H O N E`
     : `${userName}'s Screen - T E R A P H O N E`;

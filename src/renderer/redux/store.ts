@@ -9,6 +9,7 @@ import worldReducer from './WorldSlice';
 import artyReducer /* , { addParticipantRTListener } */ from './ArtySlice';
 import screenShareReducer from './ScreenShareSlice';
 import videoViewReducer from './VideoViewSlice';
+import avatarReducer from './AvatarSlice';
 
 export const store = configureStore({
   reducer: {
@@ -21,6 +22,7 @@ export const store = configureStore({
     arty: artyReducer,
     screenShare: screenShareReducer,
     videoView: videoViewReducer,
+    avatars: avatarReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

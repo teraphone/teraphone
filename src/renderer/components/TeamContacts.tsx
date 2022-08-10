@@ -13,6 +13,7 @@ import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectOnline, unknownParticipant } from '../redux/ArtySlice';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
+import { selectUserAvatars } from '../redux/AvatarSlice';
 
 export interface TeamContactsProps {
   teamInfo: models.TeamInfo;
@@ -32,6 +33,7 @@ function GroupContacts(props: TeamContactsProps) {
 
   const [onlineOpen, setOnlineOpen] = React.useState(true);
   const [offlineOpen, setOfflineOpen] = React.useState(false);
+  const userAvatars = useAppSelector(selectUserAvatars);
 
   const handleOnlineClick = React.useCallback(() => {
     setOnlineOpen(!onlineOpen);
@@ -101,7 +103,10 @@ function GroupContacts(props: TeamContactsProps) {
     return (
       <ListItemButton dense component="li" key={userId}>
         <ListItemIcon>
-          <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
+          <Avatar
+            src={userAvatars[user.oid]}
+            sx={{ width: 20, height: 20, fontSize: 14 }}
+          >
             {name[0]}
           </Avatar>
         </ListItemIcon>
@@ -121,7 +126,10 @@ function GroupContacts(props: TeamContactsProps) {
     return (
       <ListItemButton dense component="li" key={userId}>
         <ListItemIcon>
-          <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
+          <Avatar
+            src={userAvatars[user.oid]}
+            sx={{ width: 20, height: 20, fontSize: 14 }}
+          >
             {name[0]}
           </Avatar>
         </ListItemIcon>

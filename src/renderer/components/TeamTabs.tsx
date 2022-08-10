@@ -13,6 +13,7 @@ import * as models from '../models/models';
 import TeamTabPanel from './TeamTabPanel';
 import { useAppSelector } from '../redux/hooks';
 import { selectTeams } from '../redux/WorldSlice';
+import { selectTeamAvatars } from '../redux/AvatarSlice';
 
 function a11yProps(index: number) {
   return {
@@ -25,6 +26,7 @@ function TeamTabs() {
   const [value, setValue] = React.useState(0);
 
   const teamsInfo = useAppSelector(selectTeams);
+  const teamAvatars = useAppSelector(selectTeamAvatars);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     if (newValue < teamsInfo.length) {
@@ -38,7 +40,7 @@ function TeamTabs() {
     return (
       <Tooltip title={displayName} key={id} placement="right" arrow>
         <Tab
-          icon={<Avatar>{displayName[0]}</Avatar>}
+          icon={<Avatar src={teamAvatars[id]}>{displayName[0]}</Avatar>}
           key={id}
           {...a11yProps(index)}
         />

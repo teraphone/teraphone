@@ -28,6 +28,7 @@ import { getWorld } from './WorldSlice';
 import type { RootState } from './store';
 import { database } from './Firebase';
 import { ConnectionStatus } from './ConnectionStatusSlice';
+import { getTeamPhotos, getUserPhotos } from './AvatarSlice';
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -270,6 +271,32 @@ listenerMiddleware.startListening({
         })
       );
     });
+  },
+});
+
+// after getWorld, get user avatars
+listenerMiddleware.startListening({
+  actionCreator: getWorld.fulfilled,
+  effect: (action, listenerApi) => {
+    const teams = action.payload;
+    const { avatars } = listenerApi.getState() as RootState;
+    const userIdsToFetch: { [id: string]: boolean } = {};
+    const teamIdsToFetch: { [id: string]: boolean } = {};
+
+    teams.forEach((teamInfo) => {
+      if (!avatars.teams[teamInfo.team.id]) {
+        teamIdsToFetch[teamInfo.team.id] = true;
+      }
+      teamInfo.users.forEach((user) => {
+        if (!avatars.users[user.oid]) {
+          userIdsToFetch[user.oid] = true;
+        }
+      });
+    });
+    const teamIds = Object.keys(teamIdsToFetch);
+    const userIds = Object.keys(userIdsToFetch);
+    listenerApi.dispatch(getTeamPhotos(teamIds));
+    listenerApi.dispatch(getUserPhotos(userIds));
   },
 });
 

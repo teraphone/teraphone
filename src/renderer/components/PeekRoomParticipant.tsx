@@ -8,6 +8,8 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import * as models from '../models/models';
+import { useAppSelector } from '../redux/hooks';
+import { selectUserAvatars } from '../redux/AvatarSlice';
 
 function PeekRoomParticipant(props: {
   user: models.TenantUser;
@@ -17,11 +19,17 @@ function PeekRoomParticipant(props: {
 }) {
   const { user, isMuted, isDeafened, isScreenShare } = props;
   const { name } = user;
+  const userAvatars = useAppSelector(selectUserAvatars);
 
   return (
     <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>
       <ListItemIcon>
-        <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>{name[0]}</Avatar>
+        <Avatar
+          src={userAvatars[user.oid]}
+          sx={{ width: 20, height: 20, fontSize: 14 }}
+        >
+          {name[0]}
+        </Avatar>
       </ListItemIcon>
       <ListItemText primary={name} />
 

@@ -29,6 +29,7 @@ import {
   ConnectionStatus,
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
+import { selectUserAvatars } from '../redux/AvatarSlice';
 
 const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
   const { mute, onClick } = props;
@@ -139,6 +140,7 @@ function BottomControls() {
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
   const { tenantUser } = useAppSelector(selectAppUser);
+  const userAvatars = useAppSelector(selectUserAvatars);
   const debug = false;
 
   const handleMuteClick = React.useCallback(() => {
@@ -204,7 +206,10 @@ function BottomControls() {
               justifyContent: 'center',
             }}
           >
-            <Avatar sx={{ width: 20, height: 20, fontSize: 14 }}>
+            <Avatar
+              src={userAvatars[tenantUser.oid]}
+              sx={{ width: 20, height: 20, fontSize: 14 }}
+            >
               {tenantUser.name[0]}
             </Avatar>
           </ListItemIcon>

@@ -64,6 +64,47 @@ export const getUserPhotos = createAsyncThunk(
   }
 );
 
+export const getTeamPhotos = createAsyncThunk(
+  'avatars/getTeamPhotos',
+  async (teamIds: string[], thunkApi) => {
+    const { avatars } = thunkApi.getState() as RootState;
+    const teamIdsToFetch = teamIds.filter((teamId) => !avatars.teams[teamId]);
+    try {
+      const teamPhotos = {} as TeamAvatars;
+
+      // create batch request steps for teams
+      const batchRequestSteps: BatchRequestStep[] = teamIdsToFetch.map(
+        (teamId) => ({
+          id: teamId,
+          request: new Request(`/teams/${teamId}/photo/$value`, {
+            method: 'GET',
+          }),
+        })
+      );
+      const batchRequestContent = new BatchRequestContent(batchRequestSteps);
+      const content = await batchRequestContent.getContent();
+      const batchResponse = new BatchResponseContent(
+        await msGraphClient.api('/$batch').post(content)
+      );
+
+      for await (const [id, response] of batchResponse.getResponses()) {
+        if (response.ok) {
+          const data = await response.text();
+          const binToBlob = await b64toBlob(data, 'img/jpg');
+          const base64Result = await blobToBase64(binToBlob);
+          teamPhotos[id] = base64Result;
+        }
+      }
+
+      return teamPhotos;
+    } catch (error) {
+      console.error(error);
+    }
+
+    return {} as TeamAvatars;
+  }
+);
+
 export const avatarSlice = createSlice({
   name: 'avatars',
   initialState,
@@ -77,8 +118,10 @@ export const avatarSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getUserPhotos.fulfilled, (state, action) => {
-      // console.log('got user photos', action.payload);
       state.users = { ...state.users, ...action.payload };
+    });
+    builder.addCase(getTeamPhotos.fulfilled, (state, action) => {
+      state.teams = { ...state.teams, ...action.payload };
     });
   },
 });

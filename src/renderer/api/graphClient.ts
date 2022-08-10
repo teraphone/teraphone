@@ -56,7 +56,7 @@ class GraphAuthProvider implements AuthenticationProvider {
       // ^^^ this.scopes is never used
     }
     // todo: add scopes support auth()
-    const authResult = await window.electron.ipcRenderer.auth();
+    const authResult = await window.electron.ipcRenderer.getAuth(this.scopes);
     try {
       if (authResult) {
         return authResult.accessToken;
@@ -68,7 +68,9 @@ class GraphAuthProvider implements AuthenticationProvider {
   }
 }
 
-const authProvider = new GraphAuthProvider();
+const authProvider = new GraphAuthProvider([
+  'https://graph.microsoft.com/.default',
+]);
 const msGraphClient = Client.initWithMiddleware({
   debugLogging: true,
   authProvider,

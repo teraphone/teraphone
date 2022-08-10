@@ -74,6 +74,11 @@ ipcMain.handle('logout', async () => {
   await authProvider.logout();
 });
 
+ipcMain.handle('getAuth', async (_event, arg: string[]) => {
+  const token = await authProvider.getAuth(arg);
+  return token;
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();

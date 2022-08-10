@@ -29,6 +29,7 @@ declare global {
         login: () => Promise<AccountInfo | null>;
         auth: () => Promise<AuthenticationResult | null>;
         logout: () => Promise<void>;
+        getAuth: (scopes: string[]) => Promise<AuthenticationResult | null>;
       };
     };
   }

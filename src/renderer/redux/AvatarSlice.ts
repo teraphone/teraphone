@@ -17,7 +17,10 @@ type AvatarState = {
   users: UserAvatars;
 };
 
-const initialState = {} as AvatarState;
+const initialState: AvatarState = {
+  teams: {} as TeamAvatars,
+  users: {} as UserAvatars,
+};
 
 export const getUserPhotos = createAsyncThunk(
   'avatars/getUserPhotos',

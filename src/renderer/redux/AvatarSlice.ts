@@ -66,6 +66,11 @@ export const avatarSlice = createSlice({
       state.users = action.payload;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(getUserPhotos.fulfilled, (state, action) => {
+      state.users = { ...state.users, ...action.payload };
+    });
+  },
 });
 
 export const { setTeamAvatars, setUserAvatars } = avatarSlice.actions;

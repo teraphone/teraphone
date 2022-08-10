@@ -34,9 +34,9 @@ class GraphAuthProvider implements AuthenticationProvider {
 }
 
 const authProvider = new GraphAuthProvider();
-const client = Client.initWithMiddleware({
+const msGraphClient = Client.initWithMiddleware({
   debugLogging: true,
   authProvider,
 });
 
-export default client;
+export default msGraphClient;

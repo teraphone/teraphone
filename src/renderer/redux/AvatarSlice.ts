@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable no-console */
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
@@ -25,10 +26,11 @@ const initialState: AvatarState = {
 export const getUserPhotos = createAsyncThunk(
   'avatars/getUserPhotos',
   async (userIds: string[], thunkApi) => {
-    const userPhotos = {} as UserAvatars;
     const { avatars } = thunkApi.getState() as RootState;
     const userIdsToFetch = userIds.filter((userId) => !avatars.users[userId]);
     try {
+      const userPhotos = {} as UserAvatars;
+
       // create batch request steps for users
       const batchRequestSteps: BatchRequestStep[] = userIdsToFetch.map(
         (userId) => ({
@@ -41,20 +43,24 @@ export const getUserPhotos = createAsyncThunk(
       const batchRequestContent = new BatchRequestContent(batchRequestSteps);
       const content = await batchRequestContent.getContent();
       const batchResponse = new BatchResponseContent(
-        await msGraphClient.api('/batch').post(content)
+        await msGraphClient.api('/$batch').post(content)
       );
-      batchResponse.getResponses().forEach(async (response, id) => {
+
+      for await (const [id, response] of batchResponse.getResponses()) {
         if (response.ok) {
           const data = await response.text();
           const binToBlob = await b64toBlob(data, 'img/jpg');
           const base64Result = await blobToBase64(binToBlob);
           userPhotos[id] = base64Result;
         }
-      });
+      }
+
+      return userPhotos;
     } catch (error) {
       console.error(error);
     }
-    return userPhotos;
+
+    return {} as UserAvatars;
   }
 );
 
@@ -71,6 +77,7 @@ export const avatarSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(getUserPhotos.fulfilled, (state, action) => {
+      // console.log('got user photos', action.payload);
       state.users = { ...state.users, ...action.payload };
     });
   },

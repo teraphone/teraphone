@@ -1,5 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+/* eslint-disable no-console */
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+  BatchRequestStep,
+  BatchRequestContent,
+  BatchResponseContent,
+} from '@microsoft/microsoft-graph-client';
 import type { RootState } from './store';
+import msGraphClient, { b64toBlob, blobToBase64 } from '../api/graphClient';
 
 export type TeamAvatars = { [teamId: string]: string };
 
@@ -11,6 +18,42 @@ type AvatarState = {
 };
 
 const initialState = {} as AvatarState;
+
+export const getUserPhotos = createAsyncThunk(
+  'avatars/getUserPhotos',
+  async (userIds: string[], thunkApi) => {
+    const userPhotos = {} as UserAvatars;
+    const { avatars } = thunkApi.getState() as RootState;
+    const userIdsToFetch = userIds.filter((userId) => !avatars.users[userId]);
+    try {
+      // create batch request steps for users
+      const batchRequestSteps: BatchRequestStep[] = userIdsToFetch.map(
+        (userId) => ({
+          id: userId,
+          request: new Request(`/users/${userId}/photo/$value`, {
+            method: 'GET',
+          }),
+        })
+      );
+      const batchRequestContent = new BatchRequestContent(batchRequestSteps);
+      const content = await batchRequestContent.getContent();
+      const batchResponse = new BatchResponseContent(
+        await msGraphClient.api('/batch').post(content)
+      );
+      batchResponse.getResponses().forEach(async (response, id) => {
+        if (response.ok) {
+          const data = await response.text();
+          const binToBlob = await b64toBlob(data, 'img/jpg');
+          const base64Result = await blobToBase64(binToBlob);
+          userPhotos[id] = base64Result;
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    return userPhotos;
+  }
+);
 
 export const avatarSlice = createSlice({
   name: 'avatars',

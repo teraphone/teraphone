@@ -103,6 +103,7 @@ class AuthProvider {
 
   async logout() {
     if (this.account) {
+      console.log('Logging out of account:', this.account);
       await this.clientApplication.getTokenCache().removeAccount(this.account);
       this.account = null;
     }
@@ -125,7 +126,7 @@ class AuthProvider {
     } else {
       authResponse = await this.getTokenInteractive(req);
     }
-
+    this.handleResponse(authResponse);
     return authResponse;
   }
 

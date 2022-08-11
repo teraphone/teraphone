@@ -46,7 +46,9 @@ function SettingsMenuDialog() {
     >
       <DialogTitle sx={{ alignSelf: 'center' }}>Settings</DialogTitle>
       <DialogContent dividers>
-        <Typography variant="body1">Some text.</Typography>
+        <Typography variant="body1">
+          Disconnect and sign out of Teraphone.
+        </Typography>
         <Button variant="contained" color="error" onClick={handleSignOut}>
           Sign Out
         </Button>

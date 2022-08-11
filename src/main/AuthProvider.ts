@@ -35,6 +35,8 @@ class AuthProvider {
 
   customFileProtocolName: string;
 
+  isLoggedOut: boolean;
+
   constructor() {
     /**
      * Initialize a public client application. For more information, visit:
@@ -79,6 +81,8 @@ class AuthProvider {
       verifier: '', // Generate a code verifier for the Auth Code Request first
       challenge: '', // Generate a code challenge from the previously generated code verifier
     };
+
+    this.isLoggedOut = false;
   }
 
   // Creates a "popup" window for interactive authentication
@@ -103,10 +107,9 @@ class AuthProvider {
 
   async logout() {
     if (this.account) {
-      console.log('Logging out of account:', this.account);
-      await this.clientApplication.getTokenCache().removeAccount(this.account);
       this.account = null;
     }
+    this.isLoggedOut = true;
   }
   // ^^^ USE THESE
 
@@ -117,7 +120,7 @@ class AuthProvider {
     };
     let authResponse: AuthenticationResult | null;
     const account = this.account || (await this.getAccount());
-    if (account) {
+    if (account && !this.isLoggedOut) {
       const silentFlowRequest: SilentFlowRequest = {
         account,
         ...req,
@@ -126,6 +129,7 @@ class AuthProvider {
     } else {
       authResponse = await this.getTokenInteractive(req);
     }
+    this.isLoggedOut = false;
     this.handleResponse(authResponse);
     return authResponse;
   }
@@ -179,12 +183,16 @@ class AuthProvider {
       codeChallenge: this.pkceCodes.challenge, // PKCE Code Challenge
       codeChallengeMethod: this.pkceCodes.challengeMethod, // PKCE Code Challenge Method
     };
+    let params;
+    if (this.isLoggedOut) {
+      params = { ...authCodeUrlParams, prompt: 'select_account' };
+    } else {
+      params = authCodeUrlParams;
+    }
 
     try {
       // Get Auth Code URL
-      const authCodeUrl = await this.clientApplication.getAuthCodeUrl(
-        authCodeUrlParams
-      );
+      const authCodeUrl = await this.clientApplication.getAuthCodeUrl(params);
       const authCode = await this.listenForAuthCode(authCodeUrl, popupWindow);
       // Use Authorization Code and PKCE Code verifier to make token request
       const authResult = await this.clientApplication.acquireTokenByCode({

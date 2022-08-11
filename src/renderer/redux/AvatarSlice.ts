@@ -28,6 +28,9 @@ export const getUserPhotos = createAsyncThunk(
   async (userIds: string[], thunkApi) => {
     const { avatars } = thunkApi.getState() as RootState;
     const userIdsToFetch = userIds.filter((userId) => !avatars.users[userId]);
+    if (userIdsToFetch.length === 0) {
+      return {} as UserAvatars;
+    }
     try {
       const userPhotos = {} as UserAvatars;
 
@@ -69,6 +72,9 @@ export const getTeamPhotos = createAsyncThunk(
   async (teamIds: string[], thunkApi) => {
     const { avatars } = thunkApi.getState() as RootState;
     const teamIdsToFetch = teamIds.filter((teamId) => !avatars.teams[teamId]);
+    if (teamIdsToFetch.length === 0) {
+      return {} as TeamAvatars;
+    }
     try {
       const teamPhotos = {} as TeamAvatars;
 

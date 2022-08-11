@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,7 +11,10 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
+import PopupState, {
+  // bindTrigger,
+  bindMenu,
+} from 'material-ui-popup-state';
 import * as React from 'react';
 import * as models from '../models/models';
 
@@ -34,18 +37,18 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
           {(popupState) => (
             <>
               <ListItem
-                button
                 divider
-                secondaryAction={
-                  <KeyboardArrowDownIcon
-                    sx={{
-                      color: 'text.secondary',
-                      fontSize: 20,
-                      marginTop: 0.5,
-                    }}
-                  />
-                }
-                {...bindTrigger(popupState)}
+                // button
+                // secondaryAction={
+                //   <KeyboardArrowDownIcon
+                //     sx={{
+                //       color: 'text.secondary',
+                //       fontSize: 20,
+                //       marginTop: 0.5,
+                //     }}
+                //   />
+                // }
+                // {...bindTrigger(popupState)}
               >
                 <ListItemText disableTypography>
                   <Typography

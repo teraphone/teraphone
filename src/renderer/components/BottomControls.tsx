@@ -30,6 +30,7 @@ import {
   selectConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
 import { selectUserAvatars } from '../redux/AvatarSlice';
+import { setIsVisible } from '../redux/SettingsSlice';
 
 const MuteButton = (props: { mute: boolean; onClick: () => void }) => {
   const { mute, onClick } = props;
@@ -152,8 +153,8 @@ function BottomControls() {
   }, [dispatch]);
 
   const handleMenuClick = React.useCallback(() => {
-    alert('Not implemented yet.');
-  }, []);
+    dispatch(setIsVisible(true));
+  }, [dispatch]);
 
   const handleInfoClick = React.useCallback(async () => {
     window.electron.ipcRenderer.myPing();

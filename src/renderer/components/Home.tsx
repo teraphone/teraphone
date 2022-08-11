@@ -16,6 +16,7 @@ import {
 import ScreenPickerDialog from './ScreenPickerDialog';
 import VideoViews from './VideoViews';
 import AudioRenderers from './AudioRenderers';
+import SettingsMenuDialog from './SettingsMenuDialog';
 
 const Home = () => {
   React.useEffect(() => {
@@ -87,6 +88,7 @@ const Home = () => {
       >
         <TeamTabs />
         <ScreenPickerDialog />
+        <SettingsMenuDialog />
         <VideoViews />
         <AudioRenderers />
       </Box>

@@ -147,6 +147,7 @@ function DevicesPanel() {
   // todo:
   // - make sure selected devices exist. if not, select default.
   // - option to set to system default
+  // - persist selectedSpeakerId and selectedMicrophoneId
 
   React.useEffect(() => {
     getDevices()

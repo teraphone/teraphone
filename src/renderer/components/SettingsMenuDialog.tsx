@@ -2,19 +2,23 @@
 import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import {
+  Avatar,
   Box,
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Select,
   SelectChangeEvent,
   Tab,
   Typography,
-  Avatar,
 } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
+import DeviceManager from '../lib/DeviceManager';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectIsVisible, setIsVisible } from '../redux/SettingsSlice';
 import useRoom from '../hooks/useRoom';
@@ -90,18 +94,62 @@ function AccountPanel() {
   );
 }
 
+type DeviceCatalog = {
+  [key in MediaDeviceKind]: MediaDeviceInfo[];
+};
+
+async function getDevices() {
+  const deviceCatalog = {} as DeviceCatalog;
+  try {
+    deviceCatalog.audioinput = await DeviceManager.getInstance().getDevices(
+      'audioinput',
+      true
+    );
+    deviceCatalog.audiooutput = await DeviceManager.getInstance().getDevices(
+      'audiooutput',
+      true
+    );
+    deviceCatalog.videoinput = await DeviceManager.getInstance().getDevices(
+      'videoinput',
+      true
+    );
+  } catch (error) {
+    console.error(error);
+  }
+  return deviceCatalog;
+}
+
 function DevicesPanel() {
-  const [speakerId, setSpeakerId] = React.useState('');
-  const [microphoneId, setMicrophoneId] = React.useState('');
+  const [selectedSpeakerId, setSelectedSpeakerId] = React.useState('');
+  const [selectedMicrophoneId, setSelectedMicrophoneId] = React.useState('');
   const { room } = useRoom();
+  const [devices, setDevices] = React.useState({
+    audioinput: [],
+    audiooutput: [],
+    videoinput: [],
+  } as DeviceCatalog);
+  const currentSpeaker =
+    selectedSpeakerId === ''
+      ? devices.audiooutput[0]
+      : devices.audiooutput.find((d) => d.deviceId === selectedSpeakerId);
+  const currentMicrophone =
+    selectedMicrophoneId === ''
+      ? devices.audioinput[0]
+      : devices.audioinput.find((d) => d.deviceId === selectedMicrophoneId);
+
+  React.useEffect(() => {
+    getDevices()
+      .then((d) => setDevices(d))
+      .catch(console.error);
+  }, []);
 
   const handleSpeakerChange = React.useCallback((event: SelectChangeEvent) => {
-    setSpeakerId(event.target.value);
+    setSelectedSpeakerId(event.target.value);
   }, []);
 
   const handleMicrophoneChange = React.useCallback(
     (event: SelectChangeEvent) => {
-      setMicrophoneId(event.target.value);
+      setSelectedMicrophoneId(event.target.value);
     },
     []
   );
@@ -110,8 +158,57 @@ function DevicesPanel() {
     <>
       <Typography variant="h5">Your Devices</Typography>
       <br />
-      <Typography variant="h2">Audio Devices</Typography>
-      <Typography variant="body2">Speaker</Typography>
+      <Typography variant="h6">Audio Devices</Typography>
+      <Box sx={{ pt: 2 }}>
+        <FormControl fullWidth variant="standard">
+          {devices.audiooutput.length > 0 && (
+            <>
+              <InputLabel>Speaker</InputLabel>
+              <Select
+                value={currentSpeaker?.deviceId}
+                label={currentSpeaker?.label}
+                onChange={handleSpeakerChange}
+              >
+                {devices.audiooutput.map((d) => (
+                  <MenuItem key={d.deviceId} value={d.deviceId}>
+                    {d.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          )}
+          {devices.audiooutput.length === 0 && (
+            <Typography variant="body2">
+              No audio output devices found.
+            </Typography>
+          )}
+        </FormControl>
+      </Box>
+      <Box sx={{ pt: 2 }}>
+        <FormControl fullWidth variant="standard">
+          {devices.audioinput.length > 0 && (
+            <>
+              <InputLabel>Microphone</InputLabel>
+              <Select
+                value={currentMicrophone?.deviceId}
+                label={currentMicrophone?.label}
+                onChange={handleMicrophoneChange}
+              >
+                {devices.audioinput.map((d) => (
+                  <MenuItem key={d.deviceId} value={d.deviceId}>
+                    {d.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          )}
+          {devices.audioinput.length === 0 && (
+            <Typography variant="body2">
+              No audio input devices found.
+            </Typography>
+          )}
+        </FormControl>
+      </Box>
     </>
   );
 }

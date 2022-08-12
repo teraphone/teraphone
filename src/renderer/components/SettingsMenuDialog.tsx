@@ -143,6 +143,21 @@ function DevicesPanel() {
       .catch(console.error);
   }, []);
 
+  React.useEffect(() => {
+    if (currentSpeaker) {
+      room?.switchActiveDevice('audiooutput', currentSpeaker.deviceId);
+    }
+  }, [currentSpeaker, room]);
+
+  React.useEffect(() => {
+    if (currentMicrophone) {
+      room?.switchActiveDevice('audioinput', currentMicrophone.deviceId);
+      if (room?.options.audioCaptureDefaults) {
+        room.options.audioCaptureDefaults.deviceId = currentMicrophone.deviceId;
+      }
+    }
+  }, [currentMicrophone, room]);
+
   const handleSpeakerChange = React.useCallback((event: SelectChangeEvent) => {
     setSelectedSpeakerId(event.target.value);
   }, []);

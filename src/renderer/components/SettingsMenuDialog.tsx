@@ -20,7 +20,14 @@ import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import DeviceManager from '../lib/DeviceManager';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { selectIsVisible, setIsVisible } from '../redux/SettingsSlice';
+import {
+  selectIsVisible,
+  selectSelectedSpeakerId,
+  selectSelectedMicrophoneId,
+  setIsVisible,
+  setSelectedSpeakerId,
+  setSelectedMicrophoneId,
+} from '../redux/SettingsSlice';
 import useRoom from '../hooks/useRoom';
 import { signedOut } from '../redux/ArtySlice';
 import { selectAppUser, selectUserLicense } from '../redux/AppUserSlice';
@@ -120,8 +127,9 @@ async function getDevices() {
 }
 
 function DevicesPanel() {
-  const [selectedSpeakerId, setSelectedSpeakerId] = React.useState('');
-  const [selectedMicrophoneId, setSelectedMicrophoneId] = React.useState('');
+  const dispatch = useAppDispatch();
+  const selectedSpeakerId = useAppSelector(selectSelectedSpeakerId);
+  const selectedMicrophoneId = useAppSelector(selectSelectedMicrophoneId);
   const { room } = useRoom();
   const [devices, setDevices] = React.useState({
     audioinput: [],
@@ -158,15 +166,18 @@ function DevicesPanel() {
     }
   }, [currentMicrophone, room]);
 
-  const handleSpeakerChange = React.useCallback((event: SelectChangeEvent) => {
-    setSelectedSpeakerId(event.target.value);
-  }, []);
+  const handleSpeakerChange = React.useCallback(
+    (event: SelectChangeEvent) => {
+      dispatch(setSelectedSpeakerId(event.target.value));
+    },
+    [dispatch]
+  );
 
   const handleMicrophoneChange = React.useCallback(
     (event: SelectChangeEvent) => {
-      setSelectedMicrophoneId(event.target.value);
+      dispatch(setSelectedMicrophoneId(event.target.value));
     },
-    []
+    [dispatch]
   );
 
   return (

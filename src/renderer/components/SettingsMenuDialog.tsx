@@ -144,6 +144,9 @@ function DevicesPanel() {
     selectedMicrophoneId === ''
       ? devices.audioinput[0]
       : devices.audioinput.find((d) => d.deviceId === selectedMicrophoneId);
+  // todo:
+  // - make sure selected devices exist. if not, select default.
+  // - option to set to system default
 
   React.useEffect(() => {
     getDevices()

@@ -21,7 +21,6 @@ import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
 import { selectMute } from '../redux/MuteSlice';
-import { selectSelectedSpeakerId } from '../redux/SettingsSlice';
 
 function TeamRoom(props: {
   teamInfo: models.TeamInfo;
@@ -40,7 +39,6 @@ function TeamRoom(props: {
     connectionStatus === ConnectionStatus.Connected;
   const isVideoWindowOpen = useAppSelector(selectWindowOpen);
   const mute = useAppSelector(selectMute);
-  const selectedSpeakerId = useAppSelector(selectSelectedSpeakerId);
 
   React.useEffect(() => {
     console.log('TeamRoom', roomInfo.room.displayName, 'Mounted');
@@ -83,10 +81,6 @@ function TeamRoom(props: {
         if (mute) {
           micPublication?.audioTrack?.mute().catch(console.error);
         }
-        // set playback device
-        if (selectedSpeakerId !== '') {
-          room?.switchActiveDevice('audiooutput', selectedSpeakerId);
-        }
       } catch (error) {
         console.error(error);
       }
@@ -97,12 +91,10 @@ function TeamRoom(props: {
     connect,
     dispatch,
     mute,
-    room,
     roomInfo.room.displayName,
     roomInfo.room.id,
     roomInfo.room.teamId,
     roomInfo.roomToken,
-    selectedSpeakerId,
     teamInfo.team.displayName,
   ]);
 

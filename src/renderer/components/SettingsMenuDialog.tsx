@@ -32,7 +32,10 @@ function SettingsMenuTabPanel(props: {
   const tabId = context.value;
   return (
     <Box
-      sx={{ px: 4, py: 1.5, borderLeft: 1, borderColor: 'divider' }}
+      sx={{
+        px: 4,
+        py: 1.5,
+      }}
       hidden={tabId !== id}
     >
       {children}
@@ -86,7 +89,12 @@ function AccountPanel() {
 }
 
 function DevicesPanel() {
-  return <Typography variant="body1">Devices</Typography>;
+  return (
+    <>
+      <Typography variant="h5">Your Devices</Typography>
+      <br />
+    </>
+  );
 }
 
 function LicensePanel() {
@@ -181,6 +189,7 @@ function SettingsMenuDialog() {
             sx={{
               display: 'flex',
               flexDirection: 'row',
+              height: '100%',
             }}
           >
             <TabList
@@ -188,20 +197,26 @@ function SettingsMenuDialog() {
               variant="standard"
               orientation="vertical"
               onChange={handleTabChange}
+              sx={{
+                borderRight: 1,
+                borderColor: 'divider',
+              }}
             >
               <Tab value="tab1" label="Account" />
               <Tab value="tab2" label="Devices" />
               <Tab value="tab3" label="License" />
             </TabList>
-            <SettingsMenuTabPanel value="tab1">
-              <AccountPanel />
-            </SettingsMenuTabPanel>
-            <SettingsMenuTabPanel value="tab2">
-              <DevicesPanel />
-            </SettingsMenuTabPanel>
-            <SettingsMenuTabPanel value="tab3">
-              <LicensePanel />
-            </SettingsMenuTabPanel>
+            <Box sx={{ height: '100%' }}>
+              <SettingsMenuTabPanel value="tab1">
+                <AccountPanel />
+              </SettingsMenuTabPanel>
+              <SettingsMenuTabPanel value="tab2">
+                <DevicesPanel />
+              </SettingsMenuTabPanel>
+              <SettingsMenuTabPanel value="tab3">
+                <LicensePanel />
+              </SettingsMenuTabPanel>
+            </Box>
           </Box>
         </DialogContent>
         <DialogActions
@@ -220,3 +235,5 @@ function SettingsMenuDialog() {
 }
 
 export default SettingsMenuDialog;
+// todo:
+// - fix tab boarder. doesn't span full height in license tab.

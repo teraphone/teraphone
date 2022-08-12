@@ -7,6 +7,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Select,
+  SelectChangeEvent,
   Tab,
   Typography,
   Avatar,
@@ -89,10 +91,27 @@ function AccountPanel() {
 }
 
 function DevicesPanel() {
+  const [speakerId, setSpeakerId] = React.useState('');
+  const [microphoneId, setMicrophoneId] = React.useState('');
+  const { room } = useRoom();
+
+  const handleSpeakerChange = React.useCallback((event: SelectChangeEvent) => {
+    setSpeakerId(event.target.value);
+  }, []);
+
+  const handleMicrophoneChange = React.useCallback(
+    (event: SelectChangeEvent) => {
+      setMicrophoneId(event.target.value);
+    },
+    []
+  );
+
   return (
     <>
       <Typography variant="h5">Your Devices</Typography>
       <br />
+      <Typography variant="h2">Audio Devices</Typography>
+      <Typography variant="body2">Speaker</Typography>
     </>
   );
 }

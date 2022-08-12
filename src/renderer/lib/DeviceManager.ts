@@ -1,3 +1,4 @@
+// taken from here: https://github.com/livekit/client-sdk-js/blob/fc97dd13f390ceb8d0da4ed398a54f6f400f1efd/src/room/DeviceManager.ts
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
 const defaultId = 'default';

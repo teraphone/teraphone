@@ -12,7 +12,7 @@ export interface AudioTrackProps {
 }
 
 type HTMLAudioElement2 = HTMLAudioElement & {
-  setSinkId(deviceId: string): void;
+  setSinkId(deviceId: string): Promise<void>;
 };
 
 function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
@@ -37,7 +37,11 @@ function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
     audioEl.current.volume = volume;
     if (selectedSpeakerId !== '') {
       if ('setSinkId' in audioEl.current) {
-        audioEl.current.setSinkId(selectedSpeakerId);
+        try {
+          audioEl.current.setSinkId(selectedSpeakerId);
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
 

@@ -2,6 +2,8 @@
 /* eslint-disable consistent-return */
 import { Track } from 'livekit-client';
 import * as React from 'react';
+import { selectSelectedSpeakerId } from '../redux/SettingsSlice';
+import { useAppSelector } from '../redux/hooks';
 
 export interface AudioTrackProps {
   track: Track;
@@ -9,8 +11,13 @@ export interface AudioTrackProps {
   volume: number; // Is a double indicating the audio volume, from 0.0 (silent) to 1.0 (loudest).
 }
 
+type HTMLAudioElement2 = HTMLAudioElement & {
+  setSinkId(deviceId: string): Promise<void>;
+};
+
 function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
-  const audioEl = React.useRef<HTMLAudioElement>();
+  const audioEl = React.useRef<HTMLAudioElement2>();
+  const selectedSpeakerId = useAppSelector(selectSelectedSpeakerId);
 
   React.useEffect(() => {
     console.log('AudioRenderer Mounted');
@@ -23,14 +30,23 @@ function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
       // don't play own audio
       return;
     }
-    audioEl.current = track.attach();
+    audioEl.current = track.attach() as HTMLAudioElement2;
     if (track.sid) {
       audioEl.current.setAttribute('data-audio-track-id', track.sid);
     }
     audioEl.current.volume = volume;
+    if (selectedSpeakerId !== '') {
+      if ('setSinkId' in audioEl.current) {
+        try {
+          audioEl.current.setSinkId(selectedSpeakerId);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
 
     return () => track.detach().forEach((el) => el.remove());
-  }, [track, isLocal, volume]);
+  }, [track, isLocal, volume, selectedSpeakerId]);
 
   return null;
 }

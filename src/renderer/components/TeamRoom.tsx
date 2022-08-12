@@ -82,7 +82,7 @@ function TeamRoom(props: {
           micPublication?.audioTrack?.mute().catch(console.error);
         }
       } catch (error) {
-        console.error('publish mic error:', error);
+        console.error(error);
       }
     } catch (error) {
       console.error(error);

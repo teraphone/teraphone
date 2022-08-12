@@ -9,6 +9,7 @@ import {
   DialogTitle,
   Tab,
   Typography,
+  Avatar,
 } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +17,8 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectIsVisible, setIsVisible } from '../redux/SettingsSlice';
 import useRoom from '../hooks/useRoom';
 import { signedOut } from '../redux/ArtySlice';
+import { selectAppUser } from '../redux/AppUserSlice';
+import { selectUserAvatars } from '../redux/AvatarSlice';
 
 function SettingsMenuTabPanel(props: {
   children: React.ReactNode;
@@ -38,6 +41,8 @@ function AccountPanel() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { room } = useRoom();
+  const { tenantUser: user } = useAppSelector(selectAppUser);
+  const userAvatars = useAppSelector(selectUserAvatars);
 
   const handleSignOut = React.useCallback(() => {
     room?.disconnect().catch(console.error);
@@ -49,18 +54,40 @@ function AccountPanel() {
 
   return (
     <>
-      <Typography variant="body1">
-        Disconnect and sign out of Teraphone.
-      </Typography>
-      <Button variant="contained" color="error" onClick={handleSignOut}>
-        Sign Out
-      </Button>
+      <Typography variant="h5">Your Account</Typography>
+      <br />
+
+      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Avatar
+          src={userAvatars[user.oid]}
+          alt={user.name}
+          sx={{ height: 64, width: 64 }}
+        >
+          {user.name}
+        </Avatar>
+        <Box sx={{ ml: 2 }}>
+          <Typography variant="h6">{user.name}</Typography>
+          <Typography variant="body2">{user.email}</Typography>
+          <Button
+            sx={{ my: 4 }}
+            variant="contained"
+            color="error"
+            onClick={handleSignOut}
+          >
+            Sign Out
+          </Button>
+        </Box>
+      </Box>
     </>
   );
 }
 
 function DevicesPanel() {
   return <Typography variant="body1">Devices</Typography>;
+}
+
+function LicensePanel() {
+  return <Typography variant="body1">License</Typography>;
 }
 
 function SettingsMenuDialog() {
@@ -121,12 +148,16 @@ function SettingsMenuDialog() {
             >
               <Tab value="tab1" label="Account" />
               <Tab value="tab2" label="Devices" />
+              <Tab value="tab3" label="License" />
             </TabList>
             <SettingsMenuTabPanel value="tab1">
               <AccountPanel />
             </SettingsMenuTabPanel>
             <SettingsMenuTabPanel value="tab2">
               <DevicesPanel />
+            </SettingsMenuTabPanel>
+            <SettingsMenuTabPanel value="tab3">
+              <LicensePanel />
             </SettingsMenuTabPanel>
           </Box>
         </DialogContent>

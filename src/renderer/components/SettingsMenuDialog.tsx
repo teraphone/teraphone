@@ -17,7 +17,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectIsVisible, setIsVisible } from '../redux/SettingsSlice';
 import useRoom from '../hooks/useRoom';
 import { signedOut } from '../redux/ArtySlice';
-import { selectAppUser } from '../redux/AppUserSlice';
+import { selectAppUser, selectUserLicense } from '../redux/AppUserSlice';
 import { selectUserAvatars } from '../redux/AvatarSlice';
 
 function SettingsMenuTabPanel(props: {
@@ -31,7 +31,10 @@ function SettingsMenuTabPanel(props: {
   }
   const tabId = context.value;
   return (
-    <Box sx={{ px: 4, py: 1.5 }} hidden={tabId !== id}>
+    <Box
+      sx={{ px: 4, py: 1.5, borderLeft: 1, borderColor: 'divider' }}
+      hidden={tabId !== id}
+    >
       {children}
     </Box>
   );
@@ -87,7 +90,53 @@ function DevicesPanel() {
 }
 
 function LicensePanel() {
-  return <Typography variant="body1">License</Typography>;
+  const userLicense = useAppSelector(selectUserLicense);
+  const licensePlanMap: { [code: number]: string } = {
+    0: 'Standard',
+    1: 'Professional',
+    2: 'unknown',
+  };
+  const licenseStatusMap: { [code: number]: string } = {
+    0: 'Inactive',
+    1: 'Suspended',
+    2: 'Pending',
+    3: 'Active',
+    4: 'unknown',
+  };
+
+  return (
+    <>
+      <Typography variant="h5">Your License</Typography>
+      <br />
+      <Typography variant="h6">User ID</Typography>
+      <Typography variant="body1">{userLicense.oid}</Typography>
+      <br />
+      <Typography variant="h6">Tenant ID</Typography>
+      <Typography variant="body1">{userLicense.tid}</Typography>
+      <br />
+      <Typography variant="h6">License Plan</Typography>
+      <Typography variant="body1">
+        {licensePlanMap[userLicense.licensePlan]}
+      </Typography>
+      <br />
+      <Typography variant="h6">License Status</Typography>
+      <Typography variant="body1">
+        {licenseStatusMap[userLicense.licenseStatus]}
+      </Typography>
+      <br />
+      <Typography variant="h6">License Expiration</Typography>
+      <Typography variant="body1">{userLicense.licenseExpiresAt}</Typography>
+      <br />
+      <Typography variant="h6">Trial Activated</Typography>
+      <Typography variant="body1">
+        {userLicense.trialActivated ? 'True' : 'False'}
+      </Typography>
+      <br />
+      <Typography variant="h6">Trial Expiration</Typography>
+      <Typography variant="body1">{userLicense.trialExpiresAt}</Typography>
+      <br />
+    </>
+  );
 }
 
 function SettingsMenuDialog() {
@@ -132,7 +181,6 @@ function SettingsMenuDialog() {
             sx={{
               display: 'flex',
               flexDirection: 'row',
-              height: '100%',
             }}
           >
             <TabList
@@ -140,11 +188,6 @@ function SettingsMenuDialog() {
               variant="standard"
               orientation="vertical"
               onChange={handleTabChange}
-              sx={{
-                borderRight: 1,
-                borderColor: 'divider',
-                height: '100%',
-              }}
             >
               <Tab value="tab1" label="Account" />
               <Tab value="tab2" label="Devices" />

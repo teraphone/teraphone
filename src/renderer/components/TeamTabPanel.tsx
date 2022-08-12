@@ -35,21 +35,14 @@ function TeamTabPanel(props: TeamTabPanelProps) {
     >
       {value === index && (
         <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1 }}>
-          <Box sx={{ width: 310, flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
             <Box>
               <TeamMenu teamInfo={teamInfo} />
             </Box>
-            <Box>
+            <Box sx={{ flexGrow: 1 }}>
               <TeamRooms teamInfo={teamInfo} />
             </Box>
-            <Box
-              sx={{
-                position: 'fixed',
-                bottom: '0',
-                width: '310px',
-                backgroundColor: 'background.paper',
-              }}
-            >
+            <Box sx={{ backgroundColor: 'background.paper' }}>
               <ScreenShareBanners />
               <CurrentRoomControls />
               <BottomControls />

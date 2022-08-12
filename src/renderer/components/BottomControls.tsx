@@ -173,12 +173,7 @@ function BottomControls() {
   }, []);
 
   return (
-    <Box
-      sx={{
-        m: '2px',
-        backgroundColor: '#f8f8f8',
-      }}
-    >
+    <Box sx={{ backgroundColor: '#f8f8f8' }}>
       <List
         dense
         sx={{
@@ -189,9 +184,7 @@ function BottomControls() {
         <ListItem
           disableGutters
           disablePadding
-          sx={{
-            py: '2px',
-          }}
+          sx={{ py: '2px' }}
           secondaryAction={
             <>
               <MuteButton mute={mute} onClick={handleMuteClick} />

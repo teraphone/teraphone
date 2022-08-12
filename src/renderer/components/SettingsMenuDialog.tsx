@@ -326,12 +326,13 @@ function SettingsMenuDialog() {
         >
           Settings
         </DialogTitle>
-        <DialogContent sx={{ py: 0 }}>
+        <DialogContent sx={{ p: 0 }}>
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'row',
               height: '100%',
+              width: '100%',
             }}
           >
             <TabList
@@ -348,7 +349,7 @@ function SettingsMenuDialog() {
               <Tab value="tab2" label="Devices" />
               <Tab value="tab3" label="License" />
             </TabList>
-            <Box sx={{ height: '100%' }}>
+            <Box sx={{ height: '100%', overflowY: 'auto', flexGrow: 1 }}>
               <SettingsMenuTabPanel value="tab1">
                 <AccountPanel />
               </SettingsMenuTabPanel>
@@ -377,5 +378,3 @@ function SettingsMenuDialog() {
 }
 
 export default SettingsMenuDialog;
-// todo:
-// - fix tab boarder. doesn't span full height in license tab.

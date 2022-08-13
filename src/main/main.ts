@@ -119,9 +119,9 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 600,
+    width: 550,
     minWidth: 500,
-    height: 600,
+    height: 550,
     minHeight: 300,
     resizable: true,
     acceptFirstMouse: true,

@@ -61,14 +61,23 @@ function MSLogin() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
       <CssBaseline />
       <Box
         sx={{
-          paddingTop: 8,
+          alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          mb: 8,
+          maxWidth: 'xs',
         }}
       >
         <Avatar sx={{ m: 1, bgcolor: 'common.black' }}>

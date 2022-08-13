@@ -77,22 +77,22 @@ const Home = () => {
   }, [handleBeforeUnload]);
 
   return (
-    <div>
-      <Box
-        sx={{
-          flexGrow: 1,
-          bgcolor: 'background.paper',
-          display: 'flex',
-          height: '100vh',
-        }}
-      >
-        <TeamTabs />
-        <ScreenPickerDialog />
-        <SettingsMenuDialog />
-        <VideoViews />
-        <AudioRenderers />
-      </Box>
-    </div>
+    <Box
+      sx={{
+        bgcolor: 'background.paper',
+        display: 'flex',
+        flexGrow: 1,
+        height: '100%',
+        overflow: 'hidden',
+        width: '100%',
+      }}
+    >
+      <TeamTabs />
+      <ScreenPickerDialog />
+      <SettingsMenuDialog />
+      <VideoViews />
+      <AudioRenderers />
+    </Box>
   );
 };
 

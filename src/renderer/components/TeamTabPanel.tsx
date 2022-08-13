@@ -25,17 +25,29 @@ function TeamTabPanel(props: TeamTabPanelProps) {
 
   return (
     <Box
-      role="tabpanel"
+      aria-labelledby={`vertical-tab-${index}`}
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
+      role="tabpanel"
       sx={{
+        display: 'flex',
+        flexDirection: 'row',
         flexGrow: 1,
+        flexShrink: 1,
+        minWidth: 0,
       }}
     >
       {value === index && (
-        <Box sx={{ display: 'flex', flexDirection: 'row', flexGrow: 1 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+        <>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              flexGrow: 1,
+              flexShrink: 1,
+              minWidth: 200,
+            }}
+          >
             <Box>
               <TeamMenu teamInfo={teamInfo} />
             </Box>
@@ -49,7 +61,7 @@ function TeamTabPanel(props: TeamTabPanelProps) {
             </Box>
           </Box>
           <TeamContacts teamInfo={teamInfo} />
-        </Box>
+        </>
       )}
     </Box>
   );

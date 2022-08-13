@@ -147,10 +147,10 @@ function GroupContacts(props: TeamContactsProps) {
   return (
     <Box
       sx={{
-        width: '200px',
-        borderLeft: 1,
         borderColor: 'divider',
-        height: '100vh',
+        borderLeftStyle: 'solid',
+        borderLeftWidth: 1,
+        width: '200px',
       }}
     >
       <Box

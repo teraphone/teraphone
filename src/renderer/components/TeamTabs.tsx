@@ -60,15 +60,15 @@ function TeamTabs() {
       <Stack sx={{ width: 90 }}>
         <Box
           sx={{
-            // center the text vertically and horizontally
+            alignItems: 'center',
+            backgroundColor: 'background.paper',
+            borderColor: 'divider',
+            borderRightStyle: 'solid',
+            borderRightWidth: 1,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
             height: 48,
-            backgroundColor: 'background.paper',
-            borderRight: 1,
-            borderColor: 'divider',
+            justifyContent: 'center',
           }}
         >
           <Typography

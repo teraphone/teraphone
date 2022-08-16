@@ -23,9 +23,12 @@ const initialState: AvatarState = {
   users: {} as UserAvatars,
 };
 
+const junkPrefix = 'https://DELETEME.COM';
+
 export const getUserPhotos = createAsyncThunk(
   'avatars/getUserPhotos',
   async (userIds: string[], thunkApi) => {
+    console.log('getUserPhotos', userIds);
     const { avatars } = thunkApi.getState() as RootState;
     const userIdsToFetch = userIds.filter((userId) => !avatars.users[userId]);
     if (userIdsToFetch.length === 0) {
@@ -38,13 +41,16 @@ export const getUserPhotos = createAsyncThunk(
       const batchRequestSteps: BatchRequestStep[] = userIdsToFetch.map(
         (userId) => ({
           id: userId,
-          request: new Request(`/users/${userId}/photo/$value`, {
+          request: new Request(`${junkPrefix}/users/${userId}/photo/$value`, {
             method: 'GET',
           }),
         })
       );
+      console.log('getUserPhotos batchRequestSteps', batchRequestSteps);
       const batchRequestContent = new BatchRequestContent(batchRequestSteps);
+      console.log('getUserPhotos batchRequestContent', batchRequestContent);
       const content = await batchRequestContent.getContent();
+      console.log('getUserPhotos content', content);
       const batchResponse = new BatchResponseContent(
         await msGraphClient.api('/$batch').post(content)
       );
@@ -55,6 +61,9 @@ export const getUserPhotos = createAsyncThunk(
           const binToBlob = await b64toBlob(data, 'img/jpg');
           const base64Result = await blobToBase64(binToBlob);
           userPhotos[id] = base64Result;
+        } else {
+          const msg = await response.json();
+          console.log('getUserPhotos response.json', msg);
         }
       }
 
@@ -70,6 +79,7 @@ export const getUserPhotos = createAsyncThunk(
 export const getTeamPhotos = createAsyncThunk(
   'avatars/getTeamPhotos',
   async (teamIds: string[], thunkApi) => {
+    console.log('getTeamPhotos', teamIds);
     const { avatars } = thunkApi.getState() as RootState;
     const teamIdsToFetch = teamIds.filter((teamId) => !avatars.teams[teamId]);
     if (teamIdsToFetch.length === 0) {
@@ -82,13 +92,16 @@ export const getTeamPhotos = createAsyncThunk(
       const batchRequestSteps: BatchRequestStep[] = teamIdsToFetch.map(
         (teamId) => ({
           id: teamId,
-          request: new Request(`/teams/${teamId}/photo/$value`, {
+          request: new Request(`${junkPrefix}/teams/${teamId}/photo/$value`, {
             method: 'GET',
           }),
         })
       );
+      console.log('getTeamPhotos batchRequestSteps', batchRequestSteps);
       const batchRequestContent = new BatchRequestContent(batchRequestSteps);
+      console.log('getTeamPhotos batchRequestContent', batchRequestContent);
       const content = await batchRequestContent.getContent();
+      console.log('getTeamPhotos content', content);
       const batchResponse = new BatchResponseContent(
         await msGraphClient.api('/$batch').post(content)
       );
@@ -99,6 +112,9 @@ export const getTeamPhotos = createAsyncThunk(
           const binToBlob = await b64toBlob(data, 'img/jpg');
           const base64Result = await blobToBase64(binToBlob);
           teamPhotos[id] = base64Result;
+        } else {
+          const msg = await response.json();
+          console.log('getTeamPhotos response.json', msg);
         }
       }
 

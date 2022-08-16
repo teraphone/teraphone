@@ -1,4 +1,38 @@
 import { createTheme } from '@mui/material';
+import { grey } from '@mui/material/colors';
+
+// See https://mui.com/material-ui/customization/theming/#custom-variables
+// Module augmentation is required to add custom variables to the theme
+declare module '@mui/material/styles' {
+  interface Theme {
+    custom: {
+      palette: {
+        background: {
+          secondary: string;
+        };
+      };
+      spacing: {
+        header: {
+          height: number;
+        };
+      };
+    };
+  }
+  interface ThemeOptions {
+    custom?: {
+      palette?: {
+        background?: {
+          secondary: string;
+        };
+      };
+      spacing?: {
+        header?: {
+          height?: number;
+        };
+      };
+    };
+  }
+}
 
 function buttonColorFromClassName(className: string) {
   const colorVariants = [
@@ -30,7 +64,7 @@ export const globalStyles = {
   },
 };
 
-export const theme = createTheme({
+export const muiTheme = createTheme({
   typography: {
     fontFamily: [
       '"Segoe UI"',
@@ -81,6 +115,18 @@ export const theme = createTheme({
       primary: '#222',
     },
   },
+  custom: {
+    palette: {
+      background: {
+        secondary: grey[100],
+      },
+    },
+    spacing: {
+      header: {
+        height: 48,
+      },
+    },
+  },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
@@ -129,10 +175,12 @@ export const theme = createTheme({
               },
             };
           }
+
+          return {};
         },
       },
     },
   },
 });
 
-export default theme;
+export default muiTheme;

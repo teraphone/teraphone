@@ -97,31 +97,22 @@ function MSLogin() {
           >
             Authenticate with Microsoft
           </LoadingButton>
-          <Grid container>
-            <Grid item xs>
-              <Link
-                to="/"
-                onClick={() =>
-                  window.open(
-                    'https://teraphone.app/terms-of-service',
-                    '_blank'
-                  )
-                }
-              >
-                Terms of Service
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link
-                to="/"
-                onClick={() =>
-                  window.open('https://teraphone.app/privacy-policy', '_blank')
-                }
-              >
-                Privacy Policy
-              </Link>
-            </Grid>
-          </Grid>
+          <Box
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Link
+              to="/"
+              onClick={() =>
+                window.open('https://teraphone.app/privacy-policy', '_blank')
+              }
+            >
+              Privacy Policy
+            </Link>
+          </Box>
         </Box>
         <SubmitError />
       </Box>

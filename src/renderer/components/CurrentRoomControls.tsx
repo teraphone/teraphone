@@ -187,12 +187,7 @@ function CurentRoomControls() {
   return (
     <>
       {connectionStatus !== ConnectionStatus.Disconnected && (
-        <Box
-          sx={{
-            m: '2px',
-            backgroundColor: '#f8f8f8',
-          }}
-        >
+        <Box sx={{ backgroundColor: '#f8f8f8' }}>
           <List
             dense
             sx={{
@@ -232,12 +227,11 @@ function CurentRoomControls() {
               <ListItemText
                 primary={primaryStatusText}
                 primaryTypographyProps={{
-                  variant: 'body1',
-                  sx: {
-                    color: statusColor,
-                  },
+                  variant: 'body2',
+                  sx: { color: statusColor },
                 }}
                 secondary={secondaryStatusText}
+                secondaryTypographyProps={{ variant: 'body2' }}
               />
             </ListItem>
             <ListItem

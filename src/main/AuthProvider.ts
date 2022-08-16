@@ -88,9 +88,10 @@ class AuthProvider {
   // Creates a "popup" window for interactive authentication
   static createAuthWindow() {
     return new BrowserWindow({
-      width: 470,
+      autoHideMenuBar: true,
       height: 575,
       title: 'Sign in to your account',
+      width: 470,
     });
   }
 

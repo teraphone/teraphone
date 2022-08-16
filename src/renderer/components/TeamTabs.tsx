@@ -73,9 +73,7 @@ function TeamTabs() {
         >
           <Typography
             variant="body2"
-            sx={{
-              color: 'text.secondary',
-            }}
+            sx={{ color: 'text.secondary', flexShrink: 0 }}
           >
             Teams
           </Typography>

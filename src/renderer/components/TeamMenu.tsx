@@ -51,12 +51,7 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
                 // {...bindTrigger(popupState)}
               >
                 <ListItemText disableTypography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: 'text.secondary',
-                    }}
-                  >
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     {teamInfo.team.displayName}
                   </Typography>
                 </ListItemText>

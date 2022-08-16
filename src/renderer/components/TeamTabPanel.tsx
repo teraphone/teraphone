@@ -51,10 +51,16 @@ function TeamTabPanel(props: TeamTabPanelProps) {
             <Box>
               <TeamMenu teamInfo={teamInfo} />
             </Box>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
               <TeamRooms teamInfo={teamInfo} />
             </Box>
-            <Box sx={{ backgroundColor: 'background.paper' }}>
+            <Box
+              sx={{
+                backgroundColor: 'background.paper',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
               <ScreenShareBanners />
               <CurrentRoomControls />
               <BottomControls />

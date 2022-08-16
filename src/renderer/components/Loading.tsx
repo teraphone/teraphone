@@ -6,9 +6,9 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   Container,
   CssBaseline,
-  Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
@@ -99,14 +99,15 @@ const Loading = () => {
   }, [handleLogin, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" sx={{ height: '100%' }}>
       <CssBaseline />
       <Box
         sx={{
-          paddingTop: 8,
+          alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          height: '100%',
+          justifyContent: 'center',
         }}
       >
         {loginError ? (
@@ -122,7 +123,7 @@ const Loading = () => {
             </Button>
           </>
         ) : (
-          <Typography variant="h4">Please wait...</Typography>
+          <CircularProgress />
         )}
       </Box>
     </Container>

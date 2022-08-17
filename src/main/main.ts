@@ -191,7 +191,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    globalShortcut.register('CommandOrControl+`', () => {
+    globalShortcut.register('CommandOrControl+Shift+M', () => {
       console.log('Global shortcut pressed!!!');
     });
   })

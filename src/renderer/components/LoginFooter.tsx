@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-import { Link } from 'react-router-dom';
 import { Box } from '@mui/material';
 
 function LoginFooter() {
@@ -13,15 +11,13 @@ function LoginFooter() {
         m: 2,
       }}
     >
-      <Link
-        to="https://teraphone.app/privacy-policy"
-        // target="_blank"
-        // onClick={() =>
-        //   window.open('https://teraphone.app/privacy-policy', '_blank')
-        // }
+      <a
+        href="https://teraphone.app/privacy-policy"
+        target="_blank"
+        rel="noreferrer"
       >
         Privacy Policy
-      </Link>
+      </a>
     </Box>
   );
 }

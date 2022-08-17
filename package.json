@@ -190,7 +190,6 @@
     "@azure/msal-common": "^7.2.0",
     "@azure/msal-node": "^1.12.1",
     "@emotion/cache": "^11.7.1",
-    "@emotion/core": "^11.0.0",
     "@emotion/react": "^11.7.1",
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.6.0",

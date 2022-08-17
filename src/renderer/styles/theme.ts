@@ -158,6 +158,23 @@ export const muiTheme = createTheme({
         },
       },
     },
+    // TODO: Decrease elevation without affecting :focus-visible style
+    // MuiButton: {
+    //   styleOverrides: {
+    //     root: ({ theme }) => ({
+    //       boxShadow: theme.shadows[1],
+    //       '&:focus-visible': {
+    //         boxShadow: theme.shadows[3],
+    //       },
+    //       '&:hover': {
+    //         boxShadow: theme.shadows[3],
+    //       },
+    //       '&:active': {
+    //         boxShadow: theme.shadows[0],
+    //       },
+    //     }),
+    //   },
+    // },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,

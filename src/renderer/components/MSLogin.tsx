@@ -8,6 +8,7 @@ import { useAppDispatch } from '../redux/hooks';
 // import { setAppUser } from '../redux/AppUserSlice';
 import { setMSAuthResult } from '../redux/AuthSlice';
 import MSSignInLoadingButton from './MSSignInLoadingButton';
+import LoginFooter from './LoginFooter';
 import teraphoneLogo from '../../../assets/images/teraphone-logo-and-name-vertical.svg';
 
 function MSLogin() {
@@ -89,24 +90,7 @@ function MSLogin() {
         />
         <SubmitError />
       </Box>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexShrink: 0,
-          justifyContent: 'center',
-          m: 2,
-        }}
-      >
-        <Link
-          to="/"
-          onClick={() =>
-            window.open('https://teraphone.app/privacy-policy', '_blank')
-          }
-        >
-          Privacy Policy
-        </Link>
-      </Box>
+      <LoginFooter />
     </Container>
   );
 }

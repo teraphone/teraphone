@@ -1,6 +1,7 @@
 import { Icon } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useTheme } from '@mui/material/styles';
+import { SxProps } from '@mui/system';
 import microsoftLogo from '../../../assets/images/microsoft-logo.svg';
 
 function MSSignInLoadingButton({
@@ -8,11 +9,13 @@ function MSSignInLoadingButton({
   disableElevation = false,
   loading = false,
   onClick = () => {},
+  sx = {},
 }: {
   children?: React.ReactNode;
   disableElevation?: boolean;
   loading?: boolean;
   onClick?: () => void;
+  sx?: SxProps;
 }) {
   const theme = useTheme();
 
@@ -29,13 +32,17 @@ function MSSignInLoadingButton({
       sx={{
         backgroundColor: '#fff',
         borderRadius: 0,
-        boxShadow: !disableElevation ? theme.shadows[2] : 'none',
+        boxShadow: !disableElevation ? theme.shadows[2] : theme.shadows[0],
         px: 1.5,
         '&:hover': {
           backgroundColor: theme.palette.grey[50],
-          boxShadow: !disableElevation ? theme.shadows[4] : 'none',
+          boxShadow: !disableElevation ? theme.shadows[4] : theme.shadows[0],
+        },
+        '&:active': {
+          boxShadow: theme.shadows[0],
         },
         '& .MuiButton-startIcon': { my: 0, ml: 0, mr: 1.5 },
+        ...sx,
       }}
       type="submit"
       variant="outlined"

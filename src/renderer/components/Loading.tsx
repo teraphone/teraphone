@@ -1,7 +1,15 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Container, CssBaseline, Typography } from '@mui/material';
+import { ArrowBackIos } from '@mui/icons-material';
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Typography,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   selectMSAuthResult,
@@ -29,6 +37,7 @@ const Loading = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const msAuthResult = useAppSelector(selectMSAuthResult);
+  const [loginError, setLoginError] = React.useState('');
 
   const handleLogin = React.useCallback(async () => {
     let success = false;
@@ -46,21 +55,19 @@ const Loading = () => {
         params
       );
       if (response.ok) {
-        try {
-          const data: LoginResponse = await response.json();
-          dispatch(setAccessToken(data.accessToken));
-          dispatch(setAccessTokenExpiration(data.accessTokenExpiration));
-          dispatch(setRefreshToken(data.refreshToken));
-          dispatch(setRefreshTokenExpiration(data.refreshTokenExpiration));
-          await signIn(data.firebaseAuthToken);
-          dispatch(setTenantUser(data.user));
-          dispatch(setUserLicense(data.license));
-          // todo: make sure we're not forgetting anything here. see SignIn.tsx
-          success = true;
-          console.log('login successful');
-        } catch (e) {
-          console.error(e);
-        }
+        const data: LoginResponse = await response.json();
+        dispatch(setAccessToken(data.accessToken));
+        dispatch(setAccessTokenExpiration(data.accessTokenExpiration));
+        dispatch(setRefreshToken(data.refreshToken));
+        dispatch(setRefreshTokenExpiration(data.refreshTokenExpiration));
+        await signIn(data.firebaseAuthToken);
+        dispatch(setTenantUser(data.user));
+        dispatch(setUserLicense(data.license));
+        // todo: make sure we're not forgetting anything here. see SignIn.tsx
+        success = true;
+        console.log('login successful');
+      } else {
+        setLoginError('Login Failed: could not find your Teams account.');
       }
     } catch (error) {
       console.log(error);
@@ -68,6 +75,17 @@ const Loading = () => {
 
     return success;
   }, [dispatch, msAuthResult.accessToken]);
+
+  const LoginError = () => {
+    if (loginError) {
+      return (
+        <Box component={Alert} severity="error" sx={{ width: '100%' }}>
+          {loginError}
+        </Box>
+      );
+    }
+    return null;
+  };
 
   React.useEffect(() => {
     handleLogin()
@@ -91,7 +109,21 @@ const Loading = () => {
           alignItems: 'center',
         }}
       >
-        <Typography variant="h4">Please wait...</Typography>
+        {loginError ? (
+          <>
+            <LoginError />
+            <Button
+              variant="contained"
+              onClick={() => navigate('/')}
+              sx={{ m: 4 }}
+            >
+              <ArrowBackIos />
+              Back
+            </Button>
+          </>
+        ) : (
+          <Typography variant="h4">Please wait...</Typography>
+        )}
       </Box>
     </Container>
   );

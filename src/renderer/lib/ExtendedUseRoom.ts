@@ -16,11 +16,10 @@ import {
   LocalParticipant,
   RemoteParticipant,
 } from 'livekit-client';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
 import {
-  selectScreens,
-  selectWindows,
+  removeSource,
   setScreens,
   setWindows,
 } from '../redux/ScreenShareSlice';
@@ -79,8 +78,6 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
     ConnectionState.Disconnected
   );
   const dispatch = useAppDispatch();
-  const screens = useAppSelector(selectScreens);
-  const windows = useAppSelector(selectWindows);
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const localParticipant = room?.localParticipant;
 
@@ -121,15 +118,9 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
 
   const unShareScreen = React.useCallback(
     (sourceId: string) => {
-      if (screens[sourceId]) {
-        const { [sourceId]: removed, ...rest } = screens;
-        dispatch(setScreens(rest));
-      } else if (windows[sourceId]) {
-        const { [sourceId]: removed, ...rest } = windows;
-        dispatch(setWindows(rest));
-      }
+      dispatch(removeSource(sourceId));
     },
-    [dispatch, screens, windows]
+    [dispatch]
   );
 
   const handleTrackPublished = React.useCallback(

@@ -20,7 +20,7 @@ function MSLogin() {
   const handleAuthClick = React.useCallback(async () => {
     // todo: click auth button then close popup. why no error???
     try {
-      // setAuthPending(true);
+      setAuthPending(true);
       const authResult = await window.electron.ipcRenderer.auth();
       console.log('authResult', authResult);
       if (authResult) {
@@ -40,7 +40,7 @@ function MSLogin() {
       setErrorMessage('Authentication failed');
     }
 
-    // setAuthPending(false);
+    setAuthPending(false);
   }, [dispatch, navigate]);
 
   const SubmitError = () => {

@@ -1,5 +1,6 @@
 import { createTheme } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { alpha } from '@mui/material/styles';
 
 // See https://mui.com/material-ui/customization/theming/#custom-variables
 // Module augmentation is required to add custom variables to the theme
@@ -114,6 +115,9 @@ export const muiTheme = createTheme({
     text: {
       primary: '#222',
     },
+    info: {
+      main: '#5e5e5e',
+    },
   },
   custom: {
     palette: {
@@ -160,10 +164,19 @@ export const muiTheme = createTheme({
       },
       styleOverrides: {
         root: ({ theme, className }) => {
-          const color = buttonColorFromClassName(className as string);
+          const sx = {
+            '&:focus-visible': {
+              boxShadow: `0px 0px 0px 0.2rem ${alpha(
+                theme.palette.primary.main,
+                0.2
+              )}`,
+            },
+          };
 
+          const color = buttonColorFromClassName(className as string);
+          let containedSx = {};
           if (color) {
-            return {
+            containedSx = {
               '&.MuiButton-contained:hover': {
                 backgroundColor: theme.palette[color].light,
               },
@@ -176,7 +189,7 @@ export const muiTheme = createTheme({
             };
           }
 
-          return {};
+          return { ...sx, ...containedSx };
         },
       },
     },

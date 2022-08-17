@@ -1,20 +1,14 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Alert from '@mui/material/Alert';
-import Avatar from '@mui/material/Avatar';
-import LoadingButton from '@mui/lab/LoadingButton';
-import CssBaseline from '@mui/material/CssBaseline';
 // import type { AuthenticationResult } from '@azure/msal-node';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { Alert, Box, Container, CssBaseline } from '@mui/material';
 // import { signIn } from '../redux/Firebase';
 import { useAppDispatch } from '../redux/hooks';
 // import { setAppUser } from '../redux/AppUserSlice';
 import { setMSAuthResult } from '../redux/AuthSlice';
+import MSSignInLoadingButton from './MSSignInLoadingButton';
+import teraphoneLogo from '../../../assets/images/teraphone-logo-and-name-vertical.svg';
 
 function MSLogin() {
   const [authPending, setAuthPending] = React.useState(false);
@@ -66,6 +60,8 @@ function MSLogin() {
       sx={{
         alignItems: 'center',
         display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
         height: '100%',
         justifyContent: 'center',
       }}
@@ -76,45 +72,40 @@ function MSLogin() {
           alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
-          mb: 8,
-          maxWidth: 'xs',
+          flexGrow: 1,
+          gap: 6,
+          justifyContent: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'common.black' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box sx={{ mt: 1 }}>
-          <LoadingButton
-            fullWidth
-            loading={authPending}
-            sx={{ mt: 3, mb: 2 }}
-            type="submit"
-            variant="contained"
-            onClick={handleAuthClick}
-          >
-            Authenticate with Microsoft
-          </LoadingButton>
-          <Box
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <Link
-              to="/"
-              onClick={() =>
-                window.open('https://teraphone.app/privacy-policy', '_blank')
-              }
-            >
-              Privacy Policy
-            </Link>
-          </Box>
-        </Box>
+        <Box
+          alt="Teraphone logo"
+          component="img"
+          src={teraphoneLogo}
+          sx={{ height: 112, width: 'auto' }}
+        />
+        <MSSignInLoadingButton
+          loading={authPending}
+          onClick={handleAuthClick}
+        />
         <SubmitError />
+      </Box>
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexShrink: 0,
+          justifyContent: 'center',
+          m: 2,
+        }}
+      >
+        <Link
+          to="/"
+          onClick={() =>
+            window.open('https://teraphone.app/privacy-policy', '_blank')
+          }
+        >
+          Privacy Policy
+        </Link>
       </Box>
     </Container>
   );

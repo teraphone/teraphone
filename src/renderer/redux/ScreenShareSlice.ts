@@ -77,6 +77,24 @@ export const screenShareSlice = createSlice({
         state.isSharing = false;
       }
     },
+    removeSource: (state, action: PayloadAction<string>) => {
+      const sourceId = action.payload;
+      if (state.screens[sourceId]) {
+        const { [sourceId]: target, ...rest } = state.screens;
+        state.screens = rest;
+      } else if (state.windows[sourceId]) {
+        const { [sourceId]: target, ...rest } = state.windows;
+        state.windows = rest;
+      }
+      if (
+        Object.keys(state.screens).length > 0 ||
+        Object.keys(state.windows).length > 0
+      ) {
+        state.isSharing = true;
+      } else {
+        state.isSharing = false;
+      }
+    },
     setPickerVisible: (state, action: PayloadAction<boolean>) => {
       state.pickerVisible = action.payload;
     },
@@ -88,6 +106,7 @@ export const {
   removeScreen,
   setWindows,
   removeWindow,
+  removeSource,
   setPickerVisible,
 } = screenShareSlice.actions;
 

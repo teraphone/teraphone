@@ -134,7 +134,6 @@ const createWindow = async () => {
     useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nativeWindowOpen: true,
     },
   });
 

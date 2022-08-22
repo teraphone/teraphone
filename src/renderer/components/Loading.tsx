@@ -21,6 +21,7 @@ import {
 import { signIn } from '../redux/Firebase';
 import { setTenantUser, setUserLicense } from '../redux/AppUserSlice';
 import { TenantUser, UserLicense } from '../models/models';
+import LoginFooter from './LoginFooter';
 
 type LoginResponse = {
   success: boolean;
@@ -99,7 +100,17 @@ const Loading = () => {
   }, [handleLogin, navigate]);
 
   return (
-    <Container component="main" sx={{ height: '100%' }}>
+    <Container
+      component="main"
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
       <CssBaseline />
       <Box
         sx={{
@@ -126,6 +137,7 @@ const Loading = () => {
           <CircularProgress />
         )}
       </Box>
+      <LoginFooter />
     </Container>
   );
 };

@@ -2,13 +2,16 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Stack from '@mui/material/Stack';
+import { useTheme } from '@mui/material/styles';
+import {
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+  Avatar,
+  Tooltip,
+  Stack,
+} from '@mui/material';
 import * as models from '../models/models';
 import TeamTabPanel from './TeamTabPanel';
 import { useAppSelector } from '../redux/hooks';
@@ -24,9 +27,9 @@ function a11yProps(index: number) {
 
 function TeamTabs() {
   const [value, setValue] = React.useState(0);
-
   const teamsInfo = useAppSelector(selectTeams);
   const teamAvatars = useAppSelector(selectTeamAvatars);
+  const theme = useTheme();
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     if (newValue < teamsInfo.length) {
@@ -61,13 +64,14 @@ function TeamTabs() {
         <Box
           sx={{
             alignItems: 'center',
-            backgroundColor: 'background.paper',
+            backgroundColor: theme.custom.palette.background.secondary,
             borderColor: 'divider',
             borderRightStyle: 'solid',
             borderRightWidth: 1,
             display: 'flex',
             flexDirection: 'column',
-            height: 48,
+            flexShrink: 0,
+            height: theme.custom.spacing.header.height,
             justifyContent: 'center',
           }}
         >
@@ -86,12 +90,12 @@ function TeamTabs() {
           onChange={handleChange}
           aria-label="group-tabs"
           sx={{
-            height: '100%',
             borderRight: 1,
             borderColor: 'divider',
             '.MuiTabs-indicator': {
               left: 0,
             },
+            flexGrow: 1,
           }}
         >
           {tabs}

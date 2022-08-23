@@ -87,12 +87,18 @@ class AuthProvider {
 
   // Creates a "popup" window for interactive authentication
   static createAuthWindow() {
-    return new BrowserWindow({
+    const popupWindow = new BrowserWindow({
       autoHideMenuBar: true,
       height: 575,
+      minHeight: 300,
       title: 'Sign in to your account',
       width: 470,
     });
+    const popupPromise = new Promise((_resolve, reject) => {
+      popupWindow.on('closed', reject);
+    });
+
+    return { popupWindow, popupPromise };
   }
 
   // USE THESE
@@ -175,7 +181,7 @@ class AuthProvider {
       await this.cryptoProvider.generatePkceCodes();
     this.pkceCodes.verifier = verifier;
     this.pkceCodes.challenge = challenge;
-    const popupWindow = AuthProvider.createAuthWindow();
+    const { popupWindow, popupPromise } = AuthProvider.createAuthWindow();
 
     // Add PKCE params to Auth Code URL request
     const authCodeUrlParams = {
@@ -194,7 +200,15 @@ class AuthProvider {
     try {
       // Get Auth Code URL
       const authCodeUrl = await this.clientApplication.getAuthCodeUrl(params);
-      const authCode = await this.listenForAuthCode(authCodeUrl, popupWindow);
+      const popupAuthCodePromise = this.listenForAuthCode(
+        authCodeUrl,
+        popupWindow
+      );
+      const authCode = await Promise.race([
+        popupAuthCodePromise, // Resolves with MS auth code
+        popupPromise, // Rejects if user closes window
+      ]);
+
       // Use Authorization Code and PKCE Code verifier to make token request
       const authResult = await this.clientApplication.acquireTokenByCode({
         ...this.authCodeRequest,

@@ -13,47 +13,32 @@ import teraphoneLogo from '../../../assets/images/teraphone-logo-and-name-vertic
 
 function MSLogin() {
   const [authPending, setAuthPending] = React.useState(false);
-  const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleAuthClick = React.useCallback(async () => {
-    // todo: click auth button then close popup. why no error???
     try {
+      setErrorMessage('');
       setAuthPending(true);
       const authResult = await window.electron.ipcRenderer.auth();
       console.log('authResult', authResult);
       if (authResult) {
         dispatch(setMSAuthResult(authResult));
         setAuthPending(false);
-        setSubmitError(false);
         navigate('/loading');
       } else {
         setAuthPending(false);
-        setSubmitError(true);
         setErrorMessage('Authentication failed');
       }
     } catch (error) {
       console.log(error);
       setAuthPending(false);
-      setSubmitError(true);
       setErrorMessage('Authentication failed');
     }
 
     setAuthPending(false);
   }, [dispatch, navigate]);
-
-  const SubmitError = () => {
-    if (submitError) {
-      return (
-        <Box component={Alert} severity="error" sx={{ width: '100%' }} mt={4}>
-          {errorMessage}
-        </Box>
-      );
-    }
-    return null;
-  };
 
   return (
     <Container
@@ -88,7 +73,7 @@ function MSLogin() {
           loading={authPending}
           onClick={handleAuthClick}
         />
-        <SubmitError />
+        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       </Box>
       <LoginFooter />
     </Container>

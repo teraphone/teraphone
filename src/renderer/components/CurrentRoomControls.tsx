@@ -35,18 +35,18 @@ const ShareCameraButton = (props: {
 }) => {
   const { /* status, */ onClick } = props;
   return (
-    <Tooltip title="Share Camera" placement="top" arrow>
+    <Tooltip title="Share Camera" placement="top" arrow sx={{ flexGrow: 1 }}>
       <span>
         <Button
-          size="small"
-          fullWidth
-          // disabled={status !== ConnectionStatus.Connected}
           disabled
-          variant="contained"
-          startIcon={<VideoCameraFrontIcon />}
+          // disabled={status !== ConnectionStatus.Connected}
           disableElevation
+          fullWidth
           onClick={onClick}
-          sx={{ px: 4, backgroundColor: 'black' }}
+          size="small"
+          startIcon={<VideoCameraFrontIcon />}
+          sx={{ backgroundColor: 'black', minWidth: 'unset' }}
+          variant="contained"
         >
           Camera
         </Button>
@@ -64,13 +64,14 @@ const ShareScreenButton = (props: {
     <Tooltip title="Share Screens" placement="top" arrow>
       <span>
         <Button
-          size="small"
-          variant="contained"
-          startIcon={<ScreenShareIcon />}
-          disableElevation
-          onClick={onClick}
-          sx={{ px: 4, backgroundColor: 'black' }}
           disabled={status !== ConnectionStatus.Connected}
+          disableElevation
+          fullWidth
+          onClick={onClick}
+          size="small"
+          startIcon={<ScreenShareIcon />}
+          sx={{ backgroundColor: 'black' }}
+          variant="contained"
         >
           Screens
         </Button>
@@ -237,15 +238,19 @@ function CurentRoomControls() {
             <ListItem
               sx={{ px: 0, textAlign: 'center', justifyContent: 'center' }}
             >
-              <Stack direction="row" spacing={1}>
-                <ShareCameraButton
-                  // status={connectionStatus}
-                  onClick={handleShareCameraClick}
-                />
-                <ShareScreenButton
-                  status={connectionStatus}
-                  onClick={handleShareScreenClick}
-                />
+              <Stack direction="row" gap={1} px={1} width="100%">
+                <Box sx={{ flexGrow: 1 }}>
+                  <ShareCameraButton
+                    // status={connectionStatus}
+                    onClick={handleShareCameraClick}
+                  />
+                </Box>
+                <Box sx={{ flexGrow: 1 }}>
+                  <ShareScreenButton
+                    status={connectionStatus}
+                    onClick={handleShareScreenClick}
+                  />
+                </Box>
               </Stack>
             </ListItem>
           </List>

@@ -17,6 +17,9 @@ declare module '@mui/material/styles' {
           height: number;
         };
       };
+      shadows: {
+        header: string;
+      };
     };
   }
   interface ThemeOptions {
@@ -30,6 +33,9 @@ declare module '@mui/material/styles' {
         header?: {
           height?: number;
         };
+      };
+      shadows?: {
+        header?: string;
       };
     };
   }
@@ -127,8 +133,11 @@ export const muiTheme = createTheme({
     },
     spacing: {
       header: {
-        height: 48,
+        height: 41,
       },
+    },
+    shadows: {
+      header: '0 0 4px 1px rgb(0 0 0 / 10%)',
     },
   },
   components: {

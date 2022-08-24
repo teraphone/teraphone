@@ -80,6 +80,9 @@ const Home = () => {
     <Box
       sx={{
         bgcolor: 'background.paper',
+        borderTopColor: 'divider',
+        borderTopStyle: 'solid',
+        borderTopWidth: 1,
         display: 'flex',
         flexGrow: 1,
         height: '100%',

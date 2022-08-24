@@ -46,11 +46,10 @@ function TeamTabPanel(props: TeamTabPanelProps) {
               flexGrow: 1,
               flexShrink: 1,
               minWidth: 200,
+              overflow: 'hidden',
             }}
           >
-            <Box>
-              <TeamMenu teamInfo={teamInfo} />
-            </Box>
+            <TeamMenu teamInfo={teamInfo} />
             <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
               <TeamRooms teamInfo={teamInfo} />
             </Box>
@@ -59,6 +58,7 @@ function TeamTabPanel(props: TeamTabPanelProps) {
                 backgroundColor: 'background.paper',
                 display: 'flex',
                 flexDirection: 'column',
+                overflow: 'hidden',
               }}
             >
               <ScreenShareBanners />

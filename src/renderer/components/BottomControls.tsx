@@ -9,7 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import * as React from 'react';
-import { Avatar, Box, Typography } from '@mui/material';
+import { Avatar, Box, Typography, useTheme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   selectMute,
@@ -130,6 +130,7 @@ const InfoButton = (props: { onClick: () => void }) => {
 };
 
 function BottomControls() {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
@@ -170,8 +171,13 @@ function BottomControls() {
       sx={{
         alignItems: 'center',
         backgroundColor: '#f8f8f8',
+        borderColor: 'divider',
+        borderTopStyle: 'solid',
+        borderTopWidth: 1,
+        boxShadow: theme.custom.shadows.header,
         display: 'flex',
         flexDirection: 'row',
+        marginTop: 1,
       }}
     >
       <Avatar

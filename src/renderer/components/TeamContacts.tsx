@@ -7,8 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import { Collapse } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import { Collapse, useTheme } from '@mui/material';
 import * as models from '../models/models';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
@@ -155,18 +154,25 @@ function GroupContacts(props: TeamContactsProps) {
         borderLeftWidth: 1,
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'hidden',
         width: '200px',
       }}
     >
       <Box
         sx={{
-          alignItems: 'center',
           backgroundColor: theme.custom.palette.background.secondary,
+          borderBottomColor: 'divider',
+          borderBottomStyle: 'solid',
+          borderBottomWidth: 1,
+          boxShadow: theme.custom.shadows.header,
           display: 'flex',
           flexDirection: 'column',
           flexShrink: 0,
           height: theme.custom.spacing.header.height,
           justifyContent: 'center',
+          px: 2,
+          py: 1,
+          zIndex: 1,
         }}
       >
         <Typography sx={{ color: 'text.secondary' }} variant="body2">

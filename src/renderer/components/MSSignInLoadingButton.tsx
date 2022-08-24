@@ -1,6 +1,5 @@
-import { Icon } from '@mui/material';
+import { Icon, useTheme } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { useTheme } from '@mui/material/styles';
 import { SxProps } from '@mui/system';
 import microsoftLogo from '../../../assets/images/microsoft-logo.svg';
 

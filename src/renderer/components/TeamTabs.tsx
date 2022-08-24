@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
 import {
   Tabs,
   Tab,
@@ -11,6 +10,7 @@ import {
   Avatar,
   Tooltip,
   Stack,
+  useTheme,
 } from '@mui/material';
 import * as models from '../models/models';
 import TeamTabPanel from './TeamTabPanel';
@@ -60,19 +60,24 @@ function TeamTabs() {
 
   return (
     <>
-      <Stack sx={{ width: 90 }}>
+      <Stack sx={{ overflow: 'hidden', width: 90 }}>
         <Box
           sx={{
             alignItems: 'center',
             backgroundColor: theme.custom.palette.background.secondary,
+            borderBottomColor: 'divider',
+            borderBottomStyle: 'solid',
+            borderBottomWidth: 1,
             borderColor: 'divider',
             borderRightStyle: 'solid',
             borderRightWidth: 1,
+            boxShadow: theme.custom.shadows.header,
             display: 'flex',
             flexDirection: 'column',
             flexShrink: 0,
             height: theme.custom.spacing.header.height,
             justifyContent: 'center',
+            zIndex: 1,
           }}
         >
           <Typography

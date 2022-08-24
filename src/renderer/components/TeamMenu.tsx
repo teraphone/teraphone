@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useTheme } from '@mui/material/styles';
 import {
   Box,
   List,
@@ -8,6 +7,7 @@ import {
   Menu,
   MenuItem,
   Typography,
+  useTheme,
 } from '@mui/material';
 // import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -29,8 +29,13 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
     <Box
       sx={{
         backgroundColor: theme.custom.palette.background.secondary,
+        borderBottomColor: 'divider',
+        borderBottomStyle: 'solid',
+        borderBottomWidth: 1,
+        boxShadow: theme.custom.shadows.header,
         height: theme.custom.spacing.header.height,
         width: '100%',
+        zIndex: 1,
       }}
     >
       <List

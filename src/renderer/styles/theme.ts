@@ -65,12 +65,6 @@ function buttonColorFromClassName(className: string) {
   return color;
 }
 
-export const globalStyles = {
-  'html, body, body > div': {
-    height: '100%',
-  },
-};
-
 export const muiTheme = createTheme({
   typography: {
     fontFamily: [
@@ -141,32 +135,6 @@ export const muiTheme = createTheme({
     },
   },
   components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          fontSize: '0.875rem', // 14px
-          lineHeight: 1.4286,
-          backgroundImage: 'radial-gradient(#fafafa 40%, transparent 43%)',
-          backgroundSize: '24px 24px',
-          height: '100%',
-        },
-      },
-    },
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          paddingLeft: '32px',
-          paddingRight: '32px',
-        },
-      },
-    },
-    MuiToolbar: {
-      styleOverrides: {
-        root: {
-          minHeight: '64px',
-        },
-      },
-    },
     // TODO: Decrease elevation without affecting :focus-visible style
     // MuiButton: {
     //   styleOverrides: {
@@ -216,6 +184,39 @@ export const muiTheme = createTheme({
           }
 
           return { ...sx, ...containedSx };
+        },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          fontSize: '0.875rem', // 14px
+          lineHeight: 1.4286,
+          backgroundImage: 'radial-gradient(#fafafa 40%, transparent 43%)',
+          backgroundSize: '24px 24px',
+          height: '100%',
+        },
+      },
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          paddingLeft: '32px',
+          paddingRight: '32px',
+        },
+      },
+    },
+    MuiListItemIcon: {
+      styleOverrides: {
+        root: {
+          minWidth: '32px',
+        },
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          minHeight: '64px',
         },
       },
     },

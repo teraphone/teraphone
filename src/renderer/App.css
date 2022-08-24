@@ -11,6 +11,6 @@
 
 html,
 body,
-body > div {
+body > #root {
   height: 100%;
 }

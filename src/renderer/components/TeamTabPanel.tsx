@@ -23,7 +23,7 @@ function TeamTabPanel(props: TeamTabPanelProps) {
     return () => console.log('TeamTabPanel', index, 'Unmounted');
   }, [index]);
 
-  return (
+  return value !== index ? null : (
     <Box
       aria-labelledby={`vertical-tab-${index}`}
       hidden={value !== index}
@@ -37,37 +37,33 @@ function TeamTabPanel(props: TeamTabPanelProps) {
         minWidth: 0,
       }}
     >
-      {value === index && (
-        <>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexGrow: 1,
-              flexShrink: 1,
-              minWidth: 200,
-              overflow: 'hidden',
-            }}
-          >
-            <TeamMenu teamInfo={teamInfo} />
-            <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
-              <TeamRooms teamInfo={teamInfo} />
-            </Box>
-            <Box
-              sx={{
-                backgroundColor: 'background.paper',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
-            >
-              <ScreenShareBanners />
-              <CurrentRoomControls />
-              <BottomControls />
-            </Box>
-          </Box>
-          <TeamContacts teamInfo={teamInfo} />
-        </>
-      )}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          flexShrink: 1,
+          minWidth: 200,
+          overflow: 'hidden',
+        }}
+      >
+        <TeamMenu teamInfo={teamInfo} />
+        <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
+          <TeamRooms teamInfo={teamInfo} />
+        </Box>
+        <Box
+          sx={{
+            backgroundColor: 'background.paper',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <ScreenShareBanners />
+          <CurrentRoomControls />
+          <BottomControls />
+        </Box>
+      </Box>
+      <TeamContacts teamInfo={teamInfo} />
     </Box>
   );
 }

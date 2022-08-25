@@ -5,7 +5,9 @@ import { useRoomExtended, ExtendedRoomState } from '../lib/ExtendedUseRoom';
 
 const RoomContext = React.createContext({} as ExtendedRoomState);
 
-export const RoomProvider: React.FC = ({ children }) => {
+export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   // const options: RoomOptions = {
   //   adaptiveStream: {
   //     pixelDensity: 1,
@@ -14,6 +16,7 @@ export const RoomProvider: React.FC = ({ children }) => {
   //   dynacast: true,
   // };
   const extendedRoomState = useRoomExtended();
+
   return (
     <RoomContext.Provider value={extendedRoomState}>
       {children}

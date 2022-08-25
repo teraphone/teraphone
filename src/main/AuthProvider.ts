@@ -85,15 +85,6 @@ class AuthProvider {
     this.isLoggedOut = false;
   }
 
-  // Creates a "popup" window for interactive authentication
-  static createAuthWindow() {
-    return new BrowserWindow({
-      width: 400,
-      height: 600,
-      title: 'Sign in to your account',
-    });
-  }
-
   // USE THESE
   async login() {
     const authResult = await this.getTokenInteractive(this.authCodeUrlParams);
@@ -174,7 +165,6 @@ class AuthProvider {
       await this.cryptoProvider.generatePkceCodes();
     this.pkceCodes.verifier = verifier;
     this.pkceCodes.challenge = challenge;
-    const popupWindow = AuthProvider.createAuthWindow();
 
     // Add PKCE params to Auth Code URL request
     const authCodeUrlParams = {
@@ -183,42 +173,52 @@ class AuthProvider {
       codeChallenge: this.pkceCodes.challenge, // PKCE Code Challenge
       codeChallengeMethod: this.pkceCodes.challengeMethod, // PKCE Code Challenge Method
     };
-    let params;
-    if (this.isLoggedOut) {
-      params = { ...authCodeUrlParams, prompt: 'select_account' };
-    } else {
-      params = authCodeUrlParams;
-    }
+    const params = this.isLoggedOut
+      ? { ...authCodeUrlParams, prompt: 'select_account' }
+      : authCodeUrlParams;
+
+    // Create a popup window for interactive authentication
+    const popupWindow = new BrowserWindow({
+      autoHideMenuBar: true,
+      height: 575,
+      minHeight: 300,
+      title: 'Sign in to your account',
+      width: 470,
+    });
+    // Set up custom file protocol to listen for redirect and get auth code
+    const authCodeListener = new CustomProtocolListener(
+      this.customFileProtocolName
+    );
 
     try {
-      // Get Auth Code URL
+      const popupPromise = new Promise((_resolve, reject) => {
+        popupWindow.on('closed', reject);
+      });
+      const authCodeListenerPromise = authCodeListener.start();
+
       const authCodeUrl = await this.clientApplication.getAuthCodeUrl(params);
-      const authCode = await this.listenForAuthCode(authCodeUrl, popupWindow);
+      popupWindow.loadURL(authCodeUrl);
+
+      const authCode = await Promise.race([
+        authCodeListenerPromise, // Resolves with MS auth code
+        popupPromise, // Rejects if user closes window
+      ]);
+      authCodeListener.close();
+
       // Use Authorization Code and PKCE Code verifier to make token request
       const authResult = await this.clientApplication.acquireTokenByCode({
         ...this.authCodeRequest,
-        code: authCode,
+        code: authCode as string,
         codeVerifier: verifier,
       });
 
       popupWindow.close();
       return authResult;
     } catch (error) {
+      authCodeListener.close();
       popupWindow.close();
       throw error;
     }
-  }
-
-  async listenForAuthCode(navigateUrl: string, authWindow: BrowserWindow) {
-    // Set up custom file protocol to listen for redirect response
-    const authCodeListener = new CustomProtocolListener(
-      this.customFileProtocolName
-    );
-    const codePromise = authCodeListener.start();
-    authWindow.loadURL(navigateUrl);
-    const code = await codePromise;
-    authCodeListener.close();
-    return code as string;
   }
 
   /**

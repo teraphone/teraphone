@@ -6,9 +6,9 @@ import {
   Alert,
   Box,
   Button,
+  CircularProgress,
   Container,
   CssBaseline,
-  Typography,
 } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
@@ -21,6 +21,7 @@ import {
 import { signIn } from '../redux/Firebase';
 import { setTenantUser, setUserLicense } from '../redux/AppUserSlice';
 import { TenantUser, UserLicense } from '../models/models';
+import LoginFooter from './LoginFooter';
 
 type LoginResponse = {
   success: boolean;
@@ -99,14 +100,25 @@ const Loading = () => {
   }, [handleLogin, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
       <CssBaseline />
       <Box
         sx={{
-          paddingTop: 8,
+          alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          height: '100%',
+          justifyContent: 'center',
         }}
       >
         {loginError ? (
@@ -122,9 +134,10 @@ const Loading = () => {
             </Button>
           </>
         ) : (
-          <Typography variant="h4">Please wait...</Typography>
+          <CircularProgress />
         )}
       </Box>
+      <LoginFooter />
     </Container>
   );
 };

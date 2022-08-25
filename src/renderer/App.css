@@ -1,20 +1,13 @@
-/*
- * @NOTE: Prepend a `~` to css file paths that are in your node_modules
- *        See https://github.com/webpack-contrib/sass-loader#imports
- */
+@import "@fontsource/inter/variable.css";
 
- * {
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-
- }
-
- body {
-  min-height: 100vh;
-  margin: 0 auto;
 }
 
-.MuiListItemIcon-root {
-  min-width: 32px !important;
+html,
+body,
+body > #root {
+  height: 100%;
 }

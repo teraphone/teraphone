@@ -118,20 +118,17 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    show: false,
-    width: 600,
-    minWidth: 600,
-    maxWidth: 600,
-    height: 600,
-    minHeight: 600,
-    resizable: true,
-    maximizable: false,
-    fullscreen: false,
-    fullscreenable: false,
     acceptFirstMouse: true,
-    title: 'T E R A P H O N E',
+    autoHideMenuBar: true,
+    height: 550,
     icon: getAssetPath('icon.png'),
+    minHeight: 300,
+    minWidth: 450,
+    resizable: true,
+    show: false,
+    title: 'T E R A P H O N E',
     useContentSize: true,
+    width: 550,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -194,7 +191,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    globalShortcut.register('CommandOrControl+`', () => {
+    globalShortcut.register('CommandOrControl+Shift+M', () => {
       console.log('Global shortcut pressed!!!');
     });
   })

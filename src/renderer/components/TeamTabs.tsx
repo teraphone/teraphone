@@ -2,13 +2,16 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Stack from '@mui/material/Stack';
+import {
+  Tabs,
+  Tab,
+  Typography,
+  Box,
+  Avatar,
+  Tooltip,
+  Stack,
+  useTheme,
+} from '@mui/material';
 import * as models from '../models/models';
 import TeamTabPanel from './TeamTabPanel';
 import { useAppSelector } from '../redux/hooks';
@@ -24,9 +27,9 @@ function a11yProps(index: number) {
 
 function TeamTabs() {
   const [value, setValue] = React.useState(0);
-
   const teamsInfo = useAppSelector(selectTeams);
   const teamAvatars = useAppSelector(selectTeamAvatars);
+  const theme = useTheme();
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     if (newValue < teamsInfo.length) {
@@ -42,6 +45,7 @@ function TeamTabs() {
         <Tab
           icon={<Avatar src={teamAvatars[id]}>{displayName[0]}</Avatar>}
           key={id}
+          sx={{ minWidth: 0 }}
           {...a11yProps(index)}
         />
       </Tooltip>
@@ -57,25 +61,30 @@ function TeamTabs() {
 
   return (
     <>
-      <Stack sx={{ width: 90 }}>
+      <Stack sx={{ flexShrink: 0, overflow: 'hidden', width: 78 }}>
         <Box
           sx={{
-            // center the text vertically and horizontally
+            backgroundColor: theme.custom.palette.background.secondary,
+            borderBottomColor: 'divider',
+            borderBottomStyle: 'solid',
+            borderBottomWidth: 1,
+            borderColor: 'divider',
+            borderRightStyle: 'solid',
+            borderRightWidth: 1,
+            boxShadow: theme.custom.shadows.header,
             display: 'flex',
             flexDirection: 'column',
+            flexShrink: 0,
+            height: theme.custom.spacing.header.height,
             justifyContent: 'center',
-            alignItems: 'center',
-            height: 48,
-            backgroundColor: 'background.paper',
-            borderRight: 1,
-            borderColor: 'divider',
+            px: 2,
+            py: 1,
+            zIndex: 1,
           }}
         >
           <Typography
+            sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500 }}
             variant="body2"
-            sx={{
-              color: 'text.secondary',
-            }}
           >
             Teams
           </Typography>
@@ -88,12 +97,13 @@ function TeamTabs() {
           onChange={handleChange}
           aria-label="group-tabs"
           sx={{
-            height: '100%',
+            backgroundColor: theme.palette.grey[200],
             borderRight: 1,
             borderColor: 'divider',
             '.MuiTabs-indicator': {
               left: 0,
             },
+            flexGrow: 1,
           }}
         >
           {tabs}

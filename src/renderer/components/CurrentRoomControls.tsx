@@ -4,7 +4,6 @@ import {
   Box,
   IconButton,
   Tooltip,
-  List,
   ListItem,
   ListItemText,
   ListItemIcon,
@@ -35,18 +34,18 @@ const ShareCameraButton = (props: {
 }) => {
   const { /* status, */ onClick } = props;
   return (
-    <Tooltip title="Share Camera" placement="top" arrow>
+    <Tooltip title="Share Camera" placement="top" arrow sx={{ flexGrow: 1 }}>
       <span>
         <Button
-          size="small"
-          fullWidth
-          // disabled={status !== ConnectionStatus.Connected}
           disabled
-          variant="contained"
-          startIcon={<VideoCameraFrontIcon />}
+          // disabled={status !== ConnectionStatus.Connected}
           disableElevation
+          fullWidth
           onClick={onClick}
-          sx={{ px: 4, backgroundColor: 'black' }}
+          size="small"
+          startIcon={<VideoCameraFrontIcon />}
+          sx={{ backgroundColor: 'black', minWidth: 'unset' }}
+          variant="contained"
         >
           Camera
         </Button>
@@ -64,13 +63,14 @@ const ShareScreenButton = (props: {
     <Tooltip title="Share Screens" placement="top" arrow>
       <span>
         <Button
-          size="small"
-          variant="contained"
-          startIcon={<ScreenShareIcon />}
-          disableElevation
-          onClick={onClick}
-          sx={{ px: 4, backgroundColor: 'black' }}
           disabled={status !== ConnectionStatus.Connected}
+          disableElevation
+          fullWidth
+          onClick={onClick}
+          size="small"
+          startIcon={<ScreenShareIcon />}
+          sx={{ backgroundColor: 'black' }}
+          variant="contained"
         >
           Screens
         </Button>
@@ -184,80 +184,61 @@ function CurentRoomControls() {
 
   const secondaryStatusText = `${currentRoom.teamName} / ${currentRoom.roomName}`;
 
-  return (
-    <>
-      {connectionStatus !== ConnectionStatus.Disconnected && (
-        <Box
+  return connectionStatus === ConnectionStatus.Disconnected ? null : (
+    <Stack sx={{ backgroundColor: '#f8f8f8' }}>
+      <ListItem
+        disableGutters
+        disablePadding
+        sx={{
+          py: '2px',
+        }}
+        secondaryAction={
+          <>
+            {debug && (
+              <InfoButton status={connectionStatus} onClick={handleInfoClick} />
+            )}
+            <DisconnectButton
+              status={connectionStatus}
+              onClick={handleDisconnectClick}
+            />
+          </>
+        }
+      >
+        <ListItemIcon
           sx={{
-            m: '2px',
-            backgroundColor: '#f8f8f8',
+            textAlign: 'center',
+            justifyContent: 'center',
           }}
         >
-          <List
-            dense
-            sx={{
-              boxSizing: 'border-box',
-              p: 0,
-            }}
-          >
-            <ListItem
-              disableGutters
-              disablePadding
-              sx={{
-                py: '2px',
-              }}
-              secondaryAction={
-                <>
-                  {debug && (
-                    <InfoButton
-                      status={connectionStatus}
-                      onClick={handleInfoClick}
-                    />
-                  )}
-                  <DisconnectButton
-                    status={connectionStatus}
-                    onClick={handleDisconnectClick}
-                  />
-                </>
-              }
-            >
-              <ListItemIcon
-                sx={{
-                  textAlign: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={primaryStatusText}
-                primaryTypographyProps={{
-                  variant: 'body1',
-                  sx: {
-                    color: statusColor,
-                  },
-                }}
-                secondary={secondaryStatusText}
-              />
-            </ListItem>
-            <ListItem
-              sx={{ px: 0, textAlign: 'center', justifyContent: 'center' }}
-            >
-              <Stack direction="row" spacing={1}>
-                <ShareCameraButton
-                  // status={connectionStatus}
-                  onClick={handleShareCameraClick}
-                />
-                <ShareScreenButton
-                  status={connectionStatus}
-                  onClick={handleShareScreenClick}
-                />
-              </Stack>
-            </ListItem>
-          </List>
-        </Box>
-      )}
-    </>
+          {icon}
+        </ListItemIcon>
+        <ListItemText
+          primary={primaryStatusText}
+          primaryTypographyProps={{
+            variant: 'body2',
+            sx: { color: statusColor },
+          }}
+          secondary={secondaryStatusText}
+          secondaryTypographyProps={{ variant: 'body2' }}
+        />
+      </ListItem>
+      <ListItem sx={{ p: 1, textAlign: 'center', justifyContent: 'center' }}>
+        <Stack direction="row" gap={1} width="100%">
+          <Box sx={{ flexGrow: 1 }}>
+            <ShareCameraButton
+              // status={connectionStatus}
+              onClick={handleShareCameraClick}
+            />
+          </Box>
+          <Box sx={{ flexGrow: 1 }}>
+            <ShareScreenButton
+              status={connectionStatus}
+              onClick={handleShareScreenClick}
+            />
+          </Box>
+        </Stack>
+      </ListItem>
+    </Stack>
   );
 }
 

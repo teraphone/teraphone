@@ -23,44 +23,48 @@ function TeamTabPanel(props: TeamTabPanelProps) {
     return () => console.log('TeamTabPanel', index, 'Unmounted');
   }, [index]);
 
-  return (
-    <div
-      role="tabpanel"
+  return value !== index ? null : (
+    <Box
+      aria-labelledby={`vertical-tab-${index}`}
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
+      role="tabpanel"
+      sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexGrow: 1,
+        flexShrink: 1,
+        minWidth: 0,
+      }}
     >
-      {value === index && (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          flexGrow: 1,
+          flexShrink: 1,
+          minWidth: 200,
+          overflow: 'hidden',
+        }}
+      >
+        <TeamMenu teamInfo={teamInfo} />
+        <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
+          <TeamRooms teamInfo={teamInfo} />
+        </Box>
         <Box
           sx={{
+            backgroundColor: 'background.paper',
             display: 'flex',
-            flexDirection: 'row',
+            flexDirection: 'column',
           }}
         >
-          <Box sx={{ width: 310 }}>
-            <Box>
-              <TeamMenu teamInfo={teamInfo} />
-            </Box>
-            <Box>
-              <TeamRooms teamInfo={teamInfo} />
-            </Box>
-            <Box
-              sx={{
-                position: 'fixed',
-                bottom: '0',
-                width: '310px',
-                backgroundColor: 'background.paper',
-              }}
-            >
-              <ScreenShareBanners />
-              <CurrentRoomControls />
-              <BottomControls />
-            </Box>
-          </Box>
-          <TeamContacts teamInfo={teamInfo} />
+          <ScreenShareBanners />
+          <CurrentRoomControls />
+          <BottomControls />
         </Box>
-      )}
-    </div>
+      </Box>
+      <TeamContacts teamInfo={teamInfo} />
+    </Box>
   );
 }
 

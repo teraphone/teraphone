@@ -42,7 +42,6 @@ function ScreenShareBanner(props: {
       sx={{
         py: '2px',
         pr: '40px',
-        my: '2px',
         backgroundColor: '#f8f8f8',
       }}
       secondaryAction={
@@ -69,18 +68,10 @@ function ScreenShareBanner(props: {
         </Box>
       }
     >
-      <ListItemAvatar
-        sx={{
-          px: '4px',
-          minWidth: avatarDim,
-        }}
-      >
+      <ListItemAvatar sx={{ minWidth: 0, margin: '4px' }}>
         {isValidIcon ? (
           <Avatar
-            sx={{
-              height: avatarDim,
-              width: avatarDim,
-            }}
+            sx={{ height: avatarDim, width: avatarDim }}
             variant="square"
             src={appIconDataURL as string}
           />
@@ -124,14 +115,7 @@ function ScreenShareBanners() {
   ));
 
   return (
-    <List
-      dense
-      sx={{
-        boxSizing: 'border-box',
-        mx: '2px',
-        py: 0,
-      }}
-    >
+    <List dense sx={{ boxSizing: 'border-box', py: 0 }}>
       {screenBanners}
       {windowBanners}
     </List>

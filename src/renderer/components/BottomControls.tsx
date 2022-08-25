@@ -9,14 +9,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 import Tooltip from '@mui/material/Tooltip';
 import * as React from 'react';
-import {
-  Avatar,
-  Box,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import { Avatar, Box, Typography, useTheme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   selectMute,
@@ -137,6 +130,7 @@ const InfoButton = (props: { onClick: () => void }) => {
 };
 
 function BottomControls() {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const mute = useAppSelector(selectMute);
   const deafen = useAppSelector(selectDeafen);
@@ -175,53 +169,40 @@ function BottomControls() {
   return (
     <Box
       sx={{
-        m: '2px',
+        alignItems: 'center',
         backgroundColor: '#f8f8f8',
+        borderColor: 'divider',
+        borderTopStyle: 'solid',
+        borderTopWidth: 1,
+        boxShadow: theme.custom.shadows.footer,
+        display: 'flex',
+        flexDirection: 'row',
       }}
     >
-      <List
-        dense
+      <Avatar
+        src={userAvatars[tenantUser.oid]}
+        sx={{ width: 20, height: 20, fontSize: 14, m: 1, flexShrink: 0 }}
+      >
+        {tenantUser.name[0]}
+      </Avatar>
+      <Typography
+        variant="body2"
         sx={{
-          boxSizing: 'border-box',
-          p: 0,
+          flexGrow: 1,
+          flexShrink: 1,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
         }}
       >
-        <ListItem
-          disableGutters
-          disablePadding
-          sx={{
-            py: '2px',
-          }}
-          secondaryAction={
-            <>
-              <MuteButton mute={mute} onClick={handleMuteClick} />
-              <DeafenButton deafen={deafen} onClick={handleDeafenClick} />
-              <MenuButton onClick={handleMenuClick} />
-              {debug && <InfoButton onClick={handleInfoClick} />}
-            </>
-          }
-        >
-          <ListItemIcon
-            sx={{
-              textAlign: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Avatar
-              src={userAvatars[tenantUser.oid]}
-              sx={{ width: 20, height: 20, fontSize: 14 }}
-            >
-              {tenantUser.name[0]}
-            </Avatar>
-          </ListItemIcon>
-          <ListItemText
-            primary={tenantUser.name}
-            primaryTypographyProps={{
-              variant: 'body2',
-            }}
-          />
-        </ListItem>
-      </List>
+        {tenantUser.name}
+      </Typography>
+      <Box sx={{ display: 'flex', flexShrink: 0 }}>
+        <MuteButton mute={mute} onClick={handleMuteClick} />
+        <DeafenButton deafen={deafen} onClick={handleDeafenClick} />
+        <MenuButton onClick={handleMenuClick} />
+        {debug && <InfoButton onClick={handleInfoClick} />}
+      </Box>
     </Box>
   );
 }

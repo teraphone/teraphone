@@ -1,12 +1,21 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Alert, Box, Container, CssBaseline, Typography } from '@mui/material';
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Container,
+  CssBaseline,
+  Typography,
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectAuth } from '../redux/AuthSlice';
 import { selectUserLicense, setUserLicense } from '../redux/AppUserSlice';
 import { LicenseStatus, UserLicense } from '../models/models';
+import LoginFooter from './LoginFooter';
+import teraphoneLogo from '../../../assets/images/teraphone-logo-and-name-vertical.svg';
 
 type UpdateLicenseResponse = {
   success: boolean;
@@ -23,7 +32,6 @@ const LicenseCheck = () => {
   const isTrialExpired = Date.now() > Date.parse(userLicense.trialExpiresAt);
   const [canStartTrial, setCanStartTrial] = React.useState(false);
   const [pending, setPending] = React.useState(false);
-  const [submitError, setSubmitError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
   React.useEffect(() => {
@@ -65,53 +73,74 @@ const LicenseCheck = () => {
         dispatch(setUserLicense(data.license));
       } else {
         setPending(false);
-        setSubmitError(true);
         setErrorMessage('Request failed: could not start trial.');
       }
     } catch (error) {
       console.log(error);
       setPending(false);
-      setSubmitError(true);
       setErrorMessage('Request failed: could not start trial.');
     }
   }, [auth.accessToken, dispatch]);
 
-  const SubmitError = () => {
-    if (submitError) {
-      return (
-        <Box component={Alert} severity="error" sx={{ width: '100%' }} mt={4}>
-          {errorMessage}
-        </Box>
-      );
-    }
-    return null;
-  };
-
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      sx={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        height: '100%',
+        justifyContent: 'center',
+      }}
+    >
       <CssBaseline />
       <Box
         sx={{
-          paddingTop: 8,
+          alignItems: 'center',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          height: '100%',
+          justifyContent: 'center',
         }}
       >
-        <Typography variant="h4">License Check...</Typography>
-        {canStartTrial && (
-          <LoadingButton
-            fullWidth
-            loading={pending}
-            sx={{ mt: 3, mb: 2 }}
-            type="submit"
-            variant="contained"
-            onClick={handleStartTrial}
-          >
-            Begin 30-Day Free Trial
-          </LoadingButton>
-        )}
-        <SubmitError />
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            gap: 6,
+            justifyContent: 'center',
+          }}
+        >
+          {canStartTrial ? (
+            <>
+              <Box
+                alt="Teraphone logo"
+                component="img"
+                src={teraphoneLogo}
+                sx={{ height: 112, width: 'auto' }}
+              />
+              <Typography sx={{ textAlign: 'center' }}>
+                Please enjoy a free trial with full access to Teraphone for 30
+                days.
+              </Typography>
+              <LoadingButton
+                loading={pending}
+                onClick={handleStartTrial}
+                type="submit"
+                variant="contained"
+              >
+                Begin free trial
+              </LoadingButton>
+              {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+            </>
+          ) : (
+            <CircularProgress />
+          )}
+        </Box>
+        <LoginFooter />
       </Box>
     </Container>
   );

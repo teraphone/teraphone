@@ -179,7 +179,7 @@
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
-    "@fontsource/roboto": "^4.5.3",
+    "@fontsource/inter": "^4.5.12",
     "@microsoft/microsoft-graph-client": "^3.0.2",
     "@mui/icons-material": "^5.10.2",
     "@mui/lab": "^5.0.0-alpha.96",

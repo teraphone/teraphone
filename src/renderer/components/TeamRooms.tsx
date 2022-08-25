@@ -27,7 +27,7 @@ function TeamRooms(props: { teamInfo: models.TeamInfo }) {
     );
   });
 
-  return <List disablePadding>{roomItems}</List>;
+  return <List>{roomItems}</List>;
 }
 
 export default React.memo(TeamRooms);

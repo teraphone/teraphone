@@ -1,12 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import Box from '@mui/material/Box';
-import Menu from '@mui/material/Menu';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Typography,
+  useTheme,
+} from '@mui/material';
 // import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import MenuItem from '@mui/material/MenuItem';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
@@ -20,12 +23,19 @@ import * as models from '../models/models';
 
 function TeamMenu(props: { teamInfo: models.TeamInfo }) {
   const { teamInfo } = props;
+  const theme = useTheme();
 
   return (
     <Box
       sx={{
+        backgroundColor: theme.custom.palette.background.secondary,
+        borderBottomColor: 'divider',
+        borderBottomStyle: 'solid',
+        borderBottomWidth: 1,
+        boxShadow: theme.custom.shadows.header,
+        height: theme.custom.spacing.header.height,
         width: '100%',
-        height: '100%',
+        zIndex: 1,
       }}
     >
       <List
@@ -37,7 +47,7 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
           {(popupState) => (
             <>
               <ListItem
-                divider
+                sx={{ height: '100%' }}
                 // button
                 // secondaryAction={
                 //   <KeyboardArrowDownIcon
@@ -52,10 +62,8 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
               >
                 <ListItemText disableTypography>
                   <Typography
+                    sx={{ color: 'text.secondary', fontWeight: 500 }}
                     variant="body2"
-                    sx={{
-                      color: 'text.secondary',
-                    }}
                   >
                     {teamInfo.team.displayName}
                   </Typography>

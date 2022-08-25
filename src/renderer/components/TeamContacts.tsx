@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import { Collapse } from '@mui/material';
+import { Collapse, useTheme } from '@mui/material';
 import * as models from '../models/models';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
@@ -20,6 +20,8 @@ export interface TeamContactsProps {
 }
 
 function GroupContacts(props: TeamContactsProps) {
+  const theme = useTheme();
+
   const { teamInfo } = props;
   const { users, team } = teamInfo;
   const { tenantUser } = useAppSelector(selectAppUser);
@@ -147,46 +149,68 @@ function GroupContacts(props: TeamContactsProps) {
   return (
     <Box
       sx={{
-        width: '200px',
-        borderLeft: 1,
         borderColor: 'divider',
-        height: '100vh',
+        borderLeftStyle: 'solid',
+        borderLeftWidth: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        width: '200px',
       }}
     >
       <Box
         sx={{
+          backgroundColor: theme.custom.palette.background.secondary,
+          borderBottomColor: 'divider',
+          borderBottomStyle: 'solid',
+          borderBottomWidth: 1,
+          boxShadow: theme.custom.shadows.header,
           display: 'flex',
           flexDirection: 'column',
+          flexShrink: 0,
+          height: theme.custom.spacing.header.height,
           justifyContent: 'center',
-          alignItems: 'center',
-          height: 48,
+          px: 2,
+          py: 1,
+          zIndex: 1,
         }}
       >
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography
+          sx={{ color: 'text.secondary', fontWeight: 500 }}
+          variant="body2"
+        >
           Team Contacts
         </Typography>
       </Box>
-      <List disablePadding>
-        <ListItemButton onClick={handleOnlineClick}>
-          <ListItemText primary="Online" />
-          {onlineOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={onlineOpen} timeout="auto" unmountOnExit>
-          <List disablePadding>
-            {/* {thisContact} */}
-            {onlineContacts}
-          </List>
-        </Collapse>
-      </List>
-      <List disablePadding>
-        <ListItemButton onClick={handleOfflineClick}>
-          <ListItemText primary="Offline" />
-          {offlineOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={offlineOpen} timeout="auto" unmountOnExit>
-          <List disablePadding>{offlineContacts}</List>
-        </Collapse>
-      </List>
+      <Box sx={{ overflowY: 'auto' }}>
+        <List disablePadding>
+          <ListItemButton onClick={handleOnlineClick}>
+            <ListItemText
+              primary="Online"
+              primaryTypographyProps={{ fontWeight: 500, variant: 'body2' }}
+            />
+            {onlineOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={onlineOpen} timeout="auto" unmountOnExit>
+            <List disablePadding>
+              {/* {thisContact} */}
+              {onlineContacts}
+            </List>
+          </Collapse>
+        </List>
+        <List disablePadding>
+          <ListItemButton onClick={handleOfflineClick}>
+            <ListItemText
+              primary="Offline"
+              primaryTypographyProps={{ fontWeight: 500, variant: 'body2' }}
+            />
+            {offlineOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={offlineOpen} timeout="auto" unmountOnExit>
+            <List disablePadding>{offlineContacts}</List>
+          </Collapse>
+        </List>
+      </Box>
     </Box>
   );
 }

@@ -32,6 +32,8 @@ function MSSignInLoadingButton({
         backgroundColor: '#fff',
         borderRadius: 0,
         boxShadow: !disableElevation ? theme.shadows[2] : theme.shadows[0],
+        fontFamily: 'Segoe UI, system-ui, sans-serif',
+        fontSize: '15px',
         px: 1.5,
         '&:hover': {
           backgroundColor: theme.palette.grey[50],

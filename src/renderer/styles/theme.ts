@@ -68,10 +68,9 @@ function buttonColorFromClassName(className: string) {
 export const muiTheme = createTheme({
   typography: {
     fontFamily: [
-      '"Segoe UI"',
+      'InterVariable',
       'system-ui',
       '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
       'sans-serif',
     ].join(','),
     // 16px browser default base font size

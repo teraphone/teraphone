@@ -175,14 +175,20 @@ function GroupContacts(props: TeamContactsProps) {
           zIndex: 1,
         }}
       >
-        <Typography sx={{ color: 'text.secondary' }} variant="body2">
+        <Typography
+          sx={{ color: 'text.secondary', fontWeight: 500 }}
+          variant="body2"
+        >
           Team Contacts
         </Typography>
       </Box>
       <Box sx={{ overflowY: 'auto' }}>
         <List disablePadding>
           <ListItemButton onClick={handleOnlineClick}>
-            <ListItemText primary="Online" />
+            <ListItemText
+              primary="Online"
+              primaryTypographyProps={{ fontWeight: 500, variant: 'body2' }}
+            />
             {onlineOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={onlineOpen} timeout="auto" unmountOnExit>
@@ -194,7 +200,10 @@ function GroupContacts(props: TeamContactsProps) {
         </List>
         <List disablePadding>
           <ListItemButton onClick={handleOfflineClick}>
-            <ListItemText primary="Offline" />
+            <ListItemText
+              primary="Offline"
+              primaryTypographyProps={{ fontWeight: 500, variant: 'body2' }}
+            />
             {offlineOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={offlineOpen} timeout="auto" unmountOnExit>

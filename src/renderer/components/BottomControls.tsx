@@ -174,10 +174,9 @@ function BottomControls() {
         borderColor: 'divider',
         borderTopStyle: 'solid',
         borderTopWidth: 1,
-        boxShadow: theme.custom.shadows.header,
+        boxShadow: theme.custom.shadows.footer,
         display: 'flex',
         flexDirection: 'row',
-        marginTop: 1,
       }}
     >
       <Avatar

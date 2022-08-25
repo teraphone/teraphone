@@ -58,7 +58,6 @@ function TeamTabPanel(props: TeamTabPanelProps) {
                 backgroundColor: 'background.paper',
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden',
               }}
             >
               <ScreenShareBanners />

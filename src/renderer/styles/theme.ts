@@ -19,6 +19,7 @@ declare module '@mui/material/styles' {
       };
       shadows: {
         header: string;
+        footer: string;
       };
     };
   }
@@ -36,6 +37,7 @@ declare module '@mui/material/styles' {
       };
       shadows?: {
         header?: string;
+        footer?: string;
       };
     };
   }
@@ -130,7 +132,8 @@ export const muiTheme = createTheme({
       },
     },
     shadows: {
-      header: '0 0 4px 1px rgb(0 0 0 / 10%)',
+      header: '0 0 3px 1px rgb(0 0 0 / 10%)',
+      footer: '0 1px 3px 1px rgb(0 0 0 / 10%)',
     },
   },
   components: {

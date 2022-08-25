@@ -45,6 +45,7 @@ function TeamTabs() {
         <Tab
           icon={<Avatar src={teamAvatars[id]}>{displayName[0]}</Avatar>}
           key={id}
+          sx={{ minWidth: 0 }}
           {...a11yProps(index)}
         />
       </Tooltip>
@@ -60,10 +61,9 @@ function TeamTabs() {
 
   return (
     <>
-      <Stack sx={{ overflow: 'hidden', width: 90 }}>
+      <Stack sx={{ flexShrink: 0, overflow: 'hidden', width: 78 }}>
         <Box
           sx={{
-            alignItems: 'center',
             backgroundColor: theme.custom.palette.background.secondary,
             borderBottomColor: 'divider',
             borderBottomStyle: 'solid',
@@ -77,12 +77,14 @@ function TeamTabs() {
             flexShrink: 0,
             height: theme.custom.spacing.header.height,
             justifyContent: 'center',
+            px: 2,
+            py: 1,
             zIndex: 1,
           }}
         >
           <Typography
+            sx={{ color: 'text.secondary', flexShrink: 0, fontWeight: 500 }}
             variant="body2"
-            sx={{ color: 'text.secondary', flexShrink: 0 }}
           >
             Teams
           </Typography>
@@ -95,6 +97,7 @@ function TeamTabs() {
           onChange={handleChange}
           aria-label="group-tabs"
           sx={{
+            backgroundColor: theme.palette.grey[200],
             borderRight: 1,
             borderColor: 'divider',
             '.MuiTabs-indicator': {

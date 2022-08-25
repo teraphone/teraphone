@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import type { AuthenticationResult } from '@azure/msal-node';
 import { Alert, Box, Container, CssBaseline } from '@mui/material';
 // import { signIn } from '../redux/Firebase';

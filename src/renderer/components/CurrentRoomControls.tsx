@@ -4,7 +4,6 @@ import {
   Box,
   IconButton,
   Tooltip,
-  List,
   ListItem,
   ListItemText,
   ListItemIcon,

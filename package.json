@@ -75,8 +75,10 @@
     ]
   },
   "jest": {
-    "testURL": "http://localhost/",
     "testEnvironment": "jsdom",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
     "transform": {
       "\\.(ts|tsx|js|jsx)$": "ts-jest"
     },

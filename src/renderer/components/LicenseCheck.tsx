@@ -12,30 +12,36 @@ import {
 import { LoadingButton } from '@mui/lab';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { selectAuth } from '../redux/AuthSlice';
-import { selectUserLicense, setUserLicense } from '../redux/AppUserSlice';
-import { LicenseStatus, UserLicense } from '../models/models';
+import {
+  selectSubscription,
+  selectTenantUser,
+  setTenantUser,
+} from '../redux/AppUserSlice';
+import { SubscriptionStatus, TenantUser } from '../models/models';
 import LoginFooter from './LoginFooter';
 import teraphoneLogo from '../../../assets/images/teraphone-logo-and-name-vertical.svg';
 
-type UpdateLicenseResponse = {
+type UpdateTrialResponse = {
   success: boolean;
-  license: UserLicense;
+  user: TenantUser;
 };
 
 const LicenseCheck = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { auth } = useAppSelector(selectAuth);
-  const userLicense = useAppSelector(selectUserLicense);
-  const isLicenseActive = userLicense.licenseStatus === LicenseStatus.active;
-  const isTrialActive = userLicense.trialActivated;
-  const isTrialExpired = Date.now() > Date.parse(userLicense.trialExpiresAt);
+  const tenantUser = useAppSelector(selectTenantUser);
+  const subscription = useAppSelector(selectSubscription);
+  const isSubscriptionActive =
+    subscription.saasSubscriptionStatus === SubscriptionStatus.Subscribed;
+  const isTrialActive = tenantUser.trialActivated;
+  const isTrialExpired = Date.now() > Date.parse(tenantUser.trialExpiresAt);
   const [canStartTrial, setCanStartTrial] = React.useState(false);
   const [pending, setPending] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
   React.useEffect(() => {
-    if (isLicenseActive) {
+    if (isSubscriptionActive) {
       console.log('license is active, redirecting to home');
       navigate('/home');
     }
@@ -51,7 +57,7 @@ const LicenseCheck = () => {
       console.log('trial is not active, start trial?');
       setCanStartTrial(true);
     }
-  }, [isLicenseActive, isTrialActive, isTrialExpired, navigate]);
+  }, [isSubscriptionActive, isTrialActive, isTrialExpired, navigate]);
 
   const handleStartTrial = React.useCallback(async () => {
     const params: RequestInit = {
@@ -64,13 +70,13 @@ const LicenseCheck = () => {
     setPending(true);
     try {
       const response = await window.fetch(
-        'https://api.teraphone.app/v1/private/license',
+        'https://api.teraphone.app/v1/private/trial',
         params
       );
       console.log('response', response);
       if (response.ok) {
-        const data: UpdateLicenseResponse = await response.json();
-        dispatch(setUserLicense(data.license));
+        const data: UpdateTrialResponse = await response.json();
+        dispatch(setTenantUser(data.user));
       } else {
         setPending(false);
         setErrorMessage('Request failed: could not start trial.');

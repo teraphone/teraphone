@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TenantUser, UserLicense } from '../models/models';
+import { TenantUser, Subscription } from '../models/models';
 import type { RootState } from './store';
 
 type AppUserState = {
   tenantUser: TenantUser;
-  userLicense: UserLicense;
+  subscription: Subscription;
 };
 
 const initialState: AppUserState = {
   tenantUser: {} as TenantUser,
-  userLicense: {} as UserLicense,
+  subscription: {} as Subscription,
 };
 
 export const appUserSlice = createSlice({
@@ -19,19 +19,19 @@ export const appUserSlice = createSlice({
     setTenantUser: (state, action: PayloadAction<TenantUser>) => {
       state.tenantUser = action.payload;
     },
-    setUserLicense: (state, action: PayloadAction<UserLicense>) => {
-      state.userLicense = action.payload;
+    setSubscription: (state, action: PayloadAction<Subscription>) => {
+      state.subscription = action.payload;
     },
   },
 });
 
-export const { setTenantUser, setUserLicense } = appUserSlice.actions;
+export const { setTenantUser, setSubscription } = appUserSlice.actions;
 
 export const selectAppUser = (state: RootState) => state.appUser;
 
 export const selectTenantUser = (state: RootState) => state.appUser.tenantUser;
 
-export const selectUserLicense = (state: RootState) =>
-  state.appUser.userLicense;
+export const selectSubscription = (state: RootState) =>
+  state.appUser.subscription;
 
 export default appUserSlice.reducer;

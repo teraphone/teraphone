@@ -4,16 +4,14 @@ import * as models from '../models/models';
 // World endpoint:
 // GetWorld                     GET     /v1/world
 
-// License endpoint:
-// UpdateLicense                PATCH    /v1/license
+// Trial endpoint:
+// UpdateTrial                  PATCH    /v1/trial
 
 // Rooms endpoints:
 // JoinLiveKitRoom              GET     /v1/roomservice/rooms/:group_id/:room_id/join
 
 export type GetWorldResponse = {
   teams: models.TeamInfo[];
-  user: models.TenantUser;
-  license: models.UserLicense;
 };
 
 export function GetWorld(client: AxiosInstance) {
@@ -21,13 +19,13 @@ export function GetWorld(client: AxiosInstance) {
   return client.get(url);
 }
 
-export type UpdateLicenseResponse = {
+export type UpdateTrialResponse = {
   success: boolean;
-  license: models.UserLicense;
+  user: models.TenantUser;
 };
 
-export function UpdateLicense(client: AxiosInstance) {
-  const url = '/v1/private/license';
+export function UpdateTrial(client: AxiosInstance) {
+  const url = '/v1/private/trial';
   return client.patch(url);
 }
 

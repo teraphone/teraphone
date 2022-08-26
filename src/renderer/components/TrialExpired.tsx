@@ -1,13 +1,11 @@
 /* eslint-disable no-console */
 import { Box, Container, CssBaseline, Typography } from '@mui/material';
 import { useAppSelector } from '../redux/hooks';
-import { selectUserLicense, selectTenantUser } from '../redux/AppUserSlice';
+import { selectTenantUser } from '../redux/AppUserSlice';
 
 const TrialExpired = () => {
-  const userLicense = useAppSelector(selectUserLicense);
   const tenantUser = useAppSelector(selectTenantUser);
   const infoFontSize = 12;
-  console.log('userLicense', userLicense);
   console.log('tenantUser', tenantUser);
 
   return (
@@ -25,7 +23,7 @@ const TrialExpired = () => {
         <br />
         <Typography variant="body1">
           Please contact your System Administrator and ask them to assign a
-          license to your account:
+          subscription seat to your account:
         </Typography>
         <br />
         <Box sx={{ width: '100%' }}>

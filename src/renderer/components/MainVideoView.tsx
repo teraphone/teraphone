@@ -2,8 +2,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Track } from 'livekit-client';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import { Box } from '@mui/material';
 import VideoItem from './VideoItem';
 import VideoItemPlaceholder from './VideoItemPlaceholder';
 import { ChildWindowContext } from './WindowPortal';
@@ -49,6 +48,7 @@ function MainVideoView(props: MainVideoViewProps) {
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
     setIsMounted(true);
+
     return () => {
       setIsMounted(false);
       console.log('MainVideoView Unmounted');
@@ -56,11 +56,9 @@ function MainVideoView(props: MainVideoViewProps) {
   }, []);
 
   React.useEffect(() => {
-    if (isMounted) {
-      if (focus !== '' && !videoItems[focus]) {
-        setIsFocusView(false);
-        setFocus('');
-      }
+    if (isMounted && focus !== '' && !videoItems[focus]) {
+      setIsFocusView(false);
+      setFocus('');
     }
   }, [focus, isMounted, videoItems]);
 
@@ -97,104 +95,62 @@ function MainVideoView(props: MainVideoViewProps) {
     return () => {};
   }, [escKeydownHandler, isMounted, thisWindow]);
 
-  const gridBoxStyle: React.CSSProperties = {
-    background: 'black',
-    height: '400px',
-    width: '500px',
-    minWidth: '400px',
-    position: 'relative',
-  };
-
-  const gridBoxFocusStyle: React.CSSProperties = {
-    background: 'black',
-    boxSizing: 'border-box',
-    maxHeight: '100%',
-    maxWidth: '100%',
-    padding: '0px',
-    position: 'relative',
-  };
-
-  const gridItemFocusStyle: React.CSSProperties = {
-    padding: '0px',
-  };
-
-  const gridStyle: React.CSSProperties = {
-    justifyContent: 'center',
-    position: 'relative',
-  };
-
-  const gridFocusStyle: React.CSSProperties = {
-    justifyContent: 'center',
-    backgroundColor: 'black',
-    height: '100%',
-    width: '100%',
-    margin: '0px',
-    position: 'relative',
-  };
-
   const focusVideoItem = videoItems[focus];
-  let focusUserName = teamInfo?.users.find(
-    (u) => u.oid === focusVideoItem?.userId
-  )?.name;
-  if (!focusUserName) {
-    focusUserName = 'Unknown';
-  }
+  const focusUserName =
+    teamInfo?.users.find((u) => u.oid === focusVideoItem?.userId)?.name ??
+    'Unknown';
 
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userId, isPopout, isLocal, videoTrack } = videoItem;
-    let userName = teamInfo?.users.find((u) => u.oid === userId)?.name;
-    if (!userName) {
-      userName = 'Unknown';
-    }
-    if (videoTrack) {
-      const isFocusItem = focus === sid;
-      const sourceType = videoTrack.source;
-      const isScreen = sourceType === Track.Source.ScreenShare;
-      const sourceNameLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
-      const sourceNameRemote = `${userName}'s ${
-        isScreen ? 'Screen' : 'Camera'
-      }`;
-      const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
-      const placeholderMessage = `${sourceName} is playing in a popout window`;
-      return (
-        <Grid
-          item
-          key={sid}
-          hidden={isFocusView && !isFocusItem}
-          style={isFocusItem ? gridItemFocusStyle : {}}
+    const userName =
+      teamInfo?.users.find((u) => u.oid === userId)?.name ?? 'Unknown';
+
+    if (!videoTrack) return null;
+
+    const isFocusItem = focus === sid;
+    const sourceType = videoTrack.source;
+    const isScreen = sourceType === Track.Source.ScreenShare;
+    const sourceNameLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
+    const sourceNameRemote = `${userName}'s ${isScreen ? 'Screen' : 'Camera'}`;
+    const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
+    const placeholderMessage = `${sourceName} is playing in a popout window`;
+
+    return (
+      <Box
+        key={sid}
+        hidden={isFocusView && !isFocusItem}
+        // style={isFocusItem ? gridItemFocusStyle : {}}
+      >
+        <Box
+          // style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
+          onClick={handleVideoClickEvent(sid)}
         >
-          <Box
-            style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
-            onClick={handleVideoClickEvent(sid)}
-          >
-            {videoItem.isPopout ? (
-              <VideoItemPlaceholder
-                message={placeholderMessage}
-                buttonText="Restore"
-                buttonAction={() => setIsPopout(sid, false)}
+          {videoItem.isPopout ? (
+            <VideoItemPlaceholder
+              message={placeholderMessage}
+              buttonText="Restore"
+              buttonAction={() => setIsPopout(sid, false)}
+            />
+          ) : (
+            <>
+              <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
+              <VideoOverlay
+                sid={sid}
+                isFocusItem={isFocusItem}
+                userName={userName}
+                isPopout={isPopout}
+                isLocal={isLocal}
+                sourceType={sourceType}
+                hidden={isFocusView}
+                setFocus={setFocus}
+                setIsFocusView={setIsFocusView}
+                setIsPopout={setIsPopout}
               />
-            ) : (
-              <>
-                <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-                <VideoOverlay
-                  sid={sid}
-                  isFocusItem={isFocusItem}
-                  userName={userName}
-                  isPopout={isPopout}
-                  isLocal={isLocal}
-                  sourceType={sourceType}
-                  hidden={isFocusView}
-                  setFocus={setFocus}
-                  setIsFocusView={setIsFocusView}
-                  setIsPopout={setIsPopout}
-                />
-              </>
-            )}
-          </Box>
-        </Grid>
-      );
-    }
-    return null;
+            </>
+          )}
+        </Box>
+      </Box>
+    );
   });
 
   const isEmpty = Object.keys(videoItems).length === 0;
@@ -214,10 +170,8 @@ function MainVideoView(props: MainVideoViewProps) {
   }
 
   return (
-    <Grid
-      container
-      spacing={1}
-      style={isFocusView ? gridFocusStyle : gridStyle}
+    <Box
+      // style={isFocusView ? gridFocusStyle : gridStyle}
       onMouseEnter={isFocusView ? onOverlayMouseEnter : () => {}}
       onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
@@ -235,7 +189,7 @@ function MainVideoView(props: MainVideoViewProps) {
         setIsPopout={setIsPopout}
       />
       {gridItems}
-    </Grid>
+    </Box>
   );
 }
 

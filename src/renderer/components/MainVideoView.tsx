@@ -122,9 +122,10 @@ function MainVideoView(props: MainVideoViewProps) {
         className="main-video-view-grid-item"
         sx={{
           borderRadius: '4px',
-          maxHeight: '100vh',
+          maxHeight: isFocusView ? '100vh' : 'calc(100vh - 16px)',
           overflow: 'hidden',
-          position: 'relative',
+          // For grid view, position controls relative to each video item
+          position: isFocusView ? 'static' : 'relative',
         }}
         key={sid}
         // style={isFocusItem ? gridItemFocusStyle : {}}
@@ -184,6 +185,7 @@ function MainVideoView(props: MainVideoViewProps) {
       sx={{
         alignItems: 'center',
         backgroundColor: 'black',
+        boxSizing: 'border-box',
         display: 'flex',
         height: '100%',
         justifyContent: 'center',

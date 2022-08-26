@@ -119,23 +119,24 @@ function VideoOverlay(props: VideoOverlayProps) {
       <Box // top overlay
         className="video-overlay-top"
         sx={{
-          boxSizing: 'border-box',
-          position: 'absolute',
-          top: 0,
-          zIndex: 1,
-          width: '100%',
-          height: '10%',
           background:
             'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
+          boxSizing: 'border-box',
+          height: '10%',
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          zIndex: 1,
         }}
       >
         <Box // top left
           sx={{
             boxSizing: 'border-box',
+            left: 0,
             padding: '5px',
             position: 'absolute',
             top: 0,
-            left: 0,
           }}
         >
           <Typography variant="body1" color="white">
@@ -146,8 +147,8 @@ function VideoOverlay(props: VideoOverlayProps) {
           sx={{
             boxSizing: 'border-box',
             position: 'absolute',
-            top: 0,
             right: 0,
+            top: 0,
           }}
         >
           {!isFocusItem ? (
@@ -161,21 +162,22 @@ function VideoOverlay(props: VideoOverlayProps) {
       <Box // bottom
         className="video-overlay-bottom"
         sx={{
-          boxSizing: 'border-box',
-          position: 'absolute',
-          bottom: 0,
-          zIndex: 1,
-          width: '100%',
-          height: '10%',
           background:
             'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
+          bottom: 0,
+          boxSizing: 'border-box',
+          height: '10%',
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          zIndex: 1,
         }}
       >
         <Box // bottom right
           sx={{
+            bottom: 0,
             boxSizing: 'border-box',
             position: 'absolute',
-            bottom: 0,
             right: 0,
           }}
         >

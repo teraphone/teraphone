@@ -64,7 +64,7 @@ const LicenseCheck = () => {
     setPending(true);
     try {
       const response = await window.fetch(
-        'https://api-dev.teraphone.app/v1/private/license',
+        'https://api.teraphone.app/v1/private/license',
         params
       );
       console.log('response', response);

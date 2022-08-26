@@ -120,7 +120,12 @@ function MainVideoView(props: MainVideoViewProps) {
     return (
       <Box
         className="main-video-view-grid-item"
-        sx={{ maxHeight: '100vh', position: 'relative' }}
+        sx={{
+          borderRadius: '4px',
+          maxHeight: '100vh',
+          overflow: 'hidden',
+          position: 'relative',
+        }}
         key={sid}
         // style={isFocusItem ? gridItemFocusStyle : {}}
       >
@@ -173,16 +178,16 @@ function MainVideoView(props: MainVideoViewProps) {
   return (
     <Box
       className="main-video-view"
-      // style={isFocusView ? gridFocusStyle : gridStyle}
       onMouseEnter={isFocusView ? onOverlayMouseEnter : () => {}}
       onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
+      sx={{ backgroundColor: 'black', height: '100%', p: isFocusView ? 0 : 1 }}
     >
       <Box
         className="main-video-view-grid"
         sx={{
           display: 'grid',
-          gridGap: 1,
+          gridGap: '8px',
           gridTemplateColumns:
             'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
         }}

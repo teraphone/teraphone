@@ -1,11 +1,17 @@
 /* eslint-disable no-console */
-import * as React from 'react';
+import {
+  createContext,
+  MutableRefObject,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import Portal from '@mui/material/Portal';
 
-export const ChildWindowContext = React.createContext<
-  React.MutableRefObject<Window | null>
+export const ChildWindowContext = createContext<
+  MutableRefObject<Window | null>
 >({ current: null });
 
 function WindowPortal(props: {
@@ -16,15 +22,18 @@ function WindowPortal(props: {
   children: JSX.Element;
   onClose: () => void;
 }) {
-  const [isMounted, setIsMounted] = React.useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { id, title, width, height, children, onClose } = props;
-  const containerRef = React.useRef(document.createElement('div'));
-  const windowRef = React.useRef<Window | null>(null);
-  const cacheRef = React.useRef(
+  const containerDiv = document.createElement('div');
+  containerDiv.setAttribute('class', 'window-portal');
+  containerDiv.setAttribute('style', 'height: 100%');
+  const containerRef = useRef(containerDiv);
+  const windowRef = useRef<Window | null>(null);
+  const cacheRef = useRef(
     createCache({ key: 'external', container: containerRef.current })
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log('WindowPortal Mounted', title);
     setIsMounted(true);
     return () => {
@@ -34,7 +43,7 @@ function WindowPortal(props: {
     };
   }, [title]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isMounted) {
       windowRef.current = window.open(
         'about:blank',

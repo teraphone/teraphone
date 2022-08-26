@@ -117,6 +117,7 @@ function VideoOverlay(props: VideoOverlayProps) {
   return (
     <>
       <Box // top overlay
+        className="video-overlay-top"
         sx={{
           boxSizing: 'border-box',
           position: 'absolute',
@@ -158,6 +159,7 @@ function VideoOverlay(props: VideoOverlayProps) {
       </Box>
 
       <Box // bottom
+        className="video-overlay-bottom"
         sx={{
           boxSizing: 'border-box',
           position: 'absolute',

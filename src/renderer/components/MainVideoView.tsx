@@ -119,6 +119,8 @@ function MainVideoView(props: MainVideoViewProps) {
 
     return (
       <Box
+        className="main-video-view-grid-item"
+        sx={{ position: 'relative' }}
         key={sid}
         // style={isFocusItem ? gridItemFocusStyle : {}}
       >
@@ -155,12 +157,11 @@ function MainVideoView(props: MainVideoViewProps) {
     );
   });
 
-  const isEmpty = Object.keys(videoItems).length === 0;
-
   const handleClose = React.useCallback(() => {
     dispatch(setWindowOpen(false));
   }, [dispatch]);
 
+  const isEmpty = Object.keys(videoItems).length === 0;
   if (isEmpty) {
     return (
       <VideoEmptyMessage
@@ -191,7 +192,17 @@ function MainVideoView(props: MainVideoViewProps) {
           setIsPopout={setIsPopout}
         />
       )}
-      {gridItems}
+      <Box
+        className="main-video-view-grid"
+        sx={{
+          display: 'grid',
+          gridGap: 1,
+          gridTemplateColumns:
+            'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
+        }}
+      >
+        {gridItems}
+      </Box>
     </Box>
   );
 }

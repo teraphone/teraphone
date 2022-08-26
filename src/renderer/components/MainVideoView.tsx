@@ -137,19 +137,17 @@ function MainVideoView(props: MainVideoViewProps) {
           ) : (
             <>
               <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-              {isFocusView ? null : (
-                <VideoOverlay
-                  sid={sid}
-                  isFocusItem={isFocusItem}
-                  userName={userName}
-                  isPopout={isPopout}
-                  isLocal={isLocal}
-                  sourceType={sourceType}
-                  setFocus={setFocus}
-                  setIsFocusView={setIsFocusView}
-                  setIsPopout={setIsPopout}
-                />
-              )}
+              <VideoOverlay
+                sid={sid}
+                isFocusItem={isFocusItem}
+                userName={userName}
+                isPopout={isPopout}
+                isLocal={isLocal}
+                sourceType={sourceType}
+                setFocus={setFocus}
+                setIsFocusView={setIsFocusView}
+                setIsPopout={setIsPopout}
+              />
             </>
           )}
         </Box>
@@ -174,24 +172,12 @@ function MainVideoView(props: MainVideoViewProps) {
 
   return (
     <Box
+      className="main-video-view"
       // style={isFocusView ? gridFocusStyle : gridStyle}
       onMouseEnter={isFocusView ? onOverlayMouseEnter : () => {}}
       onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
     >
-      {!isFocusView || hideOverlay ? null : (
-        <VideoOverlay // attach to grid container (if focus view)
-          sid={focus}
-          isFocusItem
-          userName={focusUserName}
-          isPopout={focusVideoItem?.isPopout}
-          isLocal={focusVideoItem?.isLocal}
-          sourceType={focusVideoItem?.videoTrack.source}
-          setFocus={setFocus}
-          setIsFocusView={setIsFocusView}
-          setIsPopout={setIsPopout}
-        />
-      )}
       <Box
         className="main-video-view-grid"
         sx={{

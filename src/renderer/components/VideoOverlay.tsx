@@ -115,7 +115,7 @@ function VideoOverlay(props: VideoOverlayProps) {
   }, [setIsPopout, sid]);
 
   return (
-    <>
+    <Box className="video-overlay">
       <Box // top overlay
         className="video-overlay-top"
         sx={{
@@ -184,7 +184,7 @@ function VideoOverlay(props: VideoOverlayProps) {
           )}
         </Box>
       </Box>
-    </>
+    </Box>
   );
 }
 

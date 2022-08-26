@@ -16,7 +16,6 @@ interface VideoOverlayProps {
   isPopout: boolean;
   isLocal: boolean;
   sourceType: Track.Source;
-  hidden: boolean;
   setFocus: (sid: string) => void;
   setIsFocusView: (isFocusView: boolean) => void;
   setIsPopout: (sid: string, isPopout: boolean) => void;
@@ -92,7 +91,6 @@ function VideoOverlay(props: VideoOverlayProps) {
     isPopout,
     isLocal,
     sourceType,
-    hidden,
     setFocus,
     setIsFocusView,
     setIsPopout,
@@ -119,7 +117,6 @@ function VideoOverlay(props: VideoOverlayProps) {
   return (
     <>
       <Box // top overlay
-        hidden={hidden}
         sx={{
           boxSizing: 'border-box',
           position: 'absolute',
@@ -161,7 +158,6 @@ function VideoOverlay(props: VideoOverlayProps) {
       </Box>
 
       <Box // bottom
-        hidden={hidden}
         sx={{
           boxSizing: 'border-box',
           position: 'absolute',

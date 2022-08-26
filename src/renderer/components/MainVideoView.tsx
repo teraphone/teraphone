@@ -115,10 +115,11 @@ function MainVideoView(props: MainVideoViewProps) {
     const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
     const placeholderMessage = `${sourceName} is playing in a popout window`;
 
+    if (isFocusView && !isFocusItem) return null;
+
     return (
       <Box
         key={sid}
-        hidden={isFocusView && !isFocusItem}
         // style={isFocusItem ? gridItemFocusStyle : {}}
       >
         <Box
@@ -134,18 +135,19 @@ function MainVideoView(props: MainVideoViewProps) {
           ) : (
             <>
               <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
-              <VideoOverlay
-                sid={sid}
-                isFocusItem={isFocusItem}
-                userName={userName}
-                isPopout={isPopout}
-                isLocal={isLocal}
-                sourceType={sourceType}
-                hidden={isFocusView}
-                setFocus={setFocus}
-                setIsFocusView={setIsFocusView}
-                setIsPopout={setIsPopout}
-              />
+              {isFocusView ? null : (
+                <VideoOverlay
+                  sid={sid}
+                  isFocusItem={isFocusItem}
+                  userName={userName}
+                  isPopout={isPopout}
+                  isLocal={isLocal}
+                  sourceType={sourceType}
+                  setFocus={setFocus}
+                  setIsFocusView={setIsFocusView}
+                  setIsPopout={setIsPopout}
+                />
+              )}
             </>
           )}
         </Box>
@@ -176,18 +178,19 @@ function MainVideoView(props: MainVideoViewProps) {
       onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
     >
-      <VideoOverlay // attach to grid container (if focus view)
-        sid={focus}
-        isFocusItem
-        userName={focusUserName}
-        isPopout={focusVideoItem?.isPopout}
-        isLocal={focusVideoItem?.isLocal}
-        sourceType={focusVideoItem?.videoTrack.source}
-        hidden={!isFocusView || hideOverlay}
-        setFocus={setFocus}
-        setIsFocusView={setIsFocusView}
-        setIsPopout={setIsPopout}
-      />
+      {!isFocusView || hideOverlay ? null : (
+        <VideoOverlay // attach to grid container (if focus view)
+          sid={focus}
+          isFocusItem
+          userName={focusUserName}
+          isPopout={focusVideoItem?.isPopout}
+          isLocal={focusVideoItem?.isLocal}
+          sourceType={focusVideoItem?.videoTrack.source}
+          setFocus={setFocus}
+          setIsFocusView={setIsFocusView}
+          setIsPopout={setIsPopout}
+        />
+      )}
       {gridItems}
     </Box>
   );

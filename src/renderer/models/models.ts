@@ -5,21 +5,53 @@ export type TenantUser = {
   tid: string;
   createdAt: string;
   updatedAt: string;
-};
-
-export type UserLicense = {
-  oid: string;
-  tid: string;
-  licenseExpiresAt: string;
-  licenseStatus: number;
-  licensePlan: number;
-  licenseAutoRenew: boolean;
-  licenseRequested: boolean;
-  licenseRequestedAt: string;
+  subscriptionId: string;
   trialActivated: boolean;
   trialExpiresAt: string;
-  createdAt: string;
-  updatedAt: string;
+};
+
+export type Subscription = {
+  autoRenew: boolean;
+  beneficiaryEmail: string;
+  beneficiaryOid: string;
+  beneficiaryTid: string;
+  beneficiaryPuid: string;
+  created: string;
+  id: string;
+  isTest: boolean;
+  name: string;
+  offerId: string;
+  planId: string;
+  purchaserEmail: string;
+  purchaserOid: string;
+  purchaserTid: string;
+  purchaserPuid: string;
+  quantity: number;
+  saasSubscriptionStatus: string;
+  sandboxType: string;
+  sessionId: string;
+  sessionMode: string;
+  storeFront: string;
+  subscriptionTermStartDate: string;
+  subscriptionTermEndDate: string;
+};
+
+export const SubscriptionStatus = {
+  NotStarted: 'NotStarted',
+  PendingFulfillmentStart: 'PendingFulfillmentStart',
+  Subscribed: 'Subscribed',
+  Suspended: 'Suspended',
+  Unsubscribed: 'Unsubscribed',
+};
+
+export const SandboxType = {
+  None: 'None',
+  Csp: 'Csp',
+};
+
+export const SessionMode = {
+  None: 'None',
+  DryRun: 'DryRun',
 };
 
 export type TenantTeam = {

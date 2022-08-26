@@ -120,7 +120,7 @@ function MainVideoView(props: MainVideoViewProps) {
     return (
       <Box
         className="main-video-view-grid-item"
-        sx={{ position: 'relative' }}
+        sx={{ maxHeight: '100vh', position: 'relative' }}
         key={sid}
         // style={isFocusItem ? gridItemFocusStyle : {}}
       >

@@ -30,7 +30,7 @@ import {
 } from '../redux/SettingsSlice';
 import useRoom from '../hooks/useRoom';
 import { signedOut } from '../redux/ArtySlice';
-import { selectAppUser, selectUserLicense } from '../redux/AppUserSlice';
+import { selectAppUser } from '../redux/AppUserSlice';
 import { selectUserAvatars } from '../redux/AvatarSlice';
 
 function SettingsMenuTabPanel(props: {
@@ -235,51 +235,78 @@ function DevicesPanel() {
 }
 
 function LicensePanel() {
-  const userLicense = useAppSelector(selectUserLicense);
-  const licensePlanMap: { [code: number]: string } = {
-    0: 'Standard',
-    1: 'Professional',
-    2: 'unknown',
-  };
-  const licenseStatusMap: { [code: number]: string } = {
-    0: 'Inactive',
-    1: 'Suspended',
-    2: 'Pending',
-    3: 'Active',
-    4: 'unknown',
-  };
+  const { tenantUser: user, subscription } = useAppSelector(selectAppUser);
+  const hasSubscription = user.subscriptionId !== '';
 
   return (
     <>
-      <Typography variant="h5">Your License</Typography>
+      <Typography variant="h5">User</Typography>
       <br />
-      <Typography variant="h6">User ID</Typography>
-      <Typography variant="body1">{userLicense.oid}</Typography>
+      <Typography variant="h6">Email</Typography>
+      <Typography variant="body1">{user.email}</Typography>
       <br />
       <Typography variant="h6">Tenant ID</Typography>
-      <Typography variant="body1">{userLicense.tid}</Typography>
+      <Typography variant="body1">{user.tid}</Typography>
       <br />
-      <Typography variant="h6">License Plan</Typography>
-      <Typography variant="body1">
-        {licensePlanMap[userLicense.licensePlan]}
-      </Typography>
+      <Typography variant="h6">User ID</Typography>
+      <Typography variant="body1">{user.oid}</Typography>
       <br />
-      <Typography variant="h6">License Status</Typography>
-      <Typography variant="body1">
-        {licenseStatusMap[userLicense.licenseStatus]}
-      </Typography>
-      <br />
-      <Typography variant="h6">License Expiration</Typography>
-      <Typography variant="body1">{userLicense.licenseExpiresAt}</Typography>
+      <Typography variant="h5">Trial</Typography>
       <br />
       <Typography variant="h6">Trial Activated</Typography>
       <Typography variant="body1">
-        {userLicense.trialActivated ? 'True' : 'False'}
+        {user.trialActivated ? 'True' : 'False'}
       </Typography>
       <br />
       <Typography variant="h6">Trial Expiration</Typography>
-      <Typography variant="body1">{userLicense.trialExpiresAt}</Typography>
+      <Typography variant="body1">{user.trialExpiresAt}</Typography>
       <br />
+      {hasSubscription && (
+        <>
+          <Typography variant="h5">Subscription</Typography>
+          <br />
+          <Typography variant="h6">Auto Renew</Typography>
+          <Typography variant="body1">{subscription.autoRenew}</Typography>
+          <br />
+          <Typography variant="h6">Beneficiary Email</Typography>
+          <Typography variant="body1">
+            {subscription.beneficiaryEmail}
+          </Typography>
+          <br />
+          <Typography variant="h6">ID</Typography>
+          <Typography variant="body1">{subscription.id}</Typography>
+          <br />
+          <Typography variant="h6">Name</Typography>
+          <Typography variant="body1">{subscription.name}</Typography>
+          <br />
+          <Typography variant="h6">Offer ID</Typography>
+          <Typography variant="body1">{subscription.offerId}</Typography>
+          <br />
+          <Typography variant="h6">Plan Id</Typography>
+          <Typography variant="body1">{subscription.planId}</Typography>
+          <br />
+          <Typography variant="h6">Purchaser Email</Typography>
+          <Typography variant="body1">{subscription.purchaserEmail}</Typography>
+          <br />
+          <Typography variant="h6">Quantity</Typography>
+          <Typography variant="body1">{subscription.quantity}</Typography>
+          <br />
+          <Typography variant="h6">Subscription Status</Typography>
+          <Typography variant="body1">
+            {subscription.saasSubscriptionStatus}
+          </Typography>
+          <br />
+          <Typography variant="h6">Subscription Term Start Date</Typography>
+          <Typography variant="body1">
+            {subscription.subscriptionTermStartDate}
+          </Typography>
+          <br />
+          <Typography variant="h6">Subscription Term End Date</Typography>
+          <Typography variant="body1">
+            {subscription.subscriptionTermEndDate}
+          </Typography>
+        </>
+      )}
     </>
   );
 }

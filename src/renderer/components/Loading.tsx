@@ -19,8 +19,8 @@ import {
   setRefreshTokenExpiration,
 } from '../redux/AuthSlice';
 import { signIn } from '../redux/Firebase';
-import { setTenantUser, setUserLicense } from '../redux/AppUserSlice';
-import { TenantUser, UserLicense } from '../models/models';
+import { setTenantUser, setSubscription } from '../redux/AppUserSlice';
+import { TenantUser, Subscription } from '../models/models';
 import LoginFooter from './LoginFooter';
 
 type LoginResponse = {
@@ -31,7 +31,7 @@ type LoginResponse = {
   refreshTokenExpiration: number;
   firebaseAuthToken: string;
   user: TenantUser;
-  license: UserLicense;
+  subscription: Subscription;
 };
 
 const Loading = () => {
@@ -52,7 +52,7 @@ const Loading = () => {
     try {
       console.log('login with params', params);
       const response = await window.fetch(
-        'https://api-dev.teraphone.app/v1/public/login',
+        'https://api.teraphone.app/v1/public/login',
         params
       );
       if (response.ok) {
@@ -63,8 +63,7 @@ const Loading = () => {
         dispatch(setRefreshTokenExpiration(data.refreshTokenExpiration));
         await signIn(data.firebaseAuthToken);
         dispatch(setTenantUser(data.user));
-        dispatch(setUserLicense(data.license));
-        // todo: make sure we're not forgetting anything here. see SignIn.tsx
+        dispatch(setSubscription(data.subscription));
         success = true;
         console.log('login successful');
       } else {

@@ -181,7 +181,14 @@ function MainVideoView(props: MainVideoViewProps) {
       onMouseEnter={isFocusView ? onOverlayMouseEnter : () => {}}
       onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
-      sx={{ backgroundColor: 'black', height: '100%', p: isFocusView ? 0 : 1 }}
+      sx={{
+        alignItems: 'center',
+        backgroundColor: 'black',
+        display: 'flex',
+        height: '100%',
+        justifyContent: 'center',
+        p: isFocusView ? 0 : 1,
+      }}
     >
       <Box
         className="main-video-view-grid"

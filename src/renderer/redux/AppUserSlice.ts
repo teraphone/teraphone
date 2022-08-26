@@ -4,12 +4,12 @@ import type { RootState } from './store';
 
 type AppUserState = {
   tenantUser: TenantUser;
-  userSubscription: Subscription;
+  subscription: Subscription;
 };
 
 const initialState: AppUserState = {
   tenantUser: {} as TenantUser,
-  userSubscription: {} as Subscription,
+  subscription: {} as Subscription,
 };
 
 export const appUserSlice = createSlice({
@@ -19,19 +19,19 @@ export const appUserSlice = createSlice({
     setTenantUser: (state, action: PayloadAction<TenantUser>) => {
       state.tenantUser = action.payload;
     },
-    setUserSubscription: (state, action: PayloadAction<Subscription>) => {
-      state.userSubscription = action.payload;
+    setSubscription: (state, action: PayloadAction<Subscription>) => {
+      state.subscription = action.payload;
     },
   },
 });
 
-export const { setTenantUser, setUserSubscription } = appUserSlice.actions;
+export const { setTenantUser, setSubscription } = appUserSlice.actions;
 
 export const selectAppUser = (state: RootState) => state.appUser;
 
 export const selectTenantUser = (state: RootState) => state.appUser.tenantUser;
 
-export const selectUserSubscription = (state: RootState) =>
-  state.appUser.userSubscription;
+export const selectSubscription = (state: RootState) =>
+  state.appUser.subscription;
 
 export default appUserSlice.reducer;

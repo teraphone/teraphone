@@ -122,17 +122,21 @@ function MainVideoView(props: MainVideoViewProps) {
         className="main-video-view-grid-item"
         sx={{
           borderRadius: '4px',
-          maxHeight: isFocusView ? '100vh' : 'calc(100vh - 16px)',
+          maxHeight: isFocusView ? '100vh' : 'calc(90vh - 56px)',
           overflow: 'hidden',
           // For grid view, position controls relative to each video item
           position: isFocusView ? 'static' : 'relative',
         }}
         key={sid}
-        // style={isFocusItem ? gridItemFocusStyle : {}}
       >
         <Box
-          // style={isFocusItem ? gridBoxFocusStyle : gridBoxStyle}
           onClick={handleVideoClickEvent(sid)}
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'center',
+            maxHeight: 'inherit',
+          }}
         >
           {videoItem.isPopout ? (
             <VideoItemPlaceholder
@@ -183,22 +187,22 @@ function MainVideoView(props: MainVideoViewProps) {
       onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
       onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
       sx={{
-        alignItems: 'center',
         backgroundColor: 'black',
         boxSizing: 'border-box',
-        display: 'flex',
         height: '100%',
-        justifyContent: 'center',
-        p: isFocusView ? 0 : 1,
+        p: isFocusView ? 0 : 2,
+        overflowY: 'auto',
       }}
     >
       <Box
         className="main-video-view-grid"
         sx={{
           display: 'grid',
-          gridGap: '8px',
+          gridGap: '16px',
           gridTemplateColumns:
             'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
+          alignItems: 'center',
+          minHeight: '100%',
         }}
       >
         {gridItems}

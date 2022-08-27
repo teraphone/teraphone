@@ -24,7 +24,6 @@ function MainVideoView(props: MainVideoViewProps) {
   const [isMounted, setIsMounted] = React.useState(false);
   const { setIsPopout, videoItems } = props;
   const [focus, setFocus] = React.useState('');
-  const [isFocusView, setIsFocusView] = React.useState(false);
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
   const [
@@ -33,7 +32,7 @@ function MainVideoView(props: MainVideoViewProps) {
     onOverlayMouseLeave,
     onOverlayMouseMove,
   ] = useHideOnMouseStop({
-    delay: 3000,
+    delay: 2000,
     hideCursor: true,
     initialHide: false,
     showOnlyOnContainerHover: true,
@@ -57,7 +56,6 @@ function MainVideoView(props: MainVideoViewProps) {
 
   React.useEffect(() => {
     if (isMounted && focus !== '' && !videoItems[focus]) {
-      setIsFocusView(false);
       setFocus('');
     }
   }, [focus, isMounted, videoItems]);
@@ -68,7 +66,6 @@ function MainVideoView(props: MainVideoViewProps) {
         const target = event.target as HTMLVideoElement | HTMLElement;
         if (target.localName === 'video') {
           setFocus(sid);
-          setIsFocusView(true);
         }
       },
     []
@@ -76,7 +73,6 @@ function MainVideoView(props: MainVideoViewProps) {
 
   const escKeydownHandler = React.useCallback((event: KeyboardEvent) => {
     if (event.key === 'Escape') {
-      setIsFocusView(false);
       setFocus('');
     }
   }, []);
@@ -95,11 +91,6 @@ function MainVideoView(props: MainVideoViewProps) {
     return () => {};
   }, [escKeydownHandler, isMounted, thisWindow]);
 
-  const focusVideoItem = videoItems[focus];
-  const focusUserName =
-    teamInfo?.users.find((u) => u.oid === focusVideoItem?.userId)?.name ??
-    'Unknown';
-
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userId, isPopout, isLocal, videoTrack } = videoItem;
     const userName =
@@ -115,17 +106,17 @@ function MainVideoView(props: MainVideoViewProps) {
     const sourceName = isLocal ? sourceNameLocal : sourceNameRemote;
     const placeholderMessage = `${sourceName} is playing in a popout window`;
 
-    if (isFocusView && !isFocusItem) return null;
+    if (focus && !isFocusItem) return null;
 
     return (
       <Box
         className="main-video-view-grid-item"
         sx={{
           borderRadius: '4px',
-          maxHeight: isFocusView ? '100vh' : 'calc(90vh - 56px)',
+          maxHeight: focus ? '100vh' : 'calc(90vh - 56px)',
           overflow: 'hidden',
           // For grid view, position controls relative to each video item
-          position: isFocusView ? 'static' : 'relative',
+          position: focus ? 'static' : 'relative',
         }}
         key={sid}
       >
@@ -148,6 +139,7 @@ function MainVideoView(props: MainVideoViewProps) {
             <>
               <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
               <VideoOverlay
+                hidden={Boolean(focus) && hideOverlay}
                 sid={sid}
                 isFocusItem={isFocusItem}
                 userName={userName}
@@ -155,7 +147,6 @@ function MainVideoView(props: MainVideoViewProps) {
                 isLocal={isLocal}
                 sourceType={sourceType}
                 setFocus={setFocus}
-                setIsFocusView={setIsFocusView}
                 setIsPopout={setIsPopout}
               />
             </>
@@ -183,14 +174,14 @@ function MainVideoView(props: MainVideoViewProps) {
   return (
     <Box
       className="main-video-view"
-      onMouseEnter={isFocusView ? onOverlayMouseEnter : () => {}}
-      onMouseLeave={isFocusView ? onOverlayMouseLeave : () => {}}
-      onMouseMove={isFocusView ? onOverlayMouseMove : () => {}}
+      onMouseEnter={focus ? onOverlayMouseEnter : () => {}}
+      onMouseLeave={focus ? onOverlayMouseLeave : () => {}}
+      onMouseMove={focus ? onOverlayMouseMove : () => {}}
       sx={{
         backgroundColor: 'black',
         boxSizing: 'border-box',
         height: '100%',
-        p: isFocusView ? 0 : 2,
+        p: focus ? 0 : 2,
         overflowY: 'auto',
       }}
     >

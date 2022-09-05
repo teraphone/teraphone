@@ -4,11 +4,8 @@ import {
   Box,
   IconButton,
   Tooltip,
-  ListItem,
-  ListItemText,
-  ListItemIcon,
+  Typography,
   CircularProgress,
-  Stack,
   Button,
 } from '@mui/material';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
@@ -182,63 +179,59 @@ function CurentRoomControls() {
     }
   }
 
-  const secondaryStatusText = `${currentRoom.teamName} / ${currentRoom.roomName}`;
-
   return connectionStatus === ConnectionStatus.Disconnected ? null : (
-    <Stack sx={{ backgroundColor: '#f8f8f8' }}>
-      <ListItem
-        disableGutters
-        disablePadding
+    <>
+      <Box
         sx={{
-          py: '2px',
+          alignItems: 'center',
+          backgroundColor: '#f8f8f8',
+          display: 'flex',
+          gap: 1,
+          pl: 1,
+          pt: 1,
         }}
-        secondaryAction={
-          <>
-            {debug && (
-              <InfoButton status={connectionStatus} onClick={handleInfoClick} />
-            )}
-            <DisconnectButton
-              status={connectionStatus}
-              onClick={handleDisconnectClick}
-            />
-          </>
-        }
       >
-        <ListItemIcon
-          sx={{
-            textAlign: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {icon}
-        </ListItemIcon>
-        <ListItemText
-          primary={primaryStatusText}
-          primaryTypographyProps={{
-            variant: 'body2',
-            sx: { color: statusColor },
-          }}
-          secondary={secondaryStatusText}
-          secondaryTypographyProps={{ variant: 'body2' }}
-        />
-      </ListItem>
-      <ListItem sx={{ p: 1, textAlign: 'center', justifyContent: 'center' }}>
-        <Stack direction="row" gap={1} width="100%">
-          <Box sx={{ flexGrow: 1 }}>
-            <ShareCameraButton
-              // status={connectionStatus}
-              onClick={handleShareCameraClick}
-            />
-          </Box>
-          <Box sx={{ flexGrow: 1 }}>
-            <ShareScreenButton
-              status={connectionStatus}
-              onClick={handleShareScreenClick}
-            />
-          </Box>
-        </Stack>
-      </ListItem>
-    </Stack>
+        <Box sx={{ flexGrow: 0, flexShrink: 0 }}>{icon}</Box>
+        <Box sx={{ flexGrow: 1 }}>
+          <Typography variant="body2" sx={{ color: statusColor }}>
+            {primaryStatusText}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            {currentRoom.roomName}
+          </Typography>
+        </Box>
+        <Box sx={{ flexGrow: 0, flexShrink: 0 }}>
+          {debug && (
+            <InfoButton status={connectionStatus} onClick={handleInfoClick} />
+          )}
+          <DisconnectButton
+            status={connectionStatus}
+            onClick={handleDisconnectClick}
+          />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          backgroundColor: '#f8f8f8',
+          display: 'flex',
+          gap: '4px',
+          p: 1,
+        }}
+      >
+        <Box sx={{ flexGrow: 1 }}>
+          <ShareCameraButton
+            // status={connectionStatus}
+            onClick={handleShareCameraClick}
+          />
+        </Box>
+        <Box sx={{ flexGrow: 1 }}>
+          <ShareScreenButton
+            status={connectionStatus}
+            onClick={handleShareScreenClick}
+          />
+        </Box>
+      </Box>
+    </>
   );
 }
 

@@ -62,7 +62,13 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
               >
                 <ListItemText disableTypography>
                   <Typography
-                    sx={{ color: 'text.secondary', fontWeight: 500 }}
+                    sx={{
+                      color: 'text.secondary',
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
                     variant="body2"
                   >
                     {teamInfo.team.displayName}

@@ -53,7 +53,7 @@ function TeamTabPanel(props: TeamTabPanelProps) {
         </Box>
         <Box
           sx={{
-            backgroundColor: 'background.paper',
+            backgroundColor: '#f8f8f8',
             display: 'flex',
             flexDirection: 'column',
           }}

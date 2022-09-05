@@ -42,7 +42,6 @@ function ScreenShareBanner(props: {
       sx={{
         py: '2px',
         pr: '40px',
-        backgroundColor: '#f8f8f8',
       }}
       secondaryAction={
         <Box

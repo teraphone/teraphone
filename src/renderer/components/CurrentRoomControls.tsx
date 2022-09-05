@@ -184,14 +184,17 @@ function CurentRoomControls() {
       <Box
         sx={{
           alignItems: 'center',
-          backgroundColor: '#f8f8f8',
           display: 'flex',
           gap: 1,
           pl: 1,
           pt: 1,
         }}
       >
-        <Box sx={{ flexGrow: 0, flexShrink: 0 }}>{icon}</Box>
+        <Box
+          sx={{ flexGrow: 0, flexShrink: 0, '&:empty': { display: 'none' } }}
+        >
+          {icon}
+        </Box>
         <Box sx={{ flexGrow: 1 }}>
           <Typography variant="body2" sx={{ color: statusColor }}>
             {primaryStatusText}
@@ -212,7 +215,6 @@ function CurentRoomControls() {
       </Box>
       <Box
         sx={{
-          backgroundColor: '#f8f8f8',
           display: 'flex',
           gap: '4px',
           p: 1,

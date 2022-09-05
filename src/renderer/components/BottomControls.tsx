@@ -170,7 +170,6 @@ function BottomControls() {
     <Box
       sx={{
         alignItems: 'center',
-        backgroundColor: '#f8f8f8',
         borderColor: 'divider',
         borderTopStyle: 'solid',
         borderTopWidth: 1,

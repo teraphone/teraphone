@@ -9,8 +9,7 @@ import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
 import useSize from '../hooks/useSize';
 import VideoEmptyMessage from './VideoEmptyMessage';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setWindowOpen } from '../redux/VideoViewSlice';
+import { useAppSelector } from '../redux/hooks';
 import type { VideoItemsObject } from '../lib/ExtendedUseRoom';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { selectTeam } from '../redux/WorldSlice';
@@ -44,7 +43,6 @@ function MainVideoView(props: MainVideoViewProps) {
     initialHide: false,
     showOnlyOnContainerHover: true,
   });
-  const dispatch = useAppDispatch();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
   const teamInfo = useAppSelector((state) =>
     selectTeam(state, currentRoom.teamId)
@@ -148,7 +146,6 @@ function MainVideoView(props: MainVideoViewProps) {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'center',
-            // maxHeight: 'inherit',
             height: '100%',
           }}
         >
@@ -179,24 +176,21 @@ function MainVideoView(props: MainVideoViewProps) {
     );
   });
 
-  const handleClose = React.useCallback(() => {
-    dispatch(setWindowOpen(false));
-  }, [dispatch]);
+  const isConnectedToRoom = currentRoom?.roomId;
+  if (!isConnectedToRoom) {
+    return (
+      <VideoEmptyMessage
+        darkMode={false}
+        message="Connect to a room to start chatting or screensharing"
+      />
+    );
+  }
 
   // TODO: Show avatars of room participants
   const isEmpty = Object.keys(videoItems).length === 0;
   if (isEmpty) {
     return (
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          height: '100%',
-          justifyContent: 'center',
-        }}
-      >
-        <VideoEmptyMessage message="No one is sharing their camera or screen." />
-      </Box>
+      <VideoEmptyMessage message="No one is sharing their camera or screen." />
     );
   }
 

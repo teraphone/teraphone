@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
-import Box from '@mui/material/Box';
 import * as React from 'react';
+import { Box } from '@mui/material';
 import * as models from '../models/models';
-import TeamRooms from './TeamRooms';
-import TeamMenu from './TeamMenu';
 import BottomControls from './BottomControls';
 import CurrentRoomControls from './CurrentRoomControls';
-import TeamContacts from './TeamContacts';
 import ScreenShareBanners from './ScreenShareBanners';
+import TeamContacts from './TeamContacts';
+import TeamMenu from './TeamMenu';
+import TeamRooms from './TeamRooms';
+import VideoViews from './VideoViews';
 
 interface TeamTabPanelProps {
   index: number;
@@ -43,24 +44,44 @@ function TeamTabPanel(props: TeamTabPanelProps) {
           flexDirection: 'column',
           flexGrow: 1,
           flexShrink: 1,
-          minWidth: 200,
           overflow: 'hidden',
         }}
       >
         <TeamMenu teamInfo={teamInfo} />
-        <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
-          <TeamRooms teamInfo={teamInfo} />
-        </Box>
         <Box
           sx={{
-            backgroundColor: 'background.paper',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            flexGrow: 1,
+            height: '100%',
+            overflow: 'hidden',
           }}
         >
-          <ScreenShareBanners />
-          <CurrentRoomControls />
-          <BottomControls />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              flexShrink: 0,
+              overflow: 'hidden',
+              width: 240,
+            }}
+          >
+            <Box sx={{ flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
+              <TeamRooms teamInfo={teamInfo} />
+            </Box>
+            <Box
+              sx={{
+                backgroundColor: '#f8f8f8',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <ScreenShareBanners />
+              <CurrentRoomControls />
+              <BottomControls />
+            </Box>
+          </Box>
+          <VideoViews />
         </Box>
       </Box>
       <TeamContacts teamInfo={teamInfo} />

@@ -15,10 +15,17 @@ const VideoItem = ({ videoTrack, isLocal }: VideoItemProps) => {
     videoTrack.track?.mediaStreamTrack.getSettings().facingMode !==
       'environment' && videoTrack.track?.source === 'camera';
   const style: React.CSSProperties = {
-    transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
-    height: '100%',
-    width: '100%',
+    // height: 'auto',
     objectFit: 'contain',
+    transform: isLocal && isFrontFacing ? 'rotateY(180deg)' : '',
+    // maxWidth: '100%',
+    // maxHeight: 'inherit',
+    maxWidth: '100%',
+    maxHeight: '100%',
+    height: 'auto',
+    width: 'auto',
+    // borderRadius: '4px',
+    overflow: 'hidden',
   };
 
   React.useEffect(() => {

@@ -2,22 +2,19 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { ConnectionState } from 'livekit-client';
+import { Box } from '@mui/material';
 import useRoom from '../hooks/useRoom';
 import useVideoItems from '../hooks/useVideoItems';
-import WindowPortal from './WindowPortal';
 import MainVideoView from './MainVideoView';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
+import { useAppSelector } from '../redux/hooks';
 import { selectAppUser } from '../redux/AppUserSlice';
 import { selectScreens, selectWindows } from '../redux/ScreenShareSlice';
 import { startStream } from '../lib/ExtendedLocalParticipant';
 import PopoutVideoView from './PopoutVideoView';
 
 function VideoViews() {
-  const dispatch = useAppDispatch();
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
-  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
   const { tenantUser } = useAppSelector(selectAppUser);
   const { room } = useRoom();
   const { videoItems, setVideoItems, setUpScreenTrack, takeDownScreenTrack } =
@@ -35,10 +32,6 @@ function VideoViews() {
   React.useEffect(() => {
     console.log('videoItems', videoItems);
   }, [videoItems]);
-
-  const handleCloseVideoView = React.useCallback(() => {
-    dispatch(setWindowOpen(false));
-  }, [dispatch]);
 
   const setIsPopout = React.useCallback(
     (sid: string, isPopout: boolean) => {
@@ -164,21 +157,10 @@ function VideoViews() {
     });
 
   return (
-    <>
-      {videoViewWindowOpen && (
-        <WindowPortal
-          key="main-video-view"
-          id="main-video-view"
-          title="Video Streams - T E R A P H O N E"
-          width={575}
-          height={475}
-          onClose={handleCloseVideoView}
-        >
-          <MainVideoView setIsPopout={setIsPopout} videoItems={videoItems} />
-        </WindowPortal>
-      )}
+    <Box sx={{ backgroundColor: 'black', flexGrow: 1 }}>
+      <MainVideoView setIsPopout={setIsPopout} videoItems={videoItems} />
       {popoutWindowNodes}
-    </>
+    </Box>
   );
 }
 

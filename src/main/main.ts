@@ -120,15 +120,15 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     acceptFirstMouse: true,
     autoHideMenuBar: true,
-    height: 550,
+    height: 556,
     icon: getAssetPath('icon.png'),
     minHeight: 300,
-    minWidth: 450,
+    minWidth: 518,
     resizable: true,
     show: false,
     title: 'T E R A P H O N E',
     useContentSize: true,
-    width: 550,
+    width: 800,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },

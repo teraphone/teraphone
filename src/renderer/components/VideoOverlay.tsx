@@ -10,16 +10,15 @@ import Tooltip from '@mui/material/Tooltip';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
 
 interface VideoOverlayProps {
-  sid: string;
-  isFocusItem: boolean;
-  userName: string;
-  isPopout: boolean;
-  isLocal: boolean;
-  sourceType: Track.Source;
   hidden: boolean;
+  isFocusItem: boolean;
+  isLocal: boolean;
+  isPopout: boolean;
   setFocus: (sid: string) => void;
-  setIsFocusView: (isFocusView: boolean) => void;
   setIsPopout: (sid: string, isPopout: boolean) => void;
+  sid: string;
+  sourceType: Track.Source;
+  userName: string;
 }
 
 const overlayTheme = createTheme({
@@ -40,6 +39,9 @@ const FocusButton = (props: { theme: Theme; onClick: () => void }) => {
           aria-label="focus"
           component="span"
           onClick={onClick}
+          sx={{
+            '& svg': { filter: 'drop-shadow(0 1px 4px black)' },
+          }}
         >
           <FitScreenIcon fontSize="small" />
         </IconButton>
@@ -58,6 +60,9 @@ const GridButton = (props: { theme: Theme; onClick: () => void }) => {
           aria-label="focus"
           component="span"
           onClick={onClick}
+          sx={{
+            '& svg': { filter: 'drop-shadow(0 1px 4px black)' },
+          }}
         >
           <GridViewIcon fontSize="small" />
         </IconButton>
@@ -76,6 +81,9 @@ const PopoutButton = (props: { theme: Theme; onClick: () => void }) => {
           aria-label="focus"
           component="span"
           onClick={onClick}
+          sx={{
+            '& svg': { filter: 'drop-shadow(0 1px 4px black)' },
+          }}
         >
           <OpenInNewIcon fontSize="small" />
         </IconButton>
@@ -86,16 +94,15 @@ const PopoutButton = (props: { theme: Theme; onClick: () => void }) => {
 
 function VideoOverlay(props: VideoOverlayProps) {
   const {
-    sid,
-    isFocusItem,
-    userName,
-    isPopout,
-    isLocal,
-    sourceType,
     hidden,
+    isFocusItem,
+    isLocal,
+    isPopout,
     setFocus,
-    setIsFocusView,
     setIsPopout,
+    sid,
+    sourceType,
+    userName,
   } = props;
   const isScreen = sourceType === Track.Source.ScreenShare;
   const descriptionLocal = `Your ${isScreen ? 'Screen' : 'Camera'}`;
@@ -104,43 +111,62 @@ function VideoOverlay(props: VideoOverlayProps) {
 
   const handleFocusClick = React.useCallback(() => {
     setFocus(sid);
-    setIsFocusView(true);
-  }, [setFocus, setIsFocusView, sid]);
+  }, [setFocus, sid]);
 
   const handleGridClick = React.useCallback(() => {
-    setIsFocusView(false);
     setFocus('');
-  }, [setFocus, setIsFocusView]);
+  }, [setFocus]);
 
   const handlePopoutClick = React.useCallback(() => {
     setIsPopout(sid, true);
   }, [setIsPopout, sid]);
 
   return (
-    <>
+    <Box
+      className="video-overlay"
+      sx={{
+        bottom: 0,
+        left: 0,
+        opacity: hidden ? 0 : 1,
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        transition: hidden ? 'opacity 2s' : 'opacity 0.3s',
+        ...(isFocusItem && {
+          '&:not(:hover)': { opacity: 0 },
+        }),
+      }}
+    >
       <Box // top overlay
-        hidden={hidden}
+        className="video-overlay-top"
         sx={{
-          boxSizing: 'border-box',
-          position: 'absolute',
-          top: 0,
-          zIndex: 1,
-          width: '100%',
-          height: '10%',
           background:
             'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
+          boxSizing: 'border-box',
+          height: '10%',
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          zIndex: 1,
         }}
       >
         <Box // top left
           sx={{
             boxSizing: 'border-box',
+            left: 0,
             padding: '5px',
             position: 'absolute',
             top: 0,
-            left: 0,
           }}
         >
-          <Typography variant="body1" color="white">
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'white',
+              textShadow: '0 1px 4px black',
+            }}
+          >
             {description}
           </Typography>
         </Box>
@@ -148,8 +174,8 @@ function VideoOverlay(props: VideoOverlayProps) {
           sx={{
             boxSizing: 'border-box',
             position: 'absolute',
-            top: 0,
             right: 0,
+            top: 0,
           }}
         >
           {!isFocusItem ? (
@@ -161,23 +187,24 @@ function VideoOverlay(props: VideoOverlayProps) {
       </Box>
 
       <Box // bottom
-        hidden={hidden}
+        className="video-overlay-bottom"
         sx={{
-          boxSizing: 'border-box',
-          position: 'absolute',
-          bottom: 0,
-          zIndex: 1,
-          width: '100%',
-          height: '10%',
           background:
             'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
+          bottom: 0,
+          boxSizing: 'border-box',
+          height: '10%',
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          zIndex: 1,
         }}
       >
         <Box // bottom right
           sx={{
+            bottom: 0,
             boxSizing: 'border-box',
             position: 'absolute',
-            bottom: 0,
             right: 0,
           }}
         >
@@ -186,7 +213,7 @@ function VideoOverlay(props: VideoOverlayProps) {
           )}
         </Box>
       </Box>
-    </>
+    </Box>
   );
 }
 

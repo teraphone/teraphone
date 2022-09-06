@@ -154,6 +154,7 @@ function GroupContacts(props: TeamContactsProps) {
         borderLeftWidth: 1,
         display: 'flex',
         flexDirection: 'column',
+        flexShrink: 0,
         overflow: 'hidden',
         width: '200px',
       }}

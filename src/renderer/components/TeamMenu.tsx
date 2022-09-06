@@ -33,6 +33,7 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
         borderBottomStyle: 'solid',
         borderBottomWidth: 1,
         boxShadow: theme.custom.shadows.header,
+        flexGrow: 0,
         height: theme.custom.spacing.header.height,
         width: '100%',
         zIndex: 1,
@@ -62,7 +63,13 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
               >
                 <ListItemText disableTypography>
                   <Typography
-                    sx={{ color: 'text.secondary', fontWeight: 500 }}
+                    sx={{
+                      color: 'text.secondary',
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
                     variant="body2"
                   >
                     {teamInfo.team.displayName}

@@ -30,14 +30,6 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
     ? `Your Screen - T E R A P H O N E`
     : `${userName}'s Screen - T E R A P H O N E`;
 
-  const popoutStyle: React.CSSProperties = {
-    background: 'black',
-    boxSizing: 'border-box',
-    maxHeight: '100%',
-    maxWidth: '100%',
-    padding: '0px',
-  };
-
   const handleClose = React.useCallback(() => {
     setIsPopout(sid, false);
   }, [setIsPopout, sid]);
@@ -58,7 +50,17 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
       height={600}
       onClose={handleClose}
     >
-      <Box style={popoutStyle}>
+      <Box
+        sx={{
+          alignItems: 'center',
+          background: 'black',
+          display: 'flex',
+          height: '100%',
+          justifyContent: 'center',
+          padding: 0,
+          width: '100%',
+        }}
+      >
         <VideoItem videoTrack={videoTrack} isLocal={isLocal} />
       </Box>
     </WindowPortal>

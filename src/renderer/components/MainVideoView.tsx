@@ -5,7 +5,6 @@ import { Track } from 'livekit-client';
 import { Box } from '@mui/material';
 import VideoItem from './VideoItem';
 import VideoItemPlaceholder from './VideoItemPlaceholder';
-import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
 import useSize from '../hooks/useSize';
@@ -25,8 +24,6 @@ function MainVideoView(props: MainVideoViewProps) {
   const [isMounted, setIsMounted] = React.useState(false);
   const { setIsPopout, videoItems } = props;
   const [focus, setFocus] = React.useState('');
-  const windowRef = React.useContext(ChildWindowContext);
-  const thisWindow = windowRef.current;
 
   const { height, refCallback: viewRefCallback } = useSize();
   const { rows, refCallback: gridRefCallback } = useSize(
@@ -46,7 +43,6 @@ function MainVideoView(props: MainVideoViewProps) {
     hideCursor: true,
     initialHide: false,
     showOnlyOnContainerHover: true,
-    targetDoc: windowRef?.current?.document,
   });
   const dispatch = useAppDispatch();
   const { currentRoom } = useAppSelector(selectCurrentRoom);
@@ -89,17 +85,14 @@ function MainVideoView(props: MainVideoViewProps) {
 
   React.useEffect(() => {
     if (isMounted) {
-      if (thisWindow) {
-        thisWindow.addEventListener('keydown', escKeydownHandler);
-      }
+      window.addEventListener('keydown', escKeydownHandler);
+
       return () => {
-        if (thisWindow) {
-          thisWindow.removeEventListener('keydown', escKeydownHandler);
-        }
+        window.removeEventListener('keydown', escKeydownHandler);
       };
     }
     return () => {};
-  }, [escKeydownHandler, isMounted, thisWindow]);
+  }, [escKeydownHandler, isMounted]);
 
   const gridItems = Object.entries(videoItems).map(([sid, videoItem]) => {
     const { userId, isPopout, isLocal, videoTrack } = videoItem;

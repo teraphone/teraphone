@@ -1,6 +1,13 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import { Box, Button, Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#fff',
+    },
+  },
+});
 
 function VideoEmptyMessage({
   message,
@@ -12,16 +19,18 @@ function VideoEmptyMessage({
   buttonAction?: () => void | undefined;
 }) {
   return (
-    <Box sx={{ textAlign: 'center' }}>
-      <Typography sx={{ color: 'white', mb: 4 }} variant="body1">
-        {message}
-      </Typography>
-      {buttonText && (
-        <Button color="primary" variant="outlined" onClick={buttonAction}>
-          {buttonText}
-        </Button>
-      )}
-    </Box>
+    <ThemeProvider theme={theme}>
+      <Box sx={{ textAlign: 'center' }}>
+        <Typography sx={{ color: 'white', mb: 2 }} variant="body1">
+          {message}
+        </Typography>
+        {buttonText && (
+          <Button color="primary" variant="outlined" onClick={buttonAction}>
+            {buttonText}
+          </Button>
+        )}
+      </Box>
+    </ThemeProvider>
   );
 }
 

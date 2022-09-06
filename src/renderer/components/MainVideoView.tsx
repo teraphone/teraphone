@@ -6,7 +6,7 @@ import { Box, useTheme } from '@mui/material';
 import {
   ConnectionStatus,
   selectConnectionStatus,
-} from 'renderer/redux/ConnectionStatusSlice';
+} from '../redux/ConnectionStatusSlice';
 import VideoItem from './VideoItem';
 import VideoItemPlaceholder from './VideoItemPlaceholder';
 import VideoOverlay from './VideoOverlay';

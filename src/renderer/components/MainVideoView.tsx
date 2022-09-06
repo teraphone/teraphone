@@ -2,7 +2,11 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { Track } from 'livekit-client';
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
+import {
+  ConnectionStatus,
+  selectConnectionStatus,
+} from 'renderer/redux/ConnectionStatusSlice';
 import VideoItem from './VideoItem';
 import VideoItemPlaceholder from './VideoItemPlaceholder';
 import VideoOverlay from './VideoOverlay';
@@ -20,6 +24,7 @@ export interface MainVideoViewProps {
 }
 
 function MainVideoView(props: MainVideoViewProps) {
+  const theme = useTheme();
   const [isMounted, setIsMounted] = React.useState(false);
   const { setIsPopout, videoItems } = props;
   const [focus, setFocus] = React.useState('');
@@ -47,6 +52,7 @@ function MainVideoView(props: MainVideoViewProps) {
   const teamInfo = useAppSelector((state) =>
     selectTeam(state, currentRoom.teamId)
   );
+  const { connectionStatus } = useAppSelector(selectConnectionStatus);
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
@@ -176,21 +182,42 @@ function MainVideoView(props: MainVideoViewProps) {
     );
   });
 
-  const isConnectedToRoom = currentRoom?.roomId;
-  if (!isConnectedToRoom) {
-    return (
+  let child;
+
+  // If not connected to a room
+  if (connectionStatus !== ConnectionStatus.Connected) {
+    child = (
       <VideoEmptyPane
-        darkMode={false}
+        dark={false}
         message="Connect to a room to start chatting or screensharing"
       />
     );
-  }
-
-  // TODO: Show avatars of room participants
-  const isEmpty = Object.keys(videoItems).length === 0;
-  if (isEmpty) {
-    return (
-      <VideoEmptyPane message="No one is sharing their camera or screen." />
+    // If no videos shared in room
+  } else if (Object.keys(videoItems).length === 0) {
+    // TODO: Show avatars of room participants
+    child = (
+      <VideoEmptyPane message="No one is sharing their camera or screen" />
+    );
+    // If videos shared in room
+  } else {
+    child = (
+      <Box
+        className="main-video-view-grid"
+        ref={gridRefCallback}
+        sx={{
+          alignItems: 'center',
+          backgroundColor: 'black',
+          display: 'grid',
+          gridAutoRows: '1fr',
+          gridGap: '16px',
+          gridTemplateColumns:
+            'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
+          minHeight: '100%',
+          p: 2,
+        }}
+      >
+        {gridItems}
+      </Box>
     );
   }
 
@@ -202,27 +229,15 @@ function MainVideoView(props: MainVideoViewProps) {
       onMouseMove={focus ? onOverlayMouseMove : () => {}}
       ref={viewRefCallback}
       sx={{
-        backgroundColor: 'black',
+        backgroundColor: theme.custom.palette.background.secondary,
+        borderColor: theme.palette.divider,
+        borderLeftStyle: 'solid',
+        borderLeftWidth: 1,
         height: '100%',
-        p: focus ? 0 : 2,
         overflowY: 'auto',
       }}
     >
-      <Box
-        className="main-video-view-grid"
-        ref={gridRefCallback}
-        sx={{
-          display: 'grid',
-          gridGap: '16px',
-          gridTemplateColumns:
-            'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
-          alignItems: 'center',
-          minHeight: '100%',
-          gridAutoRows: '1fr',
-        }}
-      >
-        {gridItems}
-      </Box>
+      {child}
     </Box>
   );
 }

@@ -8,7 +8,7 @@ import VideoItemPlaceholder from './VideoItemPlaceholder';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
 import useSize from '../hooks/useSize';
-import VideoEmptyMessage from './VideoEmptyMessage';
+import VideoEmptyPane from './VideoEmptyPane';
 import { useAppSelector } from '../redux/hooks';
 import type { VideoItemsObject } from '../lib/ExtendedUseRoom';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
@@ -179,7 +179,7 @@ function MainVideoView(props: MainVideoViewProps) {
   const isConnectedToRoom = currentRoom?.roomId;
   if (!isConnectedToRoom) {
     return (
-      <VideoEmptyMessage
+      <VideoEmptyPane
         darkMode={false}
         message="Connect to a room to start chatting or screensharing"
       />
@@ -190,7 +190,7 @@ function MainVideoView(props: MainVideoViewProps) {
   const isEmpty = Object.keys(videoItems).length === 0;
   if (isEmpty) {
     return (
-      <VideoEmptyMessage message="No one is sharing their camera or screen." />
+      <VideoEmptyPane message="No one is sharing their camera or screen." />
     );
   }
 

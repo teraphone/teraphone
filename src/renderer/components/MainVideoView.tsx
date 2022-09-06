@@ -121,20 +121,32 @@ function MainVideoView(props: MainVideoViewProps) {
     return (
       <Box
         className="main-video-view-grid-item"
-        sx={{
-          // TODO: Clean this up
-          // borderRadius: '4px',
-          // maxHeight: focus ? '100vh' : 'calc(90vh - 56px)',
-          overflow: 'hidden',
-          // For grid view, position controls relative to each video item
-          // position: focus ? 'static' : 'relative',
-          position: 'relative',
-          height: '100%',
-          width: '100%',
-          maxHeight: `max(150px, ${rowHeight})`,
-          minHeight: '150px',
-          minWidth: '150px',
-        }}
+        sx={
+          focus
+            ? {
+                backgroundColor: 'black',
+                bottom: 0,
+                height: '100%',
+                left: 0,
+                minHeight: '150px',
+                minWidth: '150px',
+                overflow: 'hidden',
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                width: '100%',
+                zIndex: 2,
+              }
+            : {
+                height: '100%',
+                maxHeight: `max(150px, ${rowHeight})`,
+                minHeight: '150px',
+                minWidth: '150px',
+                overflow: 'hidden',
+                position: 'relative',
+                width: '100%',
+              }
+        }
         key={sid}
       >
         <Box

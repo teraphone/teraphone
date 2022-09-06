@@ -33,6 +33,7 @@ function TeamMenu(props: { teamInfo: models.TeamInfo }) {
         borderBottomStyle: 'solid',
         borderBottomWidth: 1,
         boxShadow: theme.custom.shadows.header,
+        flexGrow: 0,
         height: theme.custom.spacing.header.height,
         width: '100%',
         zIndex: 1,

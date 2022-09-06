@@ -14,7 +14,6 @@ import {
   setConnectionStatus,
 } from '../redux/ConnectionStatusSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
-import VideoViews from './VideoViews';
 import AudioRenderers from './AudioRenderers';
 import SettingsMenuDialog from './SettingsMenuDialog';
 
@@ -93,7 +92,6 @@ const Home = () => {
       <TeamTabs />
       <ScreenPickerDialog />
       <SettingsMenuDialog />
-      <VideoViews />
       <AudioRenderers />
     </Box>
   );

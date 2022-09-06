@@ -8,7 +8,7 @@ import VideoItemPlaceholder from './VideoItemPlaceholder';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
-import useGridSize from '../hooks/useGridSize';
+import useSize from '../hooks/useSize';
 import VideoEmptyMessage from './VideoEmptyMessage';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
@@ -27,6 +27,15 @@ function MainVideoView(props: MainVideoViewProps) {
   const [focus, setFocus] = React.useState('');
   const windowRef = React.useContext(ChildWindowContext);
   const thisWindow = windowRef.current;
+
+  const { height, refCallback: viewRefCallback } = useSize();
+  const { rows, refCallback: gridRefCallback } = useSize(
+    Object.entries(videoItems).length
+  );
+  const rowHeight = `${
+    ((height ?? 500) - ((rows || 1) + 1) * 16) / (rows || 1)
+  }px`;
+
   const [
     hideOverlay,
     onOverlayMouseEnter,
@@ -44,11 +53,6 @@ function MainVideoView(props: MainVideoViewProps) {
   const teamInfo = useAppSelector((state) =>
     selectTeam(state, currentRoom.teamId)
   );
-
-  // const gridRef = React.useRef(null);
-  const [gridTarget, setGridTarget] = React.useState();
-  const { columns, rows } = useGridSize(gridTarget);
-  const rowPercentage = `${100 / (rows || 1)}%`;
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
@@ -127,9 +131,9 @@ function MainVideoView(props: MainVideoViewProps) {
           position: 'relative',
           height: '100%',
           width: '100%',
-          maxHeight: `max(200px, calc(${rowPercentage}% - 16px - ${
-            (rows ?? 1) * 16
-          }px))`,
+          maxHeight: `max(150px, ${rowHeight})`,
+          minHeight: '150px',
+          minWidth: '150px',
         }}
         key={sid}
       >
@@ -191,31 +195,24 @@ function MainVideoView(props: MainVideoViewProps) {
       onMouseEnter={focus ? onOverlayMouseEnter : () => {}}
       onMouseLeave={focus ? onOverlayMouseLeave : () => {}}
       onMouseMove={focus ? onOverlayMouseMove : () => {}}
+      ref={viewRefCallback}
       sx={{
         backgroundColor: 'black',
-        boxSizing: 'border-box',
         height: '100%',
         p: focus ? 0 : 2,
         overflowY: 'auto',
       }}
     >
-      <Box sx={{ color: 'white' }}>
-        {JSON.stringify({ columns, rows }, null, 2)}
-      </Box>
       <Box
-        ref={setGridTarget}
         className="main-video-view-grid"
+        ref={gridRefCallback}
         sx={{
           display: 'grid',
           gridGap: '16px',
           gridTemplateColumns:
-            'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
+            'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
           alignItems: 'center',
-          height: '100%',
-          overflow: 'hidden',
-          // TODO: Clean this up
-          // minHeight: '100%',
-          // gridTemplateRows: 'repeat(auto-fit, minmax(200px, 1fr))',
+          minHeight: '100%',
           gridAutoRows: '1fr',
         }}
       >

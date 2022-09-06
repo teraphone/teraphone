@@ -39,6 +39,9 @@ const FocusButton = (props: { theme: Theme; onClick: () => void }) => {
           aria-label="focus"
           component="span"
           onClick={onClick}
+          sx={{
+            '& svg': { filter: 'drop-shadow(0 1px 4px black)' },
+          }}
         >
           <FitScreenIcon fontSize="small" />
         </IconButton>
@@ -57,6 +60,9 @@ const GridButton = (props: { theme: Theme; onClick: () => void }) => {
           aria-label="focus"
           component="span"
           onClick={onClick}
+          sx={{
+            '& svg': { filter: 'drop-shadow(0 1px 4px black)' },
+          }}
         >
           <GridViewIcon fontSize="small" />
         </IconButton>
@@ -75,6 +81,9 @@ const PopoutButton = (props: { theme: Theme; onClick: () => void }) => {
           aria-label="focus"
           component="span"
           onClick={onClick}
+          sx={{
+            '& svg': { filter: 'drop-shadow(0 1px 4px black)' },
+          }}
         >
           <OpenInNewIcon fontSize="small" />
         </IconButton>
@@ -151,7 +160,13 @@ function VideoOverlay(props: VideoOverlayProps) {
             top: 0,
           }}
         >
-          <Typography variant="body1" color="white">
+          <Typography
+            variant="body1"
+            sx={{
+              color: 'white',
+              textShadow: '0 1px 4px black',
+            }}
+          >
             {description}
           </Typography>
         </Box>

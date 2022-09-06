@@ -145,9 +145,7 @@ function TeamRoom(props: {
           (!isVideoWindowOpen ? (
             <Tooltip title="Open Video Streams" placement="top" arrow>
               <IconButton
-                sx={{
-                  p: 0,
-                }}
+                sx={{ p: 0 }}
                 size="small"
                 aria-label="open video streams"
                 component="span"
@@ -156,12 +154,7 @@ function TeamRoom(props: {
                   dispatch(setWindowOpen(true));
                 }}
               >
-                <SmartDisplayIcon
-                  sx={{
-                    color: 'black',
-                  }}
-                  fontSize="small"
-                />
+                <SmartDisplayIcon sx={{ color: 'black' }} fontSize="small" />
               </IconButton>
             </Tooltip>
           ) : (
@@ -179,9 +172,7 @@ function TeamRoom(props: {
                 }}
               >
                 <CancelPresentationIcon
-                  sx={{
-                    color: 'black',
-                  }}
+                  sx={{ color: 'black' }}
                   fontSize="small"
                 />
               </IconButton>

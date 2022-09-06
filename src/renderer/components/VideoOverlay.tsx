@@ -116,7 +116,6 @@ function VideoOverlay(props: VideoOverlayProps) {
     <Box
       className="video-overlay"
       sx={{
-        '&:not(:hover)': { opacity: 0 },
         bottom: 0,
         left: 0,
         opacity: hidden ? 0 : 1,
@@ -124,6 +123,9 @@ function VideoOverlay(props: VideoOverlayProps) {
         right: 0,
         top: 0,
         transition: hidden ? 'opacity 2s' : 'opacity 0.3s',
+        ...(isFocusItem && {
+          '&:not(:hover)': { opacity: 0 },
+        }),
       }}
     >
       <Box // top overlay

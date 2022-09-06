@@ -8,6 +8,7 @@ import VideoItemPlaceholder from './VideoItemPlaceholder';
 import { ChildWindowContext } from './WindowPortal';
 import VideoOverlay from './VideoOverlay';
 import useHideOnMouseStop from '../hooks/useHideOnMouseStop';
+import useGridSize from '../hooks/useGridSize';
 import VideoEmptyMessage from './VideoEmptyMessage';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setWindowOpen } from '../redux/VideoViewSlice';
@@ -43,6 +44,11 @@ function MainVideoView(props: MainVideoViewProps) {
   const teamInfo = useAppSelector((state) =>
     selectTeam(state, currentRoom.teamId)
   );
+
+  // const gridRef = React.useRef(null);
+  const [gridTarget, setGridTarget] = React.useState();
+  const { columns, rows } = useGridSize(gridTarget);
+  const rowPercentage = `${100 / (rows || 1)}%`;
 
   React.useEffect(() => {
     console.log('MainVideoView Mounted');
@@ -112,11 +118,18 @@ function MainVideoView(props: MainVideoViewProps) {
       <Box
         className="main-video-view-grid-item"
         sx={{
-          borderRadius: '4px',
-          maxHeight: focus ? '100vh' : 'calc(90vh - 56px)',
+          // TODO: Clean this up
+          // borderRadius: '4px',
+          // maxHeight: focus ? '100vh' : 'calc(90vh - 56px)',
           overflow: 'hidden',
           // For grid view, position controls relative to each video item
-          position: focus ? 'static' : 'relative',
+          // position: focus ? 'static' : 'relative',
+          position: 'relative',
+          height: '100%',
+          width: '100%',
+          maxHeight: `max(200px, calc(${rowPercentage}% - 16px - ${
+            (rows ?? 1) * 16
+          }px))`,
         }}
         key={sid}
       >
@@ -126,7 +139,8 @@ function MainVideoView(props: MainVideoViewProps) {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'center',
-            maxHeight: 'inherit',
+            // maxHeight: 'inherit',
+            height: '100%',
           }}
         >
           {videoItem.isPopout ? (
@@ -185,7 +199,11 @@ function MainVideoView(props: MainVideoViewProps) {
         overflowY: 'auto',
       }}
     >
+      <Box sx={{ color: 'white' }}>
+        {JSON.stringify({ columns, rows }, null, 2)}
+      </Box>
       <Box
+        ref={setGridTarget}
         className="main-video-view-grid"
         sx={{
           display: 'grid',
@@ -193,7 +211,12 @@ function MainVideoView(props: MainVideoViewProps) {
           gridTemplateColumns:
             'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
           alignItems: 'center',
-          minHeight: '100%',
+          height: '100%',
+          overflow: 'hidden',
+          // TODO: Clean this up
+          // minHeight: '100%',
+          // gridTemplateRows: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gridAutoRows: '1fr',
         }}
       >
         {gridItems}

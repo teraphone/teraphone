@@ -183,14 +183,20 @@ function MainVideoView(props: MainVideoViewProps) {
     dispatch(setWindowOpen(false));
   }, [dispatch]);
 
+  // TODO: Show avatars of room participants
   const isEmpty = Object.keys(videoItems).length === 0;
   if (isEmpty) {
     return (
-      <VideoEmptyMessage
-        message="No one is sharing their camera or screen."
-        buttonText="Close"
-        buttonAction={handleClose}
-      />
+      <Box
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          height: '100%',
+          justifyContent: 'center',
+        }}
+      >
+        <VideoEmptyMessage message="No one is sharing their camera or screen." />
+      </Box>
     );
   }
 

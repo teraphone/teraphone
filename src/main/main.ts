@@ -120,7 +120,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     acceptFirstMouse: true,
     autoHideMenuBar: true,
-    height: 550,
+    height: 556,
     icon: getAssetPath('icon.png'),
     minHeight: 300,
     minWidth: 518,

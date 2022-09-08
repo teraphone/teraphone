@@ -124,16 +124,16 @@ function TeamRoom(props: {
   return (
     <>
       <ListItemButton
+        component="li"
         dense
         onClick={handleClick}
-        component="li"
+        selected={isThisRoomConnected}
         sx={{ py: 0.5 }}
       >
         <ListItemIcon>
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.displayName} />
-        {/* TODO: Use `isThisRoomConnected` to change room background color */}
       </ListItemButton>
       {isThisRoomConnected ? (
         <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />

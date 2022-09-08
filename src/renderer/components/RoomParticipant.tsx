@@ -49,7 +49,11 @@ function RoomParticipant(props: {
   }, [isMounted, isSpeaking, participant]);
 
   return (
-    <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>
+    <ListItemButton
+      dense
+      component="li"
+      sx={{ py: 0.5, '&, &:hover': { backgroundColor: 'transparent' } }}
+    >
       <ListItemIcon>
         <Avatar
           src={userAvatars[user.oid]}

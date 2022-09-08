@@ -70,7 +70,11 @@ function RoomParticipants(props: {
     );
   });
 
-  return <List disablePadding>{participantItems}</List>;
+  return (
+    <List disablePadding sx={{ ml: 1 }}>
+      {participantItems}
+    </List>
+  );
 }
 
 export default React.memo(RoomParticipants);

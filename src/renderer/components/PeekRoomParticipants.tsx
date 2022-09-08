@@ -48,7 +48,11 @@ function PeakRoomParticipants(props: {
     return true;
   });
 
-  return <List disablePadding>{roomParticipants}</List>;
+  return (
+    <List disablePadding sx={{ ml: 1 }}>
+      {roomParticipants}
+    </List>
+  );
 }
 
 export default React.memo(PeakRoomParticipants);

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { RoomConnectOptions, ConnectionState } from 'livekit-client';
 import {
+  Box,
   CircularProgress,
   ListItemButton,
   ListItemIcon,
@@ -128,16 +129,24 @@ function TeamRoom(props: {
   }, [connectRoom, connectionStatus, currentRoom.roomId, room, roomInfo]);
 
   return (
-    <>
+    <Box
+      component="li"
+      sx={{
+        backgroundColor: isThisRoomConnected ? grey[200] : 'transparent',
+        borderRadius: '4px',
+        mx: 1,
+        overflow: 'hidden',
+      }}
+    >
       <ListItemButton
-        component="li"
         dense
         onClick={handleClick}
         selected={isThisRoomConnected}
         sx={{
+          px: 1,
           py: 0.5,
           '&.Mui-selected, &.Mui-selected:hover': {
-            backgroundColor: grey[200],
+            backgroundColor: 'transparent',
           },
         }}
       >
@@ -150,14 +159,7 @@ function TeamRoom(props: {
             <>
               {currentRoom.roomId === roomInfo.room.id &&
               connectionStatus === ConnectionStatus.Connected ? (
-                <VolumeUpIcon
-                  color="success"
-                  sx={{
-                    fontSize: 20,
-                    filter:
-                      'drop-shadow(0 -0.5px 0 rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 0px white)',
-                  }}
-                />
+                <VolumeUpIcon sx={{ fontSize: 20, color: 'common.black' }} />
               ) : (
                 <VolumeUpIcon sx={{ fontSize: 20 }} />
               )}
@@ -171,7 +173,7 @@ function TeamRoom(props: {
       ) : (
         <PeekRoomParticipants roomInfo={roomInfo} usersObj={usersObj} />
       )}
-    </>
+    </Box>
   );
 }
 

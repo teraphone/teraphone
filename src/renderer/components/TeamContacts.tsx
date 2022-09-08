@@ -34,7 +34,7 @@ function GroupContacts(props: TeamContactsProps) {
   }>(users.reduce((acc, user) => ({ ...acc, [user.oid]: user }), {}));
 
   const [onlineOpen, setOnlineOpen] = React.useState(true);
-  const [offlineOpen, setOfflineOpen] = React.useState(false);
+  const [offlineOpen, setOfflineOpen] = React.useState(true);
   const userAvatars = useAppSelector(selectUserAvatars);
 
   const handleOnlineClick = React.useCallback(() => {

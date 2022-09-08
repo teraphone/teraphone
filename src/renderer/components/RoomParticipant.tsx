@@ -52,7 +52,7 @@ function RoomParticipant(props: {
     <ListItemButton
       dense
       component="li"
-      sx={{ py: 0.5, '&, &:hover': { backgroundColor: 'transparent' } }}
+      sx={{ pl: 3, py: 0.5, '&, &:hover': { backgroundColor: 'transparent' } }}
     >
       <ListItemIcon>
         <Avatar

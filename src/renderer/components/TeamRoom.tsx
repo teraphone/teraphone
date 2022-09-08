@@ -7,6 +7,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
@@ -133,7 +134,12 @@ function TeamRoom(props: {
         dense
         onClick={handleClick}
         selected={isThisRoomConnected}
-        sx={{ py: 0.5 }}
+        sx={{
+          py: 0.5,
+          '&.Mui-selected, &.Mui-selected:hover': {
+            backgroundColor: grey[200],
+          },
+        }}
       >
         <ListItemIcon>
           {currentRoom.roomId === roomInfo.room.id &&
@@ -141,7 +147,21 @@ function TeamRoom(props: {
             connectionStatus === ConnectionStatus.Reconnecting) ? (
             <CircularProgress size={20} />
           ) : (
-            <VolumeUpIcon sx={{ fontSize: 20 }} />
+            <>
+              {currentRoom.roomId === roomInfo.room.id &&
+              connectionStatus === ConnectionStatus.Connected ? (
+                <VolumeUpIcon
+                  color="success"
+                  sx={{
+                    fontSize: 20,
+                    filter:
+                      'drop-shadow(0 -0.5px 0 rgba(0, 0, 0, 0.5)) drop-shadow(0 1px 0px white)',
+                  }}
+                />
+              ) : (
+                <VolumeUpIcon sx={{ fontSize: 20 }} />
+              )}
+            </>
           )}
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.displayName} />

@@ -1,16 +1,19 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import { Tab, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Tab,
+  Typography,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+  useTheme,
+} from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import {
   setScreens,
@@ -101,6 +104,7 @@ function ScreenPickerTabPanel(props: {
 
 function ScreenPickerDialog() {
   const dispatch = useAppDispatch();
+  const theme = useTheme();
 
   // global state
   const screens = useAppSelector(selectScreens);
@@ -243,16 +247,40 @@ function ScreenPickerDialog() {
   return (
     <TabContext value={tabId}>
       <Dialog
-        fullScreen
         open={pickerVisible}
         onClose={handleDialogClose}
         scroll="paper"
+        sx={{
+          '& .MuiDialog-paper': {
+            flexGrow: 1,
+            height: '100%',
+            maxWidth: '100%',
+          },
+        }}
       >
-        <DialogTitle sx={{ alignSelf: 'center' }}>Screen Share</DialogTitle>
-        <Typography variant="body1" align="center" sx={{ px: 2 }}>
-          Select the Applications and Screens that you would like to share with
-          the room!
-        </Typography>
+        <Box
+          sx={{
+            backgroundColor: theme.custom.palette.background.secondary,
+            borderBottomColor: 'divider',
+            borderBottomStyle: 'solid',
+            borderBottomWidth: 1,
+            boxShadow: theme.custom.shadows.header,
+            display: 'flex',
+            flexDirection: 'column',
+            flexShrink: 0,
+            height: '56px',
+            justifyContent: 'center',
+            px: 2,
+            py: 1,
+          }}
+        >
+          <Typography
+            sx={{ fontWeight: 600, fontSize: '1rem' }}
+            variant="body2"
+          >
+            Share applications and screens with the room
+          </Typography>
+        </Box>
         <TabList value={tabId} variant="standard" onChange={handleTabChange}>
           <Tab value="tab1" label="Applications" />
           <Tab value="tab2" label="Screens" />
@@ -270,14 +298,14 @@ function ScreenPickerDialog() {
             </ImageList>
           </ScreenPickerTabPanel>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ backgroundColor: 'grey.100' }}>
           <Button autoFocus color="inherit" onClick={handleDialogClose}>
             Cancel
           </Button>
           <Button color="inherit" onClick={handleClearAll}>
             Clear All
           </Button>
-          <Button color="inherit" onClick={handleSubmit}>
+          <Button variant="contained" onClick={handleSubmit}>
             Save
           </Button>
         </DialogActions>

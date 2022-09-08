@@ -211,7 +211,7 @@ function MainVideoView(props: MainVideoViewProps) {
           gridAutoRows: '1fr',
           gridGap: '16px',
           gridTemplateColumns:
-            'repeat(auto-fit, minmax(min(200px, 100%), 1fr))',
+            'repeat(auto-fit, minmax(min(270px, 100%), 1fr))',
           minHeight: '100%',
           p: 2,
         }}

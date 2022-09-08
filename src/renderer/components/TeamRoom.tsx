@@ -1,7 +1,12 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import { RoomConnectOptions, ConnectionState } from 'livekit-client';
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  CircularProgress,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
@@ -131,7 +136,13 @@ function TeamRoom(props: {
         sx={{ py: 0.5 }}
       >
         <ListItemIcon>
-          <VolumeUpIcon sx={{ fontSize: 20 }} />
+          {currentRoom.roomId === roomInfo.room.id &&
+          (connectionStatus === ConnectionStatus.Connecting ||
+            connectionStatus === ConnectionStatus.Reconnecting) ? (
+            <CircularProgress size={20} />
+          ) : (
+            <VolumeUpIcon sx={{ fontSize: 20 }} />
+          )}
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.displayName} />
       </ListItemButton>

@@ -137,6 +137,17 @@ function VideoOverlay(props: VideoOverlayProps) {
         }),
       }}
     >
+      <Box // full size overlay click target
+        onClick={!isFocusItem ? handleFocusClick : handleGridClick}
+        sx={{
+          bottom: 0,
+          cursor: 'pointer',
+          left: 0,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+        }}
+      />
       <Box // top overlay
         className="video-overlay-top"
         sx={{

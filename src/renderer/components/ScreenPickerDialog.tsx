@@ -23,7 +23,6 @@ import {
   validDataURL,
 } from '../redux/ScreenShareSlice';
 import { SerializedDesktopCapturerSource } from '../global';
-import { selectWindowOpen, setWindowOpen } from '../redux/VideoViewSlice';
 
 function ScreenPickerItem(props: {
   source: SerializedDesktopCapturerSource;
@@ -107,7 +106,6 @@ function ScreenPickerDialog() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
   const pickerVisible = useAppSelector(selectPickerVisible);
-  const videoViewWindowOpen = useAppSelector(selectWindowOpen);
 
   // local state
   const [selectedScreens, setSelectedScreens] =
@@ -141,15 +139,7 @@ function ScreenPickerDialog() {
     dispatch(setPickerVisible(false));
     dispatch(setScreens(selectedScreens));
     dispatch(setWindows(selectedWindows));
-    if (!videoViewWindowOpen) {
-      if (
-        Object.keys(selectedScreens).length > 0 ||
-        Object.keys(selectedWindows).length > 0
-      ) {
-        dispatch(setWindowOpen(true));
-      }
-    }
-  }, [dispatch, selectedScreens, selectedWindows, videoViewWindowOpen]);
+  }, [dispatch, selectedScreens, selectedWindows]);
 
   const handleTabChange = React.useCallback(
     (_event: React.SyntheticEvent, id: string) => {

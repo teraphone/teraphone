@@ -17,7 +17,6 @@ import {
   RemoteParticipant,
 } from 'livekit-client';
 import { useAppDispatch } from '../redux/hooks';
-import { setWindowOpen } from '../redux/VideoViewSlice';
 import {
   removeSource,
   setScreens,
@@ -202,7 +201,6 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
           console.log(RoomEvent.Disconnected);
           dispatch(setScreens({}));
           dispatch(setWindows({}));
-          dispatch(setWindowOpen(false));
           setVideoItems({});
           room
             .off(RoomEvent.ParticipantConnected, onParticipantsChanged)

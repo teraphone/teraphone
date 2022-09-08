@@ -8,7 +8,6 @@ import connectionStatusReducer from './ConnectionStatusSlice';
 import worldReducer from './WorldSlice';
 import artyReducer /* , { addParticipantRTListener } */ from './ArtySlice';
 import screenShareReducer from './ScreenShareSlice';
-import videoViewReducer from './VideoViewSlice';
 import avatarReducer from './AvatarSlice';
 import settingsReducer from './SettingsSlice';
 
@@ -22,7 +21,6 @@ export const store = configureStore({
     world: worldReducer,
     arty: artyReducer,
     screenShare: screenShareReducer,
-    videoView: videoViewReducer,
     avatars: avatarReducer,
     settings: settingsReducer,
   },

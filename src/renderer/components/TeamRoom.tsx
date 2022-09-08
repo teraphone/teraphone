@@ -1,14 +1,8 @@
 /* eslint-disable no-console */
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { RoomConnectOptions, ConnectionState } from 'livekit-client';
 import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import CancelPresentationIcon from '@mui/icons-material/CancelPresentation'; // close video window
-import SmartDisplayIcon from '@mui/icons-material/SmartDisplay'; // open video streams
+import { RoomConnectOptions, ConnectionState } from 'livekit-client';
+import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import * as models from '../models/models';
 import RoomParticipants from './RoomParticipants';
 import useRoom from '../hooks/useRoom';
@@ -19,7 +13,6 @@ import {
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import PeekRoomParticipants from './PeekRoomParticipants';
 import { selectCurrentRoom, setCurrentRoom } from '../redux/CurrentRoomSlice';
-import { setWindowOpen, selectWindowOpen } from '../redux/VideoViewSlice';
 import { selectMute } from '../redux/MuteSlice';
 
 function TeamRoom(props: {
@@ -37,7 +30,6 @@ function TeamRoom(props: {
   const isThisRoomConnected =
     currentRoom.roomId === roomInfo.room.id &&
     connectionStatus === ConnectionStatus.Connected;
-  const isVideoWindowOpen = useAppSelector(selectWindowOpen);
   const mute = useAppSelector(selectMute);
 
   React.useEffect(() => {
@@ -141,43 +133,7 @@ function TeamRoom(props: {
           <VolumeUpIcon sx={{ fontSize: 20 }} />
         </ListItemIcon>
         <ListItemText primary={roomInfo.room.displayName} />
-        {isThisRoomConnected &&
-          (!isVideoWindowOpen ? (
-            <Tooltip title="Open Video Streams" placement="top" arrow>
-              <IconButton
-                sx={{ p: 0 }}
-                size="small"
-                aria-label="open video streams"
-                component="span"
-                onClick={() => {
-                  console.log('clicked Open Video Streams');
-                  dispatch(setWindowOpen(true));
-                }}
-              >
-                <SmartDisplayIcon sx={{ color: 'black' }} fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          ) : (
-            <Tooltip title="Close Video Window" placement="top" arrow>
-              <IconButton
-                sx={{
-                  p: 0,
-                }}
-                size="small"
-                aria-label="close video window"
-                component="span"
-                onClick={() => {
-                  console.log('clicked close Video Window');
-                  dispatch(setWindowOpen(false));
-                }}
-              >
-                <CancelPresentationIcon
-                  sx={{ color: 'black' }}
-                  fontSize="small"
-                />
-              </IconButton>
-            </Tooltip>
-          ))}
+        {/* TODO: Use `isThisRoomConnected` to change room background color */}
       </ListItemButton>
       {isThisRoomConnected ? (
         <RoomParticipants roomInfo={roomInfo} usersObj={usersObj} />

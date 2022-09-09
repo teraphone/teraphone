@@ -1,6 +1,6 @@
 {
   "name": "teraphone",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "description": "Voice chat and screen sharing for remote teams.",
   "main": "./dist/main/main.js",
   "author": {

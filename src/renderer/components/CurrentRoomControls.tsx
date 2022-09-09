@@ -159,7 +159,7 @@ function CurentRoomControls() {
       break;
     case ConnectionStatus.Connecting:
       primaryStatusText = 'Voice Connecting';
-      statusColor = 'warning.light';
+      statusColor = 'primary.light';
       icon = <CircularProgress size={16} sx={{ color: statusColor }} />;
       break;
     case ConnectionStatus.Error:

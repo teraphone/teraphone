@@ -22,7 +22,7 @@ function PeekRoomParticipant(props: {
   const userAvatars = useAppSelector(selectUserAvatars);
 
   return (
-    <ListItemButton dense component="li" sx={{ pl: 4, py: 0.5 }}>
+    <ListItemButton dense component="li" sx={{ pl: 3, py: 0.5 }}>
       <ListItemIcon>
         <Avatar
           src={userAvatars[user.oid]}

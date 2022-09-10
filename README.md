@@ -20,4 +20,4 @@ You will need to have the Teraphone Code Signing Certificates (CSC) from Sectigo
 
 `$Env:CSC_LINK="<path-to-windows-csc.p12>"; $Env:CSC_KEY_PASSWORD="<your-personal-p12-password>"; npm run package:win`
 
-`$ENV:GH_TOKEN="<your-github-token>"; $Env:CSC_LINK="<path-to-windows-csc.p12>"; $Env:CSC_KEY_PASSWORD="<your-personal-p12-password>"; npm run publish:win`
+`$Env:GH_TOKEN="<your-github-token>"; $Env:CSC_LINK="<path-to-windows-csc.p12>"; $Env:CSC_KEY_PASSWORD="<your-personal-p12-password>"; npm run publish:win`

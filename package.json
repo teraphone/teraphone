@@ -60,6 +60,9 @@
         "nsis"
       ]
     },
+    "nsis": {
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
     "linux": {
       "target": [
         "AppImage"
@@ -73,7 +76,12 @@
     },
     "extraResources": [
       "./assets/**"
-    ]
+    ],
+    "publish": [{
+      "provider": "github",
+      "owner": "teraphone",
+      "repo": "releases"
+    }]
   },
   "jest": {
     "testEnvironment": "jsdom",

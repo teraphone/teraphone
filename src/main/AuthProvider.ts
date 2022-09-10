@@ -8,7 +8,7 @@ import {
 import { AuthenticationResult } from '@azure/msal-common';
 import { BrowserWindow } from 'electron';
 import CustomProtocolListener from './CustomProtocolListener';
-import { msalConfig, REDIRECT_URI } from './authConfig';
+import { GetConfig, REDIRECT_URI } from './authConfig';
 
 interface TokenRequest {
   scopes: string[];
@@ -17,7 +17,7 @@ interface TokenRequest {
 }
 
 class AuthProvider {
-  clientApplication;
+  clientApplication!: PublicClientApplication;
 
   cryptoProvider;
 
@@ -42,7 +42,13 @@ class AuthProvider {
      * Initialize a public client application. For more information, visit:
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/initialize-public-client-application.md
      */
-    this.clientApplication = new PublicClientApplication(msalConfig);
+    GetConfig()
+      .then((config) => {
+        this.clientApplication = new PublicClientApplication(config);
+        return true;
+      })
+      .catch(console.error);
+
     this.account = null;
 
     // Initialize CryptoProvider instance

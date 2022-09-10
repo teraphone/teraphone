@@ -3,17 +3,18 @@
 import { LogLevel, Configuration } from '@azure/msal-node';
 import {
   DataProtectionScope,
-  Environment,
   PersistenceCreator,
   PersistenceCachePlugin,
 } from '@azure/msal-node-extensions';
 import path from 'path';
+import { app } from 'electron';
 
 const AAD_ENDPOINT_HOST = 'https://login.microsoftonline.com/';
 export const REDIRECT_URI = 'msal9ef60b2f-3246-4390-8e17-a57478e7ec45://auth';
 
-const userRootDir = Environment.getUserRootDirectory() ?? '';
-const cachePath = path.join(userRootDir, './cache.json');
+const appDataDir = app.getPath('userData');
+const cachePath = path.join(appDataDir, './teraphone-cache.json');
+console.log('using cachePath', cachePath);
 const persistenceConfiguration = {
   cachePath,
   dataProtectionScope: DataProtectionScope.CurrentUser,

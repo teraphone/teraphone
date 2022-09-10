@@ -21,3 +21,7 @@ You will need to have the Teraphone Code Signing Certificates (CSC) from Sectigo
 `$Env:CSC_LINK="<path-to-windows-csc.p12>"; $Env:CSC_KEY_PASSWORD="<your-personal-p12-password>"; npm run package:win`
 
 `$Env:GH_TOKEN="<your-github-token>"; $Env:CSC_LINK="<path-to-windows-csc.p12>"; $Env:CSC_KEY_PASSWORD="<your-personal-p12-password>"; npm run publish:win`
+
+## electron-builder.env
+
+Rather than setting environment variables in the command line, you can create a file called `electron-builder.env` in the root of the project. This file will be ignored by git and will be used by electron-builder to set the environment variables. See this [example](https://github.com/motdotla/dotenv-expand/blob/1cc80d02e1f8aa749253a04a2061c0fecb9bdb69/tests/.env).

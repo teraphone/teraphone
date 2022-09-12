@@ -107,6 +107,8 @@ class AuthProvider {
 
   async logout() {
     if (this.account) {
+      const cache = this.clientApplication.getTokenCache();
+      await cache.removeAccount(this.account);
       this.account = null;
     }
     this.isLoggedOut = true;

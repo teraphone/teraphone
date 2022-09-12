@@ -1,6 +1,6 @@
 {
   "name": "teraphone",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Voice chat and screen sharing for remote teams.",
   "main": "./dist/main/main.js",
   "author": {
@@ -13,5 +13,7 @@
     "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts",
     "postinstall": "npm run electron-rebuild && npm run link-modules"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@azure/msal-node-extensions": "^1.0.0-alpha.23"
+  }
 }

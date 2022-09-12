@@ -8,7 +8,7 @@ import {
 import { AuthenticationResult } from '@azure/msal-common';
 import { BrowserWindow } from 'electron';
 import CustomProtocolListener from './CustomProtocolListener';
-import { msalConfig, REDIRECT_URI } from './authConfig';
+import { GetConfig, REDIRECT_URI } from './authConfig';
 
 interface TokenRequest {
   scopes: string[];
@@ -17,7 +17,7 @@ interface TokenRequest {
 }
 
 class AuthProvider {
-  clientApplication;
+  clientApplication!: PublicClientApplication;
 
   cryptoProvider;
 
@@ -42,7 +42,7 @@ class AuthProvider {
      * Initialize a public client application. For more information, visit:
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/initialize-public-client-application.md
      */
-    this.clientApplication = new PublicClientApplication(msalConfig);
+
     this.account = null;
 
     // Initialize CryptoProvider instance
@@ -85,6 +85,15 @@ class AuthProvider {
     this.isLoggedOut = false;
   }
 
+  async initClientApplication() {
+    try {
+      const config = await GetConfig();
+      this.clientApplication = new PublicClientApplication(config);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   // USE THESE
   async login() {
     const authResult = await this.getTokenInteractive(this.authCodeUrlParams);
@@ -98,6 +107,8 @@ class AuthProvider {
 
   async logout() {
     if (this.account) {
+      const cache = this.clientApplication.getTokenCache();
+      await cache.removeAccount(this.account);
       this.account = null;
     }
     this.isLoggedOut = true;

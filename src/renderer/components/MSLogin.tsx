@@ -1,11 +1,8 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-// import type { AuthenticationResult } from '@azure/msal-node';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Alert, Box, Container, CssBaseline } from '@mui/material';
-// import { signIn } from '../redux/Firebase';
 import { useAppDispatch } from '../redux/hooks';
-// import { setAppUser } from '../redux/AppUserSlice';
 import { setMSAuthResult } from '../redux/AuthSlice';
 import MSSignInLoadingButton from './MSSignInLoadingButton';
 import LoginFooter from './LoginFooter';
@@ -16,6 +13,8 @@ function MSLogin() {
   const [errorMessage, setErrorMessage] = React.useState('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const signedOut = searchParams.has('signedOut');
 
   const handleAuthSilent = React.useCallback(async () => {
     try {
@@ -35,8 +34,10 @@ function MSLogin() {
   }, [dispatch, navigate]);
 
   React.useEffect(() => {
-    handleAuthSilent();
-  }, [handleAuthSilent]);
+    if (!signedOut) {
+      handleAuthSilent();
+    }
+  }, [handleAuthSilent, signedOut]);
 
   const handleAuthClick = React.useCallback(async () => {
     try {

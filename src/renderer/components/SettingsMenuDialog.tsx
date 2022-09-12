@@ -68,7 +68,7 @@ function AccountPanel() {
     dispatch(signedOut);
     window.electron.ipcRenderer.logout().catch(console.error);
     dispatch(setIsVisible(false));
-    navigate('/');
+    navigate('/?signedOut');
   }, [dispatch, navigate, room]);
 
   return (

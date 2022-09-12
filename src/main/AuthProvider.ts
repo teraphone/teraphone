@@ -42,12 +42,6 @@ class AuthProvider {
      * Initialize a public client application. For more information, visit:
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-node/docs/initialize-public-client-application.md
      */
-    GetConfig()
-      .then((config) => {
-        this.clientApplication = new PublicClientApplication(config);
-        return true;
-      })
-      .catch(console.error);
 
     this.account = null;
 
@@ -89,6 +83,15 @@ class AuthProvider {
     };
 
     this.isLoggedOut = false;
+  }
+
+  async initClientApplication() {
+    try {
+      const config = await GetConfig();
+      this.clientApplication = new PublicClientApplication(config);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   // USE THESE

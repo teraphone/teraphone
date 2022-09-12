@@ -28,6 +28,7 @@ declare global {
         once(channel: string, func: (...args: unknown[]) => void): void;
         login: () => Promise<AccountInfo | null>;
         auth: () => Promise<AuthenticationResult | null>;
+        authSilent: () => Promise<AuthenticationResult | null>;
         logout: () => Promise<void>;
         getAuth: (scopes: string[]) => Promise<AuthenticationResult | null>;
       };

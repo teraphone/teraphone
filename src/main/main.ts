@@ -72,6 +72,11 @@ const init = async () => {
     return authResponse;
   });
 
+  ipcMain.handle('authSilent', async () => {
+    const authResponse = await authProvider.authSilent();
+    return authResponse;
+  });
+
   ipcMain.handle('logout', async () => {
     await authProvider.logout();
   });

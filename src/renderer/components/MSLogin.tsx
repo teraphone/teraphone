@@ -17,6 +17,27 @@ function MSLogin() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const handleAuthSilent = React.useCallback(async () => {
+    try {
+      setAuthPending(true);
+      const authResult = await window.electron.ipcRenderer.authSilent();
+      if (authResult) {
+        dispatch(setMSAuthResult(authResult));
+        setAuthPending(false);
+        navigate('/loading');
+      } else {
+        setAuthPending(false);
+      }
+    } catch (error) {
+      setAuthPending(false);
+      console.error(error);
+    }
+  }, [dispatch, navigate]);
+
+  React.useEffect(() => {
+    handleAuthSilent();
+  }, [handleAuthSilent]);
+
   const handleAuthClick = React.useCallback(async () => {
     try {
       setErrorMessage('');

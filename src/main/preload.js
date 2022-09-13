@@ -44,6 +44,10 @@ contextBridge.exposeInMainWorld('electron', {
       const authResponse = await ipcRenderer.invoke('auth');
       return authResponse;
     },
+    authSilent: async () => {
+      const authResponse = await ipcRenderer.invoke('authSilent');
+      return authResponse;
+    },
     logout: async () => {
       await ipcRenderer.invoke('logout');
     },

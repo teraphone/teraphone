@@ -105,6 +105,11 @@ class AuthProvider {
     return authResponse;
   }
 
+  async authSilent() {
+    const authResponse = await this.getAuthSilent(this.authCodeRequest.scopes);
+    return authResponse;
+  }
+
   async logout() {
     if (this.account) {
       const cache = this.clientApplication.getTokenCache();
@@ -134,6 +139,26 @@ class AuthProvider {
     this.isLoggedOut = false;
     this.handleResponse(authResponse);
     return authResponse;
+  }
+
+  async getAuthSilent(scopes: string[]) {
+    const req = {
+      scopes,
+      redirectUri: REDIRECT_URI,
+    };
+    let authResponse: AuthenticationResult | null;
+    const account = this.account || (await this.getAccount());
+    if (account && !this.isLoggedOut) {
+      const silentFlowRequest: SilentFlowRequest = {
+        account,
+        ...req,
+      };
+      authResponse = await this.getTokenSilent(silentFlowRequest);
+      this.isLoggedOut = false;
+      this.handleResponse(authResponse);
+      return authResponse;
+    }
+    return null;
   }
 
   async getToken(scopes: string[]) {

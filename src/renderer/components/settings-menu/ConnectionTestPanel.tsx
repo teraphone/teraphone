@@ -21,12 +21,10 @@ import {
 import {
   Box,
   CircularProgress,
-  Container,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Paper,
   Typography,
 } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
@@ -379,76 +377,72 @@ const ConnectionTestPanel = () => {
   }, [resetTests, runPhase1, runPhase2]);
 
   return (
-    <Container>
-      <Paper>
-        <Box
-          sx={{ display: 'flex' }}
-          flexDirection={{ xs: 'column', md: 'row' }}
+    <Box
+      sx={{ display: 'flex', p: 0 }}
+      flexDirection={{ xs: 'column', md: 'row' }}
+    >
+      <Box sx={{ pr: 6, pb: 3 }}>
+        <Typography variant="h5" component="h1">
+          Connection Test
+        </Typography>
+        <br />
+        <Typography variant="body1">
+          Test your connection to Teraphone's servers.
+        </Typography>
+        <br />
+        <LoadingButton
+          variant="contained"
+          disabled={!data?.roomToken || testsPending}
+          onClick={runTests}
+          loading={!data?.roomToken || testsPending}
         >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h3" component="h1">
-              Connection Test
-            </Typography>
-            <br />
-            <Typography variant="body1">
-              Test your connection to Teraphone's servers.
-            </Typography>
-            <br />
-            <LoadingButton
-              variant="contained"
-              disabled={!data?.roomToken || testsPending}
-              onClick={runTests}
-              loading={!data?.roomToken || testsPending}
-            >
-              Begin Test
-            </LoadingButton>
-          </Box>
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h3" component="h1">
-              Results
-            </Typography>
-            <List>
-              <TestStatusItem
-                key="test-signal-connection"
-                status={testSignalConnectionStatus}
-                message="Connecting to signal connection via WebSocket"
-                error={testSignalConnectionError}
-              />
-              <TestStatusItem
-                key="test-webrtc-connection"
-                status={testWebRTCConnectionStatus}
-                message="Establishing WebRTC connection"
-                error={testWebRTCConnectionError}
-              />
-              <TestStatusItem
-                key="test-connect-turn"
-                status={testConnectTURNStatus}
-                message="Can connect via TURN"
-                error={testConnectTURNError}
-              />
-              <TestStatusItem
-                key="test-publish-audio"
-                status={testPublishAudioStatus}
-                message="Can publish audio"
-                error={testPublishAudioError}
-              />
-              <TestStatusItem
-                key="test-publish-video"
-                status={testPublishVideoStatus}
-                message="Can publish video"
-                error={testPublishVideoError}
-              />
-              <TestStatusItem
-                key="test-resume-connection"
-                status={testResumeConnectionStatus}
-                message="Resuming connection after interruption"
-                error={testResumeConnectionError}
-              />
-            </List>
-          </Box>
-        </Box>
-      </Paper>
-    </Container>
+          Begin Test
+        </LoadingButton>
+      </Box>
+      <Box>
+        <Typography variant="h5" component="h1">
+          Results
+        </Typography>
+        <List>
+          <TestStatusItem
+            key="test-signal-connection"
+            status={testSignalConnectionStatus}
+            message="Connecting to signal connection via WebSocket"
+            error={testSignalConnectionError}
+          />
+          <TestStatusItem
+            key="test-webrtc-connection"
+            status={testWebRTCConnectionStatus}
+            message="Establishing WebRTC connection"
+            error={testWebRTCConnectionError}
+          />
+          <TestStatusItem
+            key="test-connect-turn"
+            status={testConnectTURNStatus}
+            message="Can connect via TURN"
+            error={testConnectTURNError}
+          />
+          <TestStatusItem
+            key="test-publish-audio"
+            status={testPublishAudioStatus}
+            message="Can publish audio"
+            error={testPublishAudioError}
+          />
+          <TestStatusItem
+            key="test-publish-video"
+            status={testPublishVideoStatus}
+            message="Can publish video"
+            error={testPublishVideoError}
+          />
+          <TestStatusItem
+            key="test-resume-connection"
+            status={testResumeConnectionStatus}
+            message="Resuming connection after interruption"
+            error={testResumeConnectionError}
+          />
+        </List>
+      </Box>
+    </Box>
   );
 };
 

@@ -366,6 +366,7 @@ function SettingsMenuDialog() {
               sx={{
                 borderRight: 1,
                 borderColor: 'divider',
+                width: 120,
               }}
             >
               <Tab value="tab1" label="Account" />

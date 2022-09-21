@@ -19,7 +19,7 @@ import {
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
 import { Room } from 'livekit-client';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   selectIsVisible,
   selectSelectedSpeakerId,
@@ -27,11 +27,11 @@ import {
   setIsVisible,
   setSelectedSpeakerId,
   setSelectedMicrophoneId,
-} from '../redux/SettingsSlice';
-import useRoom from '../hooks/useRoom';
-import { signedOut } from '../redux/ArtySlice';
-import { selectAppUser } from '../redux/AppUserSlice';
-import { selectUserAvatars } from '../redux/AvatarSlice';
+} from '../../redux/SettingsSlice';
+import useRoom from '../../hooks/useRoom';
+import { signedOut } from '../../redux/ArtySlice';
+import { selectAppUser } from '../../redux/AppUserSlice';
+import { selectUserAvatars } from '../../redux/AvatarSlice';
 
 function SettingsMenuTabPanel(props: {
   children: React.ReactNode;

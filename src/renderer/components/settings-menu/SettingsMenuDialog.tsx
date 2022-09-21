@@ -32,6 +32,7 @@ import useRoom from '../../hooks/useRoom';
 import { signedOut } from '../../redux/ArtySlice';
 import { selectAppUser } from '../../redux/AppUserSlice';
 import { selectUserAvatars } from '../../redux/AvatarSlice';
+import ConnectionTestPanel from './ConnectionTestPanel';
 
 function SettingsMenuTabPanel(props: {
   children: React.ReactNode;
@@ -370,6 +371,7 @@ function SettingsMenuDialog() {
               <Tab value="tab1" label="Account" />
               <Tab value="tab2" label="Devices" />
               <Tab value="tab3" label="License" />
+              <Tab value="tab4" label="Connection Test" />
             </TabList>
             <Box sx={{ height: '100%', overflowY: 'auto', flexGrow: 1 }}>
               <SettingsMenuTabPanel value="tab1">
@@ -380,6 +382,9 @@ function SettingsMenuDialog() {
               </SettingsMenuTabPanel>
               <SettingsMenuTabPanel value="tab3">
                 <LicensePanel />
+              </SettingsMenuTabPanel>
+              <SettingsMenuTabPanel value="tab4">
+                <ConnectionTestPanel />
               </SettingsMenuTabPanel>
             </Box>
           </Box>

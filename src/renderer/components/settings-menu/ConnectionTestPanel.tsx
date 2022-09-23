@@ -43,7 +43,7 @@ interface TestItemProps {
 
 const ROOM_URL = 'wss://sfu-demo.teraphone.app';
 
-setLogLevel(LogLevel.debug);
+setLogLevel(LogLevel.warn);
 
 const TestStatusItem = (props: TestItemProps) => {
   const { status, message, error } = props;

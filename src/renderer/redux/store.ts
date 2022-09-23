@@ -10,6 +10,7 @@ import artyReducer /* , { addParticipantRTListener } */ from './ArtySlice';
 import screenShareReducer from './ScreenShareSlice';
 import avatarReducer from './AvatarSlice';
 import settingsReducer from './SettingsSlice';
+import { peachoneApi } from './api';
 
 export const store = configureStore({
   reducer: {
@@ -23,11 +24,14 @@ export const store = configureStore({
     screenShare: screenShareReducer,
     avatars: avatarReducer,
     settings: settingsReducer,
+    [peachoneApi.reducerPath]: peachoneApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).prepend(listenerMiddleware.middleware),
+    })
+      .prepend(listenerMiddleware.middleware)
+      .concat(peachoneApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

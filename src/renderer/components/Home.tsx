@@ -15,7 +15,7 @@ import {
 } from '../redux/ConnectionStatusSlice';
 import ScreenPickerDialog from './ScreenPickerDialog';
 import AudioRenderers from './AudioRenderers';
-import SettingsMenuDialog from './SettingsMenuDialog';
+import SettingsMenuDialog from './settings-menu/SettingsMenuDialog';
 
 const Home = () => {
   React.useEffect(() => {

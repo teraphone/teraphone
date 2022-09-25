@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import { TabContext, TabList, useTabContext } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
-import { Room } from 'livekit-client';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   selectIsVisible,
@@ -108,10 +107,18 @@ type DeviceCatalog = {
 
 async function getDevices() {
   const deviceCatalog = {} as DeviceCatalog;
+
   try {
-    deviceCatalog.audioinput = await Room.getLocalDevices('audioinput', true);
-    deviceCatalog.audiooutput = await Room.getLocalDevices('audiooutput', true);
-    deviceCatalog.videoinput = await Room.getLocalDevices('videoinput', true);
+    const allDevices = await navigator.mediaDevices.enumerateDevices();
+    deviceCatalog.audioinput = allDevices.filter(
+      (d) => d.kind === 'audioinput'
+    );
+    deviceCatalog.audiooutput = allDevices.filter(
+      (d) => d.kind === 'audiooutput'
+    );
+    deviceCatalog.videoinput = allDevices.filter(
+      (d) => d.kind === 'videoinput'
+    );
   } catch (error) {
     console.error(error);
   }

@@ -4,7 +4,6 @@ import {
   Participant,
   RemoteTrackPublication,
   LocalParticipant,
-  Track,
 } from 'livekit-client';
 import AudioRenderer from './AudioRenderer';
 import { useAppSelector } from '../redux/hooks';
@@ -14,7 +13,9 @@ function ParticipantAudioRenderer(props: { participant: Participant }) {
   const [isMounted, setIsMounted] = React.useState(false);
   const { participant } = props;
   const isLocal = participant instanceof LocalParticipant;
-  const microphonePublication = participant.getTrack(Track.Source.Microphone);
+  const microphonePublications = participant
+    .getTracks()
+    .filter((track) => track.kind === 'audio');
   const deafen = useAppSelector(selectDeafen);
   const volume = deafen ? 0 : 1;
 
@@ -29,34 +30,36 @@ function ParticipantAudioRenderer(props: { participant: Participant }) {
 
   React.useEffect(() => {
     if (isMounted) {
-      if (!isLocal && microphonePublication) {
-        (microphonePublication as RemoteTrackPublication).setSubscribed(true);
+      if (!isLocal) {
+        microphonePublications.forEach((microphonePublication) => {
+          (microphonePublication as RemoteTrackPublication).setSubscribed(true);
+        });
       }
     }
-  }, [isLocal, isMounted, microphonePublication]);
+  }, [isLocal, isMounted, microphonePublications]);
 
-  if (!microphonePublication) {
-    return null;
-  }
+  const renderers = microphonePublications.map((microphonePublication) => {
+    const { track, trackSid } = microphonePublication;
 
-  const { track, trackSid } = microphonePublication;
+    if (!track) {
+      return null;
+    }
 
-  if (!track) {
-    return null;
-  }
+    if (isLocal) {
+      return null;
+    }
 
-  if (isLocal) {
-    return null;
-  }
+    return (
+      <AudioRenderer
+        key={trackSid}
+        track={track}
+        isLocal={isLocal}
+        volume={volume}
+      />
+    );
+  });
 
-  return (
-    <AudioRenderer
-      key={trackSid}
-      track={track}
-      isLocal={isLocal}
-      volume={volume}
-    />
-  );
+  return <>{renderers}</>;
 }
 
 export default ParticipantAudioRenderer;

@@ -110,8 +110,12 @@ const VideoOverlayControls = () => {
       }}
     >
       <Box sx={{ display: 'flex' }}>
-        <MuteButton mute={mute} onClick={handleMuteClick} />
-        <DeafenButton deafen={deafen} onClick={handleDeafenClick} />
+        <Box sx={{ pb: 0.5, pr: 0.5 }}>
+          <MuteButton mute={mute} onClick={handleMuteClick} />
+        </Box>
+        <Box sx={{ pb: 0.5 }}>
+          <DeafenButton deafen={deafen} onClick={handleDeafenClick} />
+        </Box>
       </Box>
     </Box>
   );

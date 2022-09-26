@@ -219,7 +219,7 @@ function VideoOverlay(props: VideoOverlayProps) {
               left: 0,
               position: 'absolute',
               right: 0,
-              bottom: 10,
+              bottom: 0,
               textAlign: 'center',
             }}
           >

@@ -8,6 +8,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew'; // popout
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { createTheme, ThemeProvider, Theme } from '@mui/material/styles';
+import VideoOverlayControls from './VideoOverlayControls';
 
 interface VideoOverlayProps {
   hidden: boolean;
@@ -154,7 +155,7 @@ function VideoOverlay(props: VideoOverlayProps) {
           background:
             'linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
           boxSizing: 'border-box',
-          height: '10%',
+          height: '50px',
           left: 0,
           position: 'absolute',
           right: 0,
@@ -204,13 +205,27 @@ function VideoOverlay(props: VideoOverlayProps) {
             'linear-gradient(to top, rgba(0,0,0,0.3), rgba(0,0,0,0.0))',
           bottom: 0,
           boxSizing: 'border-box',
-          height: '10%',
+          height: '50px',
           left: 0,
           position: 'absolute',
           right: 0,
           zIndex: 1,
         }}
       >
+        {isFocusItem && (
+          <Box // bottom middle
+            sx={{
+              boxSizing: 'border-box',
+              left: 0,
+              position: 'absolute',
+              right: 0,
+              bottom: 10,
+              textAlign: 'center',
+            }}
+          >
+            <VideoOverlayControls />
+          </Box>
+        )}
         <Box // bottom right
           sx={{
             bottom: 0,

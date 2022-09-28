@@ -10,6 +10,7 @@ import artyReducer /* , { addParticipantRTListener } */ from './ArtySlice';
 import screenShareReducer from './ScreenShareSlice';
 import avatarReducer from './AvatarSlice';
 import settingsReducer from './SettingsSlice';
+import cameraShareReducer from './CameraShareSlice';
 import { peachoneApi } from './api';
 
 export const store = configureStore({
@@ -24,6 +25,7 @@ export const store = configureStore({
     screenShare: screenShareReducer,
     avatars: avatarReducer,
     settings: settingsReducer,
+    cameraShare: cameraShareReducer,
     [peachoneApi.reducerPath]: peachoneApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

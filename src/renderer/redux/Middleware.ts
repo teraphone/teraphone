@@ -142,12 +142,13 @@ listenerMiddleware.startListening({
       state.currentRoom.previousRoom;
     const { oid: userId } = state.appUser.tenantUser;
     const { mute, deafen } = state.mute;
-    const { isSharing } = state.screenShare;
+    const { isSharing: isScreenSharing } = state.screenShare;
+    const { isSharing: isCameraSharing } = state.cameraShare;
     const info: models.ParticipantRTInfo = {
       isMuted: mute,
       isDeafened: deafen,
-      isCameraShare: false,
-      isScreenShare: isSharing,
+      isCameraShare: isCameraSharing,
+      isScreenShare: isScreenSharing,
     };
     switch (connectionStatus) {
       case ConnectionStatus.Connected:
@@ -183,7 +184,7 @@ listenerMiddleware.startListening({
   },
 });
 
-// on mute/deafen/screenShare change, pushUserParticipantRTInfo if connected
+// on mute/deafen/screenShare/cameraShare change, pushUserParticipantRTInfo if connected
 listenerMiddleware.startListening({
   predicate: (_action, currentState, previousState) => {
     const { mute: currentMute, deafen: currentDeafen } = (
@@ -192,28 +193,34 @@ listenerMiddleware.startListening({
     const { mute: previousMute, deafen: previousDeafen } = (
       previousState as RootState
     ).mute;
-    const { isSharing: currentIsSharing } = (currentState as RootState)
+    const { isSharing: currentIsScreenSharing } = (currentState as RootState)
       .screenShare;
-    const { isSharing: previousIsSharing } = (previousState as RootState)
+    const { isSharing: previousIsScreenSharing } = (previousState as RootState)
       .screenShare;
+    const { isSharing: currentIsCameraSharing } = (currentState as RootState)
+      .cameraShare;
+    const { isSharing: previousIsCameraSharing } = (previousState as RootState)
+      .cameraShare;
     const { connectionStatus } = (currentState as RootState).connectionStatus;
+    const case0 = connectionStatus === ConnectionStatus.Connected;
     const case1 = currentMute !== previousMute;
     const case2 = currentDeafen !== previousDeafen;
-    const case3 = currentIsSharing !== previousIsSharing;
-    const case4 = connectionStatus === ConnectionStatus.Connected;
-    return (case1 || case2 || case3) && case4;
+    const case3 = currentIsScreenSharing !== previousIsScreenSharing;
+    const case4 = currentIsCameraSharing !== previousIsCameraSharing;
+    return case0 && (case1 || case2 || case3 || case4);
   },
   effect: (_action, listenerApi) => {
     const state = listenerApi.getState() as RootState;
     const { teamId, roomId } = state.currentRoom.currentRoom;
     const { oid: userId } = state.appUser.tenantUser;
     const { mute, deafen } = state.mute;
-    const { isSharing } = state.screenShare;
+    const { isSharing: isScreenSharing } = state.screenShare;
+    const { isSharing: isCameraSharing } = state.cameraShare;
     const info: models.ParticipantRTInfo = {
       isMuted: mute,
       isDeafened: deafen,
-      isCameraShare: false,
-      isScreenShare: isSharing,
+      isCameraShare: isCameraSharing,
+      isScreenShare: isScreenSharing,
     };
     listenerApi.dispatch(
       pushUserParticipantRTInfo({

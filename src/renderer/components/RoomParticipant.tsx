@@ -8,6 +8,7 @@ import { Participant, ParticipantEvent } from 'livekit-client';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import * as models from '../models/models';
 import { useAppSelector } from '../redux/hooks';
 import { selectUserAvatars } from '../redux/AvatarSlice';
@@ -18,9 +19,17 @@ function RoomParticipant(props: {
   isMuted: boolean;
   isDeafened: boolean;
   isScreenShare: boolean;
+  isCameraShare: boolean;
 }) {
   const [isMounted, setIsMounted] = React.useState(false);
-  const { user, participant, isMuted, isDeafened, isScreenShare } = props;
+  const {
+    user,
+    participant,
+    isMuted,
+    isDeafened,
+    isScreenShare,
+    isCameraShare,
+  } = props;
   const { name } = user;
   const [isSpeaking, setIsSpeaking] = React.useState(false);
   const [speech, setSpeech] = React.useState('');
@@ -84,6 +93,15 @@ function RoomParticipant(props: {
 
       {isScreenShare && (
         <ScreenShareIcon
+          sx={{
+            width: 16,
+            height: 16,
+          }}
+        />
+      )}
+
+      {isCameraShare && (
+        <VideocamIcon
           sx={{
             width: 16,
             height: 16,

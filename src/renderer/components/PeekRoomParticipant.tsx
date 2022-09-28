@@ -7,6 +7,7 @@ import * as React from 'react';
 import MicOffIcon from '@mui/icons-material/MicOff';
 import HeadsetOffIcon from '@mui/icons-material/HeadsetOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import * as models from '../models/models';
 import { useAppSelector } from '../redux/hooks';
 import { selectUserAvatars } from '../redux/AvatarSlice';
@@ -16,8 +17,9 @@ function PeekRoomParticipant(props: {
   isMuted: boolean;
   isDeafened: boolean;
   isScreenShare: boolean;
+  isCameraShare: boolean;
 }) {
-  const { user, isMuted, isDeafened, isScreenShare } = props;
+  const { user, isMuted, isDeafened, isScreenShare, isCameraShare } = props;
   const { name } = user;
   const userAvatars = useAppSelector(selectUserAvatars);
 
@@ -53,6 +55,15 @@ function PeekRoomParticipant(props: {
 
       {isScreenShare && (
         <ScreenShareIcon
+          sx={{
+            width: 16,
+            height: 16,
+          }}
+        />
+      )}
+
+      {isCameraShare && (
+        <VideocamIcon
           sx={{
             width: 16,
             height: 16,

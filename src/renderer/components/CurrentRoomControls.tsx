@@ -29,6 +29,7 @@ import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
+import useVideoItems from '../hooks/useVideoItems';
 
 const ShareCameraButton = (props: {
   status: ConnectionStatus;
@@ -131,15 +132,23 @@ function CurentRoomControls() {
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const debug = false;
   const isCameraShare = useAppSelector(selectCameraIsSharing);
+  const { setUpVideoTrack } = useVideoItems();
 
   const handleShareCameraClick = React.useCallback(async () => {
-    try {
-      await room?.localParticipant.setCameraEnabled(!isCameraShare);
-      dispatch(setCameraIsSharing(!isCameraShare));
-    } catch (error) {
-      console.error(error);
+    if (room?.localParticipant) {
+      try {
+        const localTrackPub = await room?.localParticipant.setCameraEnabled(
+          !isCameraShare
+        );
+        dispatch(setCameraIsSharing(!isCameraShare));
+        if (!isCameraShare && localTrackPub) {
+          setUpVideoTrack(localTrackPub, room.localParticipant);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, [dispatch, isCameraShare, room?.localParticipant]);
+  }, [dispatch, isCameraShare, room?.localParticipant, setUpVideoTrack]);
 
   const handleShareScreenClick = React.useCallback(() => {
     dispatch(setPickerVisible(true));

@@ -43,7 +43,11 @@ function TeamTabs() {
     return (
       <Tooltip title={displayName} key={id} placement="right" arrow>
         <Tab
-          icon={<Avatar src={teamAvatars[id]}>{displayName[0]}</Avatar>}
+          icon={
+            <Avatar variant="rounded" src={teamAvatars[id]}>
+              {displayName[0]}
+            </Avatar>
+          }
           key={id}
           sx={{ minWidth: 0 }}
           {...a11yProps(index)}

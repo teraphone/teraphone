@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { ConnectionState, Track } from 'livekit-client';
 import { Box } from '@mui/material';
-import { selectCameraIsSharing } from 'renderer/redux/CameraShareSlice';
+import { selectCameraIsSharing } from '../redux/CameraShareSlice';
 import useRoom from '../hooks/useRoom';
 import useVideoItems from '../hooks/useVideoItems';
 import MainVideoView from './MainVideoView';

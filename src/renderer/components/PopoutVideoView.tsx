@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as React from 'react';
 import Box from '@mui/material/Box';
+import { Track } from 'livekit-client';
 import type { VideoItemValue } from '../lib/ExtendedUseRoom';
 import WindowPortal from './WindowPortal';
 import VideoItem from './VideoItem';
@@ -25,10 +26,13 @@ function PopoutVideoView(props: PopoutVideoViewProps) {
   if (!userName) {
     userName = 'Unknown';
   }
+  const sourceType = videoTrack.source;
+  const isScreen = sourceType === Track.Source.ScreenShare;
+  const device = isScreen ? 'Screen' : 'Camera';
 
   const title = isLocal
-    ? `Your Screen - T E R A P H O N E`
-    : `${userName}'s Screen - T E R A P H O N E`;
+    ? `Your ${device} - T E R A P H O N E`
+    : `${userName}'s ${device} - T E R A P H O N E`;
 
   const handleClose = React.useCallback(() => {
     setIsPopout(sid, false);

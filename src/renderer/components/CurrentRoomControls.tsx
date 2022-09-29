@@ -37,8 +37,9 @@ const ShareCameraButton = (props: {
   isSharing: boolean;
 }) => {
   const { status, onClick, isSharing } = props;
+  const tooltip = isSharing ? 'Stop sharing camera' : 'Share camera';
   return (
-    <Tooltip title="Share Camera" placement="top" arrow sx={{ flexGrow: 1 }}>
+    <Tooltip title={tooltip} placement="top" arrow sx={{ flexGrow: 1 }}>
       <span>
         <Button
           disabled={status !== ConnectionStatus.Connected}

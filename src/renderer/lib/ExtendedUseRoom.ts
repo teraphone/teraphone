@@ -209,6 +209,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
 
         const onDisconnected = () => {
           console.log(RoomEvent.Disconnected);
+          dispatch(setCameraIsSharing(false));
           dispatch(setScreens({}));
           dispatch(setWindows({}));
           setVideoItems({});

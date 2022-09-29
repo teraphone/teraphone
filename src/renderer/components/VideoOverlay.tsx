@@ -119,7 +119,8 @@ function VideoOverlay(props: VideoOverlayProps) {
 
   const handlePopoutClick = React.useCallback(() => {
     setIsPopout(sid, true);
-  }, [setIsPopout, sid]);
+    setFocus('');
+  }, [setFocus, setIsPopout, sid]);
 
   return (
     <Box

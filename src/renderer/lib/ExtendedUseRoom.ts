@@ -16,7 +16,7 @@ import {
   LocalParticipant,
   RemoteParticipant,
 } from 'livekit-client';
-import { setCameraIsSharing } from 'renderer/redux/CameraShareSlice';
+import { setCameraIsSharing } from '../redux/CameraShareSlice';
 import { useAppDispatch } from '../redux/hooks';
 import {
   removeSource,

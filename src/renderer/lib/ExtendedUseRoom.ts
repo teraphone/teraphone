@@ -16,6 +16,7 @@ import {
   LocalParticipant,
   RemoteParticipant,
 } from 'livekit-client';
+import { setCameraIsSharing } from '../redux/CameraShareSlice';
 import { useAppDispatch } from '../redux/hooks';
 import {
   removeSource,
@@ -55,15 +56,16 @@ export interface ExtendedRoomState {
   videoItemsState: {
     videoItems: VideoItemsObject;
     setVideoItems: React.Dispatch<React.SetStateAction<VideoItemsObject>>;
-    setUpScreenTrack: (
+    setUpVideoTrack: (
       videoTrack: RemoteTrackPublication | LocalTrackPublication,
       participant: RemoteParticipant | LocalParticipant
     ) => void;
-    takeDownScreenTrack: (
+    takeDownVideoTrack: (
       videoTrack: RemoteTrackPublication | LocalTrackPublication,
       _participant: RemoteParticipant | LocalParticipant
     ) => void;
     unShareScreen: (sourceId: string) => void;
+    unShareCamera: () => void;
   };
 }
 
@@ -80,7 +82,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
   const [videoItems, setVideoItems] = React.useState<VideoItemsObject>({});
   const localParticipant = room?.localParticipant;
 
-  const setUpScreenTrack = React.useCallback(
+  const setUpVideoTrack = React.useCallback(
     (
       videoTrack: RemoteTrackPublication | LocalTrackPublication,
       participant: RemoteParticipant | LocalParticipant
@@ -102,7 +104,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
     [localParticipant?.sid, videoItems]
   );
 
-  const takeDownScreenTrack = React.useCallback(
+  const takeDownVideoTrack = React.useCallback(
     (
       videoTrack: RemoteTrackPublication | LocalTrackPublication,
       _participant: RemoteParticipant | LocalParticipant
@@ -122,22 +124,26 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
     [dispatch]
   );
 
+  const unShareCamera = React.useCallback(() => {
+    dispatch(setCameraIsSharing(false));
+  }, [dispatch]);
+
   const handleTrackPublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
       if (track.kind === 'video') {
-        setUpScreenTrack(track, participant);
+        setUpVideoTrack(track, participant);
       }
     },
-    [setUpScreenTrack]
+    [setUpVideoTrack]
   );
 
   const handleTrackUnpublished = React.useCallback(
     (track: RemoteTrackPublication, participant: RemoteParticipant) => {
       if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
+        takeDownVideoTrack(track, participant);
       }
     },
-    [takeDownScreenTrack]
+    [takeDownVideoTrack]
   );
 
   const handleTrackUnsubscribed = React.useCallback(
@@ -148,10 +154,10 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
     ) => {
       console.log(RoomEvent.TrackUnsubscribed, _, track, participant);
       if (track.kind === 'video') {
-        takeDownScreenTrack(track, participant);
+        takeDownVideoTrack(track, participant);
       }
     },
-    [takeDownScreenTrack]
+    [takeDownVideoTrack]
   );
 
   const handleLocalTrackUnpublished = React.useCallback(
@@ -160,11 +166,15 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
       if (track.kind === 'video') {
         const { trackName } = track;
         const sourceId = trackName.split('/')[1];
-        unShareScreen(sourceId);
-        takeDownScreenTrack(track, participant);
+        if (track.source === Track.Source.ScreenShare) {
+          unShareScreen(sourceId);
+        } else {
+          unShareCamera();
+        }
+        takeDownVideoTrack(track, participant);
       }
     },
-    [takeDownScreenTrack, unShareScreen]
+    [takeDownVideoTrack, unShareCamera, unShareScreen]
   );
 
   const connectFn = React.useCallback(
@@ -199,6 +209,7 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
 
         const onDisconnected = () => {
           console.log(RoomEvent.Disconnected);
+          dispatch(setCameraIsSharing(false));
           dispatch(setScreens({}));
           dispatch(setWindows({}));
           setVideoItems({});
@@ -278,9 +289,10 @@ export function useRoomExtended(roomOptions?: RoomOptions): ExtendedRoomState {
     videoItemsState: {
       videoItems,
       setVideoItems,
-      setUpScreenTrack,
-      takeDownScreenTrack,
+      setUpVideoTrack,
+      takeDownVideoTrack,
       unShareScreen,
+      unShareCamera,
     },
   };
 }

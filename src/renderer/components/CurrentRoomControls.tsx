@@ -9,12 +9,17 @@ import {
   Button,
 } from '@mui/material';
 import VideoCameraFrontIcon from '@mui/icons-material/VideoCameraFront';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InfoIcon from '@mui/icons-material/Info';
 import LogoutIcon from '@mui/icons-material/Logout';
 import * as React from 'react';
+import {
+  selectCameraIsSharing,
+  setCameraIsSharing,
+} from '../redux/CameraShareSlice';
 import useRoom from '../hooks/useRoom';
 import {
   ConnectionStatus,
@@ -24,23 +29,25 @@ import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
 import { setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
+import useVideoItems from '../hooks/useVideoItems';
 
 const ShareCameraButton = (props: {
-  // status: ConnectionStatus;
+  status: ConnectionStatus;
   onClick: () => void;
+  isSharing: boolean;
 }) => {
-  const { /* status, */ onClick } = props;
+  const { status, onClick, isSharing } = props;
+  const tooltip = isSharing ? 'Stop sharing camera' : 'Share camera';
   return (
-    <Tooltip title="Share Camera" placement="top" arrow sx={{ flexGrow: 1 }}>
+    <Tooltip title={tooltip} placement="top" arrow sx={{ flexGrow: 1 }}>
       <span>
         <Button
-          disabled
-          // disabled={status !== ConnectionStatus.Connected}
+          disabled={status !== ConnectionStatus.Connected}
           disableElevation
           fullWidth
           onClick={onClick}
           size="small"
-          startIcon={<VideoCameraFrontIcon />}
+          startIcon={isSharing ? <VideocamOffIcon /> : <VideoCameraFrontIcon />}
           sx={{ backgroundColor: 'black', minWidth: 'unset' }}
           variant="contained"
         >
@@ -125,10 +132,24 @@ function CurentRoomControls() {
   const { room } = useRoom();
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const debug = false;
+  const isCameraShare = useAppSelector(selectCameraIsSharing);
+  const { setUpVideoTrack } = useVideoItems();
 
-  const handleShareCameraClick = React.useCallback(() => {
-    console.log('handleShareCameraClick');
-  }, []);
+  const handleShareCameraClick = React.useCallback(async () => {
+    if (room?.localParticipant) {
+      try {
+        const localTrackPub = await room?.localParticipant.setCameraEnabled(
+          !isCameraShare
+        );
+        dispatch(setCameraIsSharing(!isCameraShare));
+        if (!isCameraShare && localTrackPub) {
+          setUpVideoTrack(localTrackPub, room.localParticipant);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [dispatch, isCameraShare, room?.localParticipant, setUpVideoTrack]);
 
   const handleShareScreenClick = React.useCallback(() => {
     dispatch(setPickerVisible(true));
@@ -222,8 +243,9 @@ function CurentRoomControls() {
       >
         <Box sx={{ flexGrow: 1 }}>
           <ShareCameraButton
-            // status={connectionStatus}
+            status={connectionStatus}
             onClick={handleShareCameraClick}
+            isSharing={isCameraShare}
           />
         </Box>
         <Box sx={{ flexGrow: 1 }}>

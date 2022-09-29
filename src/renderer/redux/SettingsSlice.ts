@@ -28,11 +28,18 @@ export const settingsSlice = createSlice({
     setSelectedMicrophoneId: (state, action: PayloadAction<string>) => {
       state.selectedDevices.audioinput = action.payload;
     },
+    setSelectedCameraId: (state, action: PayloadAction<string>) => {
+      state.selectedDevices.videoinput = action.payload;
+    },
   },
 });
 
-export const { setIsVisible, setSelectedSpeakerId, setSelectedMicrophoneId } =
-  settingsSlice.actions;
+export const {
+  setIsVisible,
+  setSelectedSpeakerId,
+  setSelectedMicrophoneId,
+  setSelectedCameraId,
+} = settingsSlice.actions;
 
 export const selectIsVisible = (state: RootState) => state.settings.isVisible;
 
@@ -41,5 +48,8 @@ export const selectSelectedSpeakerId = (state: RootState) =>
 
 export const selectSelectedMicrophoneId = (state: RootState) =>
   state.settings.selectedDevices.audioinput;
+
+export const selectSelectedCameraId = (state: RootState) =>
+  state.settings.selectedDevices.videoinput;
 
 export default settingsSlice.reducer;

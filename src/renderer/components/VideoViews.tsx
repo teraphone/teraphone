@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import * as React from 'react';
-import { ConnectionState } from 'livekit-client';
+import { ConnectionState, Track } from 'livekit-client';
 import { Box } from '@mui/material';
+import { selectCameraIsSharing } from '../redux/CameraShareSlice';
 import useRoom from '../hooks/useRoom';
 import useVideoItems from '../hooks/useVideoItems';
 import MainVideoView from './MainVideoView';
@@ -15,9 +16,10 @@ import PopoutVideoView from './PopoutVideoView';
 function VideoViews() {
   const screens = useAppSelector(selectScreens);
   const windows = useAppSelector(selectWindows);
+  const isCameraShare = useAppSelector(selectCameraIsSharing);
   const { tenantUser } = useAppSelector(selectAppUser);
   const { room } = useRoom();
-  const { videoItems, setVideoItems, setUpScreenTrack, takeDownScreenTrack } =
+  const { videoItems, setVideoItems, setUpVideoTrack, takeDownVideoTrack } =
     useVideoItems();
   const localParticipant = room?.localParticipant;
   const participants = room?.participants;
@@ -66,12 +68,12 @@ function VideoViews() {
       participants.forEach((participant) => {
         if (participant.videoTracks) {
           participant.videoTracks.forEach((videoTrack, _sid) => {
-            setUpScreenTrack(videoTrack, participant);
+            setUpVideoTrack(videoTrack, participant);
           });
         }
       });
     }
-  }, [participants, setUpScreenTrack]);
+  }, [participants, setUpVideoTrack]);
 
   React.useEffect(() => {
     // add local video tracks to videoItems
@@ -105,7 +107,7 @@ function VideoViews() {
           if (localParticipant?.videoTracks) {
             localParticipant.videoTracks.forEach((videoTrack, sid) => {
               if (!videoItems[sid]) {
-                setUpScreenTrack(videoTrack, localParticipant);
+                setUpVideoTrack(videoTrack, localParticipant);
               }
             });
           }
@@ -121,7 +123,7 @@ function VideoViews() {
     localParticipant,
     room,
     screens,
-    setUpScreenTrack,
+    setUpVideoTrack,
     sourceIsPublished,
     windows,
     videoItems,
@@ -133,15 +135,20 @@ function VideoViews() {
       if (localParticipant.videoTracks) {
         localParticipant.videoTracks.forEach((videoTrack) => {
           const { trackName, track } = videoTrack;
-          const sourceId = trackName.split('/')[1];
-          if (!screens[sourceId] && !windows[sourceId] && track) {
-            takeDownScreenTrack(videoTrack, localParticipant);
+          if (videoTrack.source === Track.Source.ScreenShare) {
+            const sourceId = trackName.split('/')[1];
+            if (!screens[sourceId] && !windows[sourceId] && track) {
+              takeDownVideoTrack(videoTrack, localParticipant);
+              localParticipant.unpublishTrack(track, true);
+            }
+          } else if (!isCameraShare && track) {
+            takeDownVideoTrack(videoTrack, localParticipant);
             localParticipant.unpublishTrack(track, true);
           }
         });
       }
     }
-  }, [localParticipant, screens, takeDownScreenTrack, windows]);
+  }, [isCameraShare, localParticipant, screens, takeDownVideoTrack, windows]);
 
   const popoutWindowNodes = Object.entries(videoItems)
     .filter(([, videoItem]) => videoItem.isPopout)

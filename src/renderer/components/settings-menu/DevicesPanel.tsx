@@ -13,8 +13,10 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {
   selectSelectedSpeakerId,
   selectSelectedMicrophoneId,
+  selectSelectedCameraId,
   setSelectedSpeakerId,
   setSelectedMicrophoneId,
+  setSelectedCameraId,
 } from '../../redux/SettingsSlice';
 import useRoom from '../../hooks/useRoom';
 
@@ -46,6 +48,7 @@ function DevicesPanel() {
   const dispatch = useAppDispatch();
   const selectedSpeakerId = useAppSelector(selectSelectedSpeakerId);
   const selectedMicrophoneId = useAppSelector(selectSelectedMicrophoneId);
+  const selectedCameraId = useAppSelector(selectSelectedCameraId);
   const { room } = useRoom();
   const [devices, setDevices] = React.useState({
     audioinput: [],
@@ -60,6 +63,10 @@ function DevicesPanel() {
     selectedMicrophoneId === ''
       ? devices.audioinput[0]
       : devices.audioinput.find((d) => d.deviceId === selectedMicrophoneId);
+  const currentCamera =
+    selectedCameraId === ''
+      ? devices.videoinput[0]
+      : devices.videoinput.find((d) => d.deviceId === selectedCameraId);
   // todo:
   // - make sure selected devices exist. if not, select default.
   // - option to set to system default
@@ -86,6 +93,15 @@ function DevicesPanel() {
     }
   }, [currentMicrophone, room]);
 
+  React.useEffect(() => {
+    if (currentCamera) {
+      room?.switchActiveDevice('videoinput', currentCamera.deviceId);
+      if (room?.options.videoCaptureDefaults) {
+        room.options.videoCaptureDefaults.deviceId = currentCamera.deviceId;
+      }
+    }
+  }, [currentCamera, room]);
+
   const handleSpeakerChange = React.useCallback(
     (event: SelectChangeEvent) => {
       dispatch(setSelectedSpeakerId(event.target.value));
@@ -96,6 +112,13 @@ function DevicesPanel() {
   const handleMicrophoneChange = React.useCallback(
     (event: SelectChangeEvent) => {
       dispatch(setSelectedMicrophoneId(event.target.value));
+    },
+    [dispatch]
+  );
+
+  const handleCameraChange = React.useCallback(
+    (event: SelectChangeEvent) => {
+      dispatch(setSelectedCameraId(event.target.value));
     },
     [dispatch]
   );
@@ -130,7 +153,7 @@ function DevicesPanel() {
           )}
         </FormControl>
       </Box>
-      <Box sx={{ pt: 2 }}>
+      <Box sx={{ py: 2 }}>
         <FormControl fullWidth variant="standard">
           {devices.audioinput.length > 0 && (
             <>
@@ -152,6 +175,30 @@ function DevicesPanel() {
             <Typography variant="body2">
               No audio input devices found.
             </Typography>
+          )}
+        </FormControl>
+      </Box>
+      <Typography variant="h6">Video Devices</Typography>
+      <Box sx={{ pt: 2 }}>
+        <FormControl fullWidth variant="standard">
+          {devices.videoinput.length > 0 && (
+            <>
+              <InputLabel>Camera</InputLabel>
+              <Select
+                value={currentCamera?.deviceId}
+                label={currentCamera?.label}
+                onChange={handleCameraChange}
+              >
+                {devices.videoinput.map((d) => (
+                  <MenuItem key={d.deviceId} value={d.deviceId}>
+                    {d.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          )}
+          {devices.videoinput.length === 0 && (
+            <Typography variant="body2">No camera devices found.</Typography>
           )}
         </FormControl>
       </Box>

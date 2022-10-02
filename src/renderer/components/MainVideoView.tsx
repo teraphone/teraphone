@@ -159,7 +159,10 @@ function MainVideoView(props: MainVideoViewProps) {
             <VideoItemPlaceholder
               message={placeholderMessage}
               buttonText="Restore"
-              buttonAction={() => setIsPopout(sid, false)}
+              buttonAction={() => {
+                setIsPopout(sid, false);
+                setFocus('');
+              }}
             />
           ) : (
             <>

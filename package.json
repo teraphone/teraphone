@@ -62,9 +62,7 @@
         "nsis"
       ]
     },
-    "nsis": {
-      "artifactName": "${productName}-Setup-${version}.${ext}"
-    },
+    "artifactName": "${productName}-Setup-${os}-${arch}.${ext}",
     "linux": {
       "target": [
         "AppImage"
@@ -204,7 +202,7 @@
     "firebase": "^9.9.3",
     "history": "^5.2.0",
     "isomorphic-fetch": "^3.0.0",
-    "livekit-client": "^1.2.11",
+    "livekit-client": "^1.4.1",
     "material-ui-popup-state": "^4.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

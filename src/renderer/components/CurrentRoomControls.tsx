@@ -27,7 +27,7 @@ import {
 } from '../redux/ConnectionStatusSlice';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { selectCurrentRoom } from '../redux/CurrentRoomSlice';
-import { setPickerVisible } from '../redux/ScreenShareSlice';
+import { selectIsSharing, setPickerVisible } from '../redux/ScreenShareSlice';
 import '../lib/ExtendedLocalParticipant';
 import useVideoItems from '../hooks/useVideoItems';
 
@@ -48,8 +48,9 @@ const ShareCameraButton = (props: {
           onClick={onClick}
           size="small"
           startIcon={isSharing ? <VideocamOffIcon /> : <VideoCameraFrontIcon />}
-          sx={{ backgroundColor: 'black', minWidth: 'unset' }}
+          sx={{ minWidth: 'unset' }}
           variant="contained"
+          color={isSharing ? 'success' : 'primary'}
         >
           Camera
         </Button>
@@ -61,8 +62,9 @@ const ShareCameraButton = (props: {
 const ShareScreenButton = (props: {
   status: ConnectionStatus;
   onClick: () => void;
+  isSharing: boolean;
 }) => {
-  const { status, onClick } = props;
+  const { status, onClick, isSharing } = props;
   return (
     <Tooltip title="Share Screens" placement="top" arrow>
       <span>
@@ -73,8 +75,8 @@ const ShareScreenButton = (props: {
           onClick={onClick}
           size="small"
           startIcon={<ScreenShareIcon />}
-          sx={{ backgroundColor: 'black' }}
           variant="contained"
+          color={isSharing ? 'success' : 'primary'}
         >
           Screens
         </Button>
@@ -133,6 +135,7 @@ function CurentRoomControls() {
   const { connectionStatus } = useAppSelector(selectConnectionStatus);
   const debug = false;
   const isCameraShare = useAppSelector(selectCameraIsSharing);
+  const isScreenShare = useAppSelector(selectIsSharing);
   const { setUpVideoTrack } = useVideoItems();
 
   const handleShareCameraClick = React.useCallback(async () => {
@@ -252,6 +255,7 @@ function CurentRoomControls() {
           <ShareScreenButton
             status={connectionStatus}
             onClick={handleShareScreenClick}
+            isSharing={isScreenShare}
           />
         </Box>
       </Box>

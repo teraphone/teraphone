@@ -23,6 +23,14 @@ function PeekRoomParticipant(props: {
   const { name } = user;
   const userAvatars = useAppSelector(selectUserAvatars);
 
+  React.useEffect(() => {
+    console.log('PeekRoomParticipant', name, 'Mounted');
+    return () => {
+      console.log('PeekRoomParticipant', name, 'Unmounted');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <ListItemButton dense component="li" sx={{ pl: 3, py: 0.5 }}>
       <ListItemIcon>

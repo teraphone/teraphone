@@ -20,6 +20,17 @@ function PeakRoomParticipants(props: {
   );
   const roomParticipants: JSX.Element[] = [];
 
+  React.useEffect(() => {
+    console.log('PeekRoomParticipants', roomInfo.room.displayName, 'Mounted');
+    return () =>
+      console.log(
+        'PeekRoomParticipants',
+        roomInfo.room.displayName,
+        'Unmounted'
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   Object.entries(usersRTInfo).map(([userId, participantRTInfo]) => {
     let user = {} as models.TenantUser;
     if (usersObj[userId]) {

@@ -7,7 +7,6 @@ import { useAppSelector } from '../redux/hooks';
 
 export interface AudioTrackProps {
   track: Track;
-  isLocal: boolean;
   volume: number; // Is a double indicating the audio volume, from 0.0 (silent) to 1.0 (loudest).
 }
 
@@ -15,7 +14,7 @@ type HTMLAudioElement2 = HTMLAudioElement & {
   setSinkId(deviceId: string): Promise<void>;
 };
 
-function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
+function AudioRenderer({ track, volume }: AudioTrackProps) {
   const audioEl = React.useRef<HTMLAudioElement2>();
   const selectedSpeakerId = useAppSelector(selectSelectedSpeakerId);
 
@@ -26,10 +25,6 @@ function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
 
   React.useEffect(() => {
     console.log('AudioRenderer -> useEffect');
-    if (isLocal) {
-      // don't play own audio
-      return;
-    }
     audioEl.current = track.attach() as HTMLAudioElement2;
     if (track.sid) {
       audioEl.current.setAttribute('data-audio-track-id', track.sid);
@@ -46,7 +41,7 @@ function AudioRenderer({ track, isLocal, volume }: AudioTrackProps) {
     }
 
     return () => track.detach().forEach((el) => el.remove());
-  }, [track, isLocal, volume, selectedSpeakerId]);
+  }, [track, volume, selectedSpeakerId]);
 
   return null;
 }

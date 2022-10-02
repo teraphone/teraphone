@@ -1,61 +1,30 @@
 /* eslint-disable no-console */
 import * as React from 'react';
-import {
-  Participant,
-  RemoteTrackPublication,
-  LocalParticipant,
-} from 'livekit-client';
+import { AudioTrack } from 'livekit-client';
 import AudioRenderer from './AudioRenderer';
 import { useAppSelector } from '../redux/hooks';
 import { selectDeafen } from '../redux/MuteSlice';
 
-function ParticipantAudioRenderer(props: { participant: Participant }) {
-  const [isMounted, setIsMounted] = React.useState(false);
-  const { participant } = props;
-  const isLocal = participant instanceof LocalParticipant;
-  const microphonePublications = participant
-    .getTracks()
-    .filter((track) => track.kind === 'audio');
+function ParticipantAudioRenderer(props: { audioTracks: AudioTrack[] }) {
+  const { audioTracks } = props;
   const deafen = useAppSelector(selectDeafen);
   const volume = deafen ? 0 : 1;
 
   React.useEffect(() => {
     console.log('ParticipantAudioRenderer Mounted');
-    setIsMounted(true);
+
     return () => {
-      setIsMounted(false);
       console.log('ParticipantAudioRenderer Unmounted');
     };
   }, []);
 
-  React.useEffect(() => {
-    if (isMounted) {
-      if (!isLocal) {
-        microphonePublications.forEach((microphonePublication) => {
-          (microphonePublication as RemoteTrackPublication).setSubscribed(true);
-        });
-      }
-    }
-  }, [isLocal, isMounted, microphonePublications]);
-
-  const renderers = microphonePublications.map((microphonePublication) => {
-    const { track, trackSid } = microphonePublication;
-
-    if (!track) {
-      return null;
-    }
-
-    if (isLocal) {
+  const renderers = audioTracks.map((audioTrack) => {
+    if (!audioTrack) {
       return null;
     }
 
     return (
-      <AudioRenderer
-        key={trackSid}
-        track={track}
-        isLocal={isLocal}
-        volume={volume}
-      />
+      <AudioRenderer key={audioTrack.sid} track={audioTrack} volume={volume} />
     );
   });
 

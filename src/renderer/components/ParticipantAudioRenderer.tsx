@@ -4,14 +4,18 @@ import {
   Participant,
   RemoteTrackPublication,
   LocalParticipant,
+  AudioTrack,
 } from 'livekit-client';
 import AudioRenderer from './AudioRenderer';
 import { useAppSelector } from '../redux/hooks';
 import { selectDeafen } from '../redux/MuteSlice';
 
-function ParticipantAudioRenderer(props: { participant: Participant }) {
+function ParticipantAudioRenderer(props: {
+  participant: Participant;
+  audioTracks: AudioTrack[];
+}) {
   const [isMounted, setIsMounted] = React.useState(false);
-  const { participant } = props;
+  const { participant, audioTracks } = props;
   const isLocal = participant instanceof LocalParticipant;
   const microphonePublications = participant
     .getTracks()
@@ -27,6 +31,10 @@ function ParticipantAudioRenderer(props: { participant: Participant }) {
       console.log('ParticipantAudioRenderer Unmounted');
     };
   }, []);
+
+  React.useEffect(() => {
+    console.log('ParticipantAudioRenderer audioTracks', audioTracks);
+  }, [audioTracks]);
 
   React.useEffect(() => {
     if (isMounted) {

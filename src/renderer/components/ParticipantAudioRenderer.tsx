@@ -12,7 +12,7 @@ import { selectDeafen } from '../redux/MuteSlice';
 
 function ParticipantAudioRenderer(props: {
   participant: Participant;
-  audioTracks: AudioTrack[];
+  audioTracks: AudioTrack[]; // this forces a rerender that fixed #150
 }) {
   const [isMounted, setIsMounted] = React.useState(false);
   const { participant, audioTracks } = props;

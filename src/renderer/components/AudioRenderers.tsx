@@ -11,9 +11,13 @@ function AudioRenderers() {
     return () => console.log('AudioRenderers Unmounted');
   }, []);
 
-  const { room, participants } = useRoom();
+  const { room, participants, audioTracks } = useRoom();
   const mute = useAppSelector(selectMute);
   const localParticipant = room?.localParticipant;
+
+  React.useEffect(() => {
+    console.log('AudioRenderers audioTracks', audioTracks);
+  }, [audioTracks]);
 
   React.useEffect(() => {
     if (localParticipant) {
@@ -41,6 +45,7 @@ function AudioRenderers() {
       <ParticipantAudioRenderer
         key={participant.sid}
         participant={participant}
+        audioTracks={audioTracks}
       />
     );
   });

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-// import { RoomOptions } from 'livekit-client';
 import * as React from 'react';
+// import { RoomOptions } from 'livekit-client';
+import { setLogLevel, LogLevel } from 'livekit-client';
 import { useRoomExtended, ExtendedRoomState } from '../lib/ExtendedUseRoom';
 
 const RoomContext = React.createContext({} as ExtendedRoomState);
@@ -15,6 +16,7 @@ export const RoomProvider: React.FC<{ children: React.ReactNode }> = ({
   //   },
   //   dynacast: true,
   // };
+  setLogLevel(LogLevel.warn);
   const extendedRoomState = useRoomExtended();
 
   return (

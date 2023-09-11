@@ -47,11 +47,18 @@ listenerMiddleware.startListening({
 listenerMiddleware.startListening({
   actionCreator: addOnlineRTListener,
   effect: (action, listenerApi) => {
+    const state = listenerApi.getState() as RootState;
+    const appUserId = state.appUser.tenantUser.oid;
     const { teamId } = action.payload;
     const nodeRef = ref(database, `online/${teamId}`);
     onValue(nodeRef, (snapshot) => {
       const users = snapshot.val() as models.OnlineRTUsers;
       listenerApi.dispatch(setOnlineGroup({ teamId, users }));
+      if (!users[appUserId]) {
+        listenerApi.dispatch(
+          pushUserOnlineRTInfo({ teamId, userId: appUserId })
+        );
+      }
     });
   },
 });
